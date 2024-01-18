@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  mongo-container:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+  icare-container:
+    image: icare:latest
+    ports:
+      - 8080:8080
