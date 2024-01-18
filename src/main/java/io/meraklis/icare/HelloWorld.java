@@ -1,4 +1,4 @@
-package io.meraklis.timetracker;
+package io.meraklis.icare;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

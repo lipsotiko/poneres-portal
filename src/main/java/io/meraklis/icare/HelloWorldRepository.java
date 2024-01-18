@@ -1,4 +1,4 @@
-package io.meraklis.timetracker;
+package io.meraklis.icare;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

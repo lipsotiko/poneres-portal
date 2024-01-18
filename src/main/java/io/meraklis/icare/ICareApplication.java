@@ -1,13 +1,13 @@
-package io.meraklis.timetracker;
+package io.meraklis.icare;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TimeTrackerApplication {
+public class ICareApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TimeTrackerApplication.class, args);
+		SpringApplication.run(ICareApplication.class, args);
 	}
 
 }

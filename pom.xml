@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.meraklis</groupId>
-	<artifactId>time-tracker</artifactId>
+	<artifactId>i-care</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>time-tracker</name>
+	<name>i-care</name>
 	<description>Another project stub...that may go somewhere</description>
 	<properties>
 		<java.version>21</java.version>
@@ -29,11 +29,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox-io</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
