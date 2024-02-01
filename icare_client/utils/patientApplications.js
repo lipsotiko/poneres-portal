@@ -9,4 +9,17 @@ const getPatientApplicationPdfPreview = async (id) => {
     return $fetch(`/api/patient-applications/download/${id}`);
 }
 
-export { getApplications, savePatientApplication, getPatientApplicationPdfPreview }
+const getPatientApplicationPdfPreviewWithSignatures = async (id) => {
+    return $fetch(`/api/patient-applications/download/${id}`, {
+        query: {
+            withPatientSignature: 'true',
+            withPrescriberSignature: 'true'
+        }
+    });
+}
+
+export { 
+    savePatientApplication,
+    getPatientApplicationPdfPreview,
+    getPatientApplicationPdfPreviewWithSignatures 
+}

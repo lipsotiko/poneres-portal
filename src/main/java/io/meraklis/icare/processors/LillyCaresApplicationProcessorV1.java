@@ -3,6 +3,7 @@ package io.meraklis.icare.processors;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ import static io.meraklis.icare.processors.DocumentHelper.setField;
 
 @Service
 public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
+
+    @Autowired
+    private SignatureApplicator signatureApplicator;
 
     private final static String CHECK = "X";
     private static final Map<Integer, String> radioChoices = new HashMap<>() {
@@ -177,13 +181,25 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     @Override
-    public byte[] process(Map<String, Object> metadata) throws IOException {
-        try (PDDocument document = loadPdfDoc()) {
+    public byte[] process(Map<String, Object> metadata, Boolean withPatientSignature, Boolean withPrescriberSignature) {
+        try (PDDocument doc = loadPdfDoc()) {
             // remove the medication page 9 (zero indexed)
-            document.removePage(8);
+            doc.removePage(8);
 
             // remove the first 3 pages (zero indexed)
-            for (int i = 0; i < 3; i++) document.removePage(0);
+            for (int i = 0; i < 3; i++) doc.removePage(0);
+
+            assignValues(metadata, doc);
+            assignDerivedValues(metadata, doc);
+
+            if (withPatientSignature) {
+                applyPatientSignature(doc, metadata);
+            }
+
+            String prescriberName = (String) metadata.get("prescriber_name");
+            if (withPrescriberSignature) {
+                applyPrescriberSignature(doc, prescriberName);
+            }
 
             List<ByteArrayOutputStream> medicationDocuments = new ArrayList<>();
             if (metadata.get("medications") != null) {
@@ -196,6 +212,10 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
                         assignValues(metadata, tmpDoc);
                         assignDerivedValues(metadata, tmpDoc);
 
+                        if (withPrescriberSignature) {
+                            applyPrescriberMedicationSignature(tmpDoc, prescriberName);
+                        }
+
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         tmpDoc.save(baos);
                         tmpDoc.close();
@@ -204,16 +224,13 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
                 }
             }
 
-            assignValues(metadata, document);
-            assignDerivedValues(metadata, document);
-
             PDFMergerUtility pdfMerger = new PDFMergerUtility();
 
             File tempFile = tmpFile();
             try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                document.save(baos);
-                document.close();
+                doc.save(baos);
+                doc.close();
                 outputStream.write(baos.toByteArray());
                 pdfMerger.addSource(tempFile);
             }
@@ -232,17 +249,44 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
             pdfMerger.mergeDocuments(() -> null);
 
             return baos.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void assignDerivedValues(Map<String, Object> metadata, PDDocument document) throws IOException {
+    private String getPatientFullName(Map<String, Object> metadata) {
         String patientFirstName = (String) metadata.get("patient_first_name");
         String patientMiddleInitial = (String) metadata.get("patient_middle_initial");
         String patientLastName = (String) metadata.get("patient_last_name");
 
-        String patientFullName = (patientMiddleInitial != null)
+        return (patientMiddleInitial != null)
                 ? String.format("%s %s. %s", patientFirstName, patientMiddleInitial, patientLastName)
                 : String.format("%s %s", patientFirstName, patientLastName);
+    }
+
+    private void applyPatientSignature(PDDocument doc, Map<String, Object> metadata) {
+        String patientFullName = getPatientFullName(metadata);
+        List<SignatureConfig> configs = new ArrayList<>();
+        configs.add(SignatureConfig.builder().page(3).signature(patientFullName).xPos(22).yPos(82).build());
+        configs.add(SignatureConfig.builder().page(4).signature(patientFullName).xPos(22).yPos(82).build());
+        signatureApplicator.apply(doc, configs);
+    }
+
+    private void applyPrescriberSignature(PDDocument doc, String prescriberName) {
+        List<SignatureConfig> configs = new ArrayList<>();
+        configs.add(SignatureConfig.builder().page(5).signature(prescriberName).xPos(140).yPos(202).build());
+        signatureApplicator.apply(doc, configs);
+    }
+
+    private void applyPrescriberMedicationSignature(PDDocument doc, String prescriberName) {
+        List<SignatureConfig> configs = new ArrayList<>();
+        configs.add(SignatureConfig.builder().page(1).signature(prescriberName).xPos(22).yPos(223).build());
+        signatureApplicator.apply(doc, configs);
+    }
+
+    private void assignDerivedValues(Map<String, Object> metadata, PDDocument document) throws IOException {
+        String patientFullName = getPatientFullName(metadata);
+
         for (String pdfFieldName : getLillyCaresV1().get("patient_full_name")) {
             setField(document, pdfFieldName, patientFullName);
         }
@@ -252,7 +296,7 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
         }
     }
 
-    private void assignValues(Map<String, Object> metadata, PDDocument document) throws IOException {
+    private void assignValues(Map<String, Object> metadata, PDDocument doc) throws IOException {
         for (Map.Entry<String, Object> entry : metadata.entrySet()) {
             List<String> pdfFieldNames = findPdfFieldName(entry);
 
@@ -269,15 +313,15 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
                             value = LocalDate.parse(value).format(formatter);
                         }
 
-                        setField(document, pdfFieldName, value);
+                        setField(doc, pdfFieldName, value);
                     } else if (pdfFieldName.contains("Radio Button")) {
                         Integer v = (Integer) entry.getValue();
                         String radioChoice = radioChoices.get(v);
                         if (radioChoice != null) {
-                            setField(document, pdfFieldName, radioChoice);
+                            setField(doc, pdfFieldName, radioChoice);
                         }
                     } else if (pdfFieldName.contains("Check Box")) {
-                        setField(document, pdfFieldName, CHECK);
+                        setField(doc, pdfFieldName, CHECK);
                     }
                 }
             }

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Optional;
 
 @RestController
@@ -19,14 +18,18 @@ public class PatientApplicationController {
     private PatientApplicationRepository patientApplicationRepository;
 
     @GetMapping(path = "/download/{applicationId}", produces = MediaType.APPLICATION_PDF_VALUE)
-    public @ResponseBody byte[] preview(@PathVariable("applicationId") String applicationId) throws IOException {
+    public @ResponseBody byte[] preview(@PathVariable("applicationId") String applicationId,
+                                        @RequestParam(value = "withPatientSignature", defaultValue = "false")
+                                        Boolean withPatientSignature,
+                                        @RequestParam(value = "withPrescriberSignature", defaultValue = "false")
+                                        Boolean withPrescriberSignature) {
         Optional<PatientApplication> optionalPatientApplication = patientApplicationRepository.findById(applicationId);
-        if (optionalPatientApplication.isPresent()){
+        if (optionalPatientApplication.isPresent()) {
             PatientApplication application = optionalPatientApplication.get();
-                if (application.getType().equals(PatientApplicationType.LILLY_CARES_V1)) {
-                    return processorV1.process(application.getMetadata());
-                }
+            if (application.getType().equals(PatientApplicationType.LILLY_CARES_V1)) {
+                return processorV1.process(application.getMetadata(), withPatientSignature, withPrescriberSignature);
             }
-        return new byte[0];
+        }
+        return null;
     }
 }

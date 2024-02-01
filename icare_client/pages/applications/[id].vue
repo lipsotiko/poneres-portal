@@ -16,7 +16,7 @@
       <template #header>
         <ITabTitle for="tab-1">Application</ITabTitle>
         <ITabTitle for="tab-2">Preview</ITabTitle>
-        <ITabTitle for="tab-3"> Tab 3 </ITabTitle>
+        <ITabTitle for="tab-3">With Signatures</ITabTitle>
       </template>
       <ITab name="tab-1">
         <LillyCaresFormV1
@@ -31,7 +31,10 @@
         <span v-if="loadingPreview">loading...</span>
         <iframe id="pdf-preview"></iframe>
       </ITab>
-      <ITab name="tab-3"> Tab 3 content </ITab>
+      <ITab name="tab-3">
+        <span v-if="loadingPreview">loading...</span>
+        <iframe id="pdf-preview-with-signatures"></iframe>
+      </ITab>
     </ITabs>
   </IContainer>
 </template>
@@ -55,18 +58,26 @@ export default {
   },
   watch: {
     active: async function (val) {
-      if (val === "tab-2") {
-        this.loadingPreview = true;
-        const {
+      const {
           params: { id },
         } = useRoute();
+
+      if (val === "tab-2") {
+        this.loadingPreview = true;
         await getPatientApplicationPdfPreview(id).then((blob) => {
           var file = window.URL.createObjectURL(blob);
           document.querySelector("#pdf-preview").src = file;
         });
         this.loadingPreview = false;
+      } else if (val === "tab-3") {
+        await getPatientApplicationPdfPreviewWithSignatures(id).then((blob) => {
+          var file = window.URL.createObjectURL(blob);
+          document.querySelector("#pdf-preview-with-signatures").src = file;
+        });
+        this.loadingPreview = false;
       } else {
         document.querySelector("#pdf-preview").src = "";
+        document.querySelector("#pdf-preview-with-signatures").src = "";
       }
     },
   },

@@ -36,7 +36,7 @@ public class TextToImageBuilder {
         }
     };
 
-    public byte[] convertToPng(String signature, SignatureFont signatureFont) throws IOException, FontFormatException {
+    public byte[] convertToPng(String signature, SignatureFont signatureFont) {
         return convertToImage(signature, signatureFont);
     }
 
@@ -80,7 +80,7 @@ public class TextToImageBuilder {
         return (int) Math.ceil(drawPosY);
     }
 
-    private byte[] convertToImage(String signature, SignatureFont signatureFont) throws IOException {
+    private byte[] convertToImage(String signature, SignatureFont signatureFont) {
         Font font = new Font(signatureFont.getInternalName(), Font.PLAIN, fontSizes.getOrDefault(signatureFont, 22));
         int maxWidth = 400;
         int widthAdjustment = 12;
@@ -137,11 +137,15 @@ public class TextToImageBuilder {
         g2d.dispose();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(buffRenderImage, "png", baos);
+        try {
+            ImageIO.write(buffRenderImage, "png", baos);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return baos.toByteArray();
     }
 
-    public byte[] convertToPng(String signature) throws IOException, FontFormatException {
+    public byte[] convertToPng(String signature) {
         return convertToPng(signature, SignatureFont.BERLIMAN);
     }
 }
