@@ -519,7 +519,7 @@
           </IButton>
           <IButton
             circle
-            @click="metadata.medications.push({})"
+            @click="metadata.medications.push(defaultMedication)"
             :disabled="metadata.medications.length === 3"
           >
             <template #icon>
@@ -691,6 +691,15 @@
 <script>
 export default {
   props: ["id", "metadata", "hideLoadTestData"],
+  data() {
+    return {
+      defaultMedication: {
+        refill_number: '1 Year',
+        quantity_dispensed: 1,
+        dispense_as_written: 1,
+      }
+    }
+  },
   computed: {
     isOtherInsuranceDisabled() {
       return !(
@@ -732,7 +741,7 @@ export default {
     async submit() {
       this.$emit("submit", {
         id: this.id,
-        metadata: this.metadata
+        metadata: this.metadata,
       });
     },
     loadTestData() {
@@ -821,7 +830,7 @@ export default {
         electronic_prescription_or_fax: [
           "electronic_prescription",
           "fax_prescription_utilizing_page_9",
-        ]
+        ],
       });
     },
   },
