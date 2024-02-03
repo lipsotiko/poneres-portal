@@ -13,6 +13,9 @@ export default {
   data() {
     return {
       metadata: {
+        directed_to_seek_enrollment: 1,
+        prescription_auto_refill: 1,
+        electronic_prescription_or_fax: ['fax_prescription_utilizing_page_9'],
         medications: [{}],
       },
     };
