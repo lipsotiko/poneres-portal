@@ -533,21 +533,21 @@
             <IColumn>
               <TextFieldInput
                 v-model="metadata.medications[i].medication"
-                name="medication"
+                :name="`medication_${i}`"
                 label="Medication"
               />
             </IColumn>
             <IColumn>
               <TextFieldInput
                 v-model="metadata.medications[i].strength"
-                name="strength"
+                :name="`strength_${i}`"
                 label="Strength"
               />
             </IColumn>
             <IColumn>
               <TextFieldInput
                 v-model="metadata.medications[i].max_dose_per_day"
-                name="max_dose_per_day"
+                :name="`max_dose_per_day_${i}`"
                 label="Max Dose per Day"
               />
             </IColumn>
@@ -556,7 +556,7 @@
             <IColumn>
               <TextFieldInput
                 v-model="metadata.medications[i].directions"
-                name="directions"
+                :name="`directions_${i}`"
                 label="Directions"
               />
             </IColumn>
@@ -567,7 +567,7 @@
                 <IFormLabel>Are you prescribing insulin?</IFormLabel>
                 <IRadioGroup
                   v-model="metadata.medications[i].prescribing_insulin"
-                  name="prescribing_insulin"
+                  :name="`prescribing_insulin_${i}`"
                   @change="handlePrescibingInsulinChange(i)"
                   :options="[
                     {
@@ -587,7 +587,7 @@
                 <IFormLabel>If yes, select the prescribed insulin</IFormLabel>
                 <IRadioGroup
                   v-model="metadata.medications[i].prescribed_insulin"
-                  name="prescribed_insulin"
+                  :name="`prescribed_insulin_${i}`"
                   :options="[
                     {
                       id: 1,
@@ -614,7 +614,7 @@
             <IColumn xs="4">
               <TextFieldInput
                 v-model="metadata.medications[i].refill_number"
-                name="refill_number"
+                :name="`refill_number_${i}`"
                 label="Refill #"
               />
             </IColumn>
@@ -626,7 +626,7 @@
                 >
                 <IRadioGroup
                   v-model="metadata.medications[i].quantity_dispensed"
-                  name="quantity_dispensed"
+                  :name="`quantity_dispensed_${i}`"
                   :options="[
                     {
                       id: 1,
@@ -665,7 +665,7 @@
                 >
                 <IRadioGroup
                   v-model="metadata.medications[i].dispense_as_written"
-                  name="dispense_as_written"
+                  :name="`dispense_as_written_${i}`"
                   :options="[
                     {
                       id: 1,
