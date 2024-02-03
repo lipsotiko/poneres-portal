@@ -12,8 +12,8 @@ const getPatientApplicationPdfPreview = async (id) => {
 const getPatientApplicationPdfPreviewWithSignatures = async (id) => {
     return $fetch(`/api/patient-applications/download/${id}`, {
         query: {
-            withPatientSignature: 'true',
-            withPrescriberSignature: 'true'
+            withPatientSignature: true,
+            withPrescriberSignature: true
         }
     });
 }

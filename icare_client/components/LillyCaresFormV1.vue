@@ -378,15 +378,6 @@
           <h3>Healthcare Provider/Prescriber Section</h3>
         </IRow>
         <IRow>
-          <IColumn>
-            <TextFieldInput
-              v-model="metadata.healthcare_provider_name_title"
-              name="healthcare_provider_name_title"
-              label="Healthcare Provider Name and Title"
-            />
-          </IColumn>
-        </IRow>
-        <IRow>
           <IColumn xs="8">
             <TextFieldInput
               v-model="metadata.prescriber_name"
@@ -945,7 +936,6 @@ export default {
         authorized_representative_2_name: "Father",
         authorized_representative_2_relationship: 2,
         authorized_representative_2_relationship_other: "Step father",
-        healthcare_provider_name_title: "Urgent Health Providers",
         prescriber_name: "Tom Burkens",
         healthcare_provider_dea_number: "1234",
         healthcare_provider_npi_number: "7890",

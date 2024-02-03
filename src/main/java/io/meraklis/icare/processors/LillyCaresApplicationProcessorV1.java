@@ -119,7 +119,7 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
             put("Text Field 221", "refill_number");
             put("Text Field 198", "prescriber_signature");
             put("Text Field 218", "signature_date");
-            put("Text Field 200", "healthcare_provider_name_title");
+            put("Text Field 200", "prescriber_name");
             put("Text Field 206", "healthcare_provider_dea_number");
             put("Text Field 201", "healthcare_provider_license_and_state");
             put("Text Field 204", "healthcare_provider_npi_number");
