@@ -19,8 +19,8 @@ import static io.meraklis.icare.processors.DocumentHelper.processField;
 import static io.meraklis.icare.processors.DocumentHelper.setField;
 
 @RestController
-@RequestMapping("/api/document")
-public class DocumentController {
+@RequestMapping("/api/processor")
+public class ProcessorController {
 
     @Autowired
     private SignatureApplicator signatureApplicator;
