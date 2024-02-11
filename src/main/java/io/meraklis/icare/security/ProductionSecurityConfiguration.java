@@ -1,4 +1,4 @@
-package io.meraklis.icare;
+package io.meraklis.icare.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

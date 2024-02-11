@@ -24,11 +24,11 @@
       </thead>
       <tbody>
         <tr v-for="application in data._embedded.patientApplications">
-          <th scope="row">
+          <td>
             <IButton size="sm" :to="`/applications/${application.id}`"
               >View</IButton
             >
-          </th>
+          </td>
           <td>{{ application.type }}</td>
           <td>{{ application.metadata.patient_first_name }}</td>
           <td>{{ application.metadata.patient_last_name }}</td>

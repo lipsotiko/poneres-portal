@@ -1,8 +1,3 @@
 spring:
   profiles:
     active: production
-s3:
-  bucket: "i-care"
-  region: ${AWS_REGION}
-  access-key: ${AWS_ACCESS_KEY}
-  access-secret: ${AWS_ACCESS_SECRET}

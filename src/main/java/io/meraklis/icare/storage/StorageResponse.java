@@ -1,4 +1,4 @@
-package io.meraklis.icare.documents;
+package io.meraklis.icare.storage;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

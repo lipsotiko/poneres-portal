@@ -10,3 +10,8 @@ okta:
     issuer: ${AUTH0_ISSUER}
     client-id: ${AUTH0_CLIENT_ID}
     client-secret: ${AUTH0_CLIENT_SECRET}
+s3:
+  bucket: "i-care"
+  region: ${AWS_REGION}
+  access-key: ${AWS_ACCESS_KEY}
+  access-secret: ${AWS_ACCESS_SECRET}
