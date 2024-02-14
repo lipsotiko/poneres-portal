@@ -3,7 +3,7 @@
     <div class="top">
       <h1>Applications</h1>
       <div>
-        <IButton size="sm" to="/new-application" color="primary">
+        <IButton circle to="/new-application" color="primary">
           <template #icon>
             <IIcon name="ink-plus" />
           </template>

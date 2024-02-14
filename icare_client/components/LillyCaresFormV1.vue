@@ -6,6 +6,7 @@
         <button type="button" color="secondary" @click="loadTestData">
           Load Test Data
         </button>
+        <IButton size="sm" to="/">Home</IButton>
       </div>
     </div>
     <hr />

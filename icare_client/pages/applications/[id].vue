@@ -15,7 +15,7 @@
     <ITabs v-else v-model="active" stretch>
       <template #header>
         <ITabTitle for="tab-1">Application</ITabTitle>
-        <ITabTitle for="tab-2">Supporting Documents</ITabTitle>
+        <ITabTitle for="tab-2">Documents</ITabTitle>
         <ITabTitle for="tab-3">Preview</ITabTitle>
         <ITabTitle for="tab-4">With Signatures</ITabTitle>
       </template>
@@ -53,7 +53,7 @@
               <tr>
                 <th>File Name Type</th>
                 <th>Uploaded By</th>
-                <th>Delete</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -65,19 +65,16 @@
                 </td>
                 <td>{{ doc.uploadedBy }}</td>
                 <td>
-                  <IButton
-                    circle
+                  <IIcon
+                    class="delete-icon"
+                    name="ink-times"
                     @click="
                       async () => {
                         await deletePatientDocument(doc.id);
                         await refreshPatientDocuments();
                       }
                     "
-                  >
-                    <template #icon>
-                      <IIcon name="ink-times" />
-                    </template>
-                  </IButton>
+                  />
                 </td>
               </tr>
             </tbody>
@@ -199,5 +196,9 @@ iframe {
 .upload-section {
   display: flex;
   justify-content: space-between;
+}
+
+.delete-icon {
+  cursor: pointer;
 }
 </style>
