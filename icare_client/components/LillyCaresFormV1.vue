@@ -2,7 +2,7 @@
   <IContainer>
     <div class="top">
       <h1>Lilly Cares Application</h1>
-      <div v-if="!hideLoadTestData" class="top-buttons">
+      <div v-if="showLoadTestData" class="top-buttons">
         <button type="button" color="secondary" @click="loadTestData">
           Load Test Data
         </button>
@@ -10,7 +10,7 @@
       </div>
     </div>
     <hr />
-    <IForm name="lilly_cares_v1">
+    <IForm name="lilly_cares_v1" :readonly="disabled" :disabled="disabled">
       <IContainer>
         <IRow>
           <h3>Patient Information</h3>
@@ -21,6 +21,7 @@
               v-model="metadata.patient_first_name"
               name="patient_first_name"
               label="First name"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="12" sm="3">
@@ -29,6 +30,7 @@
               name="patient_middle_initial"
               label="Middle initial"
               maxLength="1"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="12" sm="5">
@@ -36,6 +38,7 @@
               v-model="metadata.patient_last_name"
               name="patient_last_name"
               label="Last name"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -45,6 +48,7 @@
               v-model="metadata.patient_address"
               name="patient_address"
               label="Address"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -54,6 +58,7 @@
               v-model="metadata.patient_city"
               name="patient_city"
               label="City"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="4">
@@ -61,6 +66,7 @@
               v-model="metadata.patient_state"
               name="patient_state"
               label="State"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="4">
@@ -68,6 +74,7 @@
               v-model="metadata.patient_zip_code"
               name="patient_zip_code"
               label="Zip Code"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -78,6 +85,7 @@
               name="patient_dob"
               label="DOB"
               type="date"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="4">
@@ -85,6 +93,7 @@
               v-model="metadata.patient_phone_number"
               name="patient_phone_number"
               label="Phone #"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="5">
@@ -115,6 +124,7 @@
               v-model="metadata.patient_drug_allergies"
               name="patient_drug_allergies"
               label="Drug allergies"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn>
@@ -122,6 +132,7 @@
               v-model="metadata.other_medications"
               name="other_medications"
               label="Other medications"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -135,6 +146,7 @@
               v-model="metadata.number_of_people_in_household"
               name="number_of_people_in_household"
               label="Number of people in your household?"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="6">
@@ -142,6 +154,7 @@
               v-model="metadata.annual_household_income_pretax"
               name="annual_household_income_pretax"
               label="Annual Household Income before taxes?"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -224,7 +237,7 @@
                 v-model="metadata.other_insurance"
                 name="other_insurance"
                 label="Other Insurance"
-                :disabled="isOtherInsuranceDisabled"
+                :disabled="isOtherInsuranceDisabled || disabled"
               />
             </IFormGroup>
           </IColumn>
@@ -304,7 +317,7 @@
               v-model="metadata.authorized_representative_1_name"
               name="authorized_representative_1_name"
               label="Authorized Representative 1"
-              :disabled="allowsAuthorizedRepresentative"
+              :disabled="allowsAuthorizedRepresentative || disabled"
             />
           </IColumn>
           <IColumn>
@@ -323,7 +336,7 @@
                     label: 'Other, please specify.',
                   },
                 ]"
-                :disabled="allowsAuthorizedRepresentative"
+                :disabled="allowsAuthorizedRepresentative || disabled"
               />
             </IFormGroup>
           </IColumn>
@@ -332,7 +345,7 @@
               v-model="metadata.authorized_representative_1_relationship_other"
               name="authorized_representative_1_relationship_other"
               label="Other"
-              :disabled="isOtherRepresentative1Disabled"
+              :disabled="isOtherRepresentative1Disabled || disabled"
             />
           </IColumn>
         </IRow>
@@ -342,7 +355,7 @@
               v-model="metadata.authorized_representative_2_name"
               name="authorized_representative_2_name"
               label="Authorized Representative 2"
-              :disabled="allowsAuthorizedRepresentative"
+              :disabled="allowsAuthorizedRepresentative || disabled"
             />
           </IColumn>
           <IColumn>
@@ -361,7 +374,7 @@
                     label: 'Other, please specify.',
                   },
                 ]"
-                :disabled="allowsAuthorizedRepresentative"
+                :disabled="allowsAuthorizedRepresentative || disabled"
               />
             </IFormGroup>
           </IColumn>
@@ -370,7 +383,7 @@
               v-model="metadata.authorized_representative_2_relationship_other"
               name="authorized_representative_2_relationship_other"
               label="Other"
-              :disabled="isOtherRepresentative2Disabled"
+              :disabled="isOtherRepresentative2Disabled || disabled"
             />
           </IColumn>
         </IRow>
@@ -384,6 +397,7 @@
               v-model="metadata.prescriber_name"
               name="prescriber_name"
               label="Prescriber Name"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="4">
@@ -391,6 +405,7 @@
               v-model="metadata.prescriber_medications_requested"
               name="prescriber_medications_requested"
               label="Medication(s) Requested"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -400,6 +415,7 @@
               v-model="metadata.healthcare_provider_dea_number"
               name="healthcare_provider_dea_number"
               label="DEA #"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="4">
@@ -407,6 +423,7 @@
               v-model="metadata.healthcare_provider_npi_number"
               name="healthcare_provider_npi_number"
               label="NPI #"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="4">
@@ -414,6 +431,7 @@
               v-model="metadata.healthcare_provider_license_and_state"
               name="healthcare_provider_license_and_state"
               label="State License # and State"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -423,6 +441,7 @@
               v-model="metadata.healthcare_provider_address"
               name="healthcare_provider_address"
               label="Address"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -432,6 +451,7 @@
               v-model="metadata.healthcare_provider_city"
               name="healthcare_provider_city"
               label="City"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="4">
@@ -439,6 +459,7 @@
               v-model="metadata.healthcare_provider_state"
               name="healthcare_provider_state"
               label="State"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn xs="4">
@@ -446,6 +467,7 @@
               v-model="metadata.healthcare_provider_zip_code"
               name="healthcare_provider_zip_code"
               label="Zip Code"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -455,6 +477,7 @@
               v-model="metadata.healthcare_provider_phone_number"
               name="healthcare_provider_phone_number"
               label="Phone Number"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn>
@@ -462,6 +485,7 @@
               v-model="metadata.healthcare_provider_fax_number"
               name="healthcare_provider_fax_number"
               label="Fax Number"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -471,6 +495,7 @@
               v-model="metadata.healthcare_provider_office_contact_name"
               name="healthcare_provider_office_contact_name"
               label="Office Contact Name"
+              :disabled="disabled"
             />
           </IColumn>
           <IColumn>
@@ -478,6 +503,7 @@
               v-model="metadata.healthcare_provider_office_contact_phone_number"
               name="healthcare_provider_office_contact_phone_number"
               label="Office Contact Phone Number"
+              :disabled="disabled"
             />
           </IColumn>
         </IRow>
@@ -536,6 +562,7 @@
                 v-model="metadata.medications[i].medication"
                 :name="`medication_${i}`"
                 label="Medication"
+                :disabled="disabled"
               />
             </IColumn>
             <IColumn>
@@ -543,6 +570,7 @@
                 v-model="metadata.medications[i].strength"
                 :name="`strength_${i}`"
                 label="Strength"
+                :disabled="disabled"
               />
             </IColumn>
             <IColumn>
@@ -550,6 +578,7 @@
                 v-model="metadata.medications[i].max_dose_per_day"
                 :name="`max_dose_per_day_${i}`"
                 label="Max Dose per Day"
+                :disabled="disabled"
               />
             </IColumn>
           </IRow>
@@ -559,6 +588,7 @@
                 v-model="metadata.medications[i].directions"
                 :name="`directions_${i}`"
                 label="Directions"
+                :disabled="disabled"
               />
             </IColumn>
           </IRow>
@@ -617,6 +647,7 @@
                 v-model="metadata.medications[i].refill_number"
                 :name="`refill_number_${i}`"
                 label="Refill #"
+                :disabled="disabled"
               />
             </IColumn>
             <IColumn xs="8">
@@ -684,22 +715,45 @@
         </div>
       </IContainer>
       <IFormGroup class="submit">
-        <IButton type="button" color="primary" @click="submit">Save</IButton>
+        <IButton v-if="showDelete == true" outline color="danger" @click="deleteModalVisible = true">Delete</IButton>
+        <IButton color="primary" @click="submit">Save</IButton>
       </IFormGroup>
     </IForm>
+    <IModal v-model="deleteModalVisible">
+        <template #header>
+          <h3>Delete Application</h3  >
+        </template>
+        Are you sure you want to delte this application?
+        <template #footer>
+          <div class="delete-footer">
+            <IButton color="primary" @click="deleteApplication">Yes</IButton>
+          </div>
+        </template>
+    </IModal>
   </IContainer>
 </template>
 <script>
+import { useToast } from "@inkline/inkline/composables";
+
+const toast = useToast();
+
 export default {
-  props: ["id", "metadata", "hideLoadTestData"],
+  props: {
+    id: String,
+    metadata: Object,
+    disabled: Boolean,
+    showDelete: Boolean,
+    showLoadTestData: Boolean
+  },
   data() {
     return {
+      deleteModalVisible: false,
       defaultMedication: {
-        refill_number: '1 Year',
+        refill_number: "1 Year",
         quantity_dispensed: 1,
         dispense_as_written: 1,
-      }
-    }
+      },
+    };
   },
   computed: {
     isOtherInsuranceDisabled() {
@@ -744,6 +798,21 @@ export default {
         id: this.id,
         metadata: this.metadata,
       });
+
+      toast.show({
+        title: "Success",
+        message: "Patient application saved!",
+        color: "success",
+      });
+    },
+    deleteApplication() {
+      this.deleteModalVisible = false;
+      this.$emit("delete");
+      toast.show({
+        title: "Success",
+        message: "Patient application deleted!",
+        color: "success",
+      });
     },
     loadTestData() {
       this.$emit("loadTestData", {
@@ -782,14 +851,14 @@ export default {
             dispense_as_written: 2,
           },
         ],
-        patient_first_name: "Evangelos",
-        patient_last_name: "Poneres",
+        patient_first_name: "John",
+        patient_middle_initial: "F",
+        patient_last_name: "Wick",
         patient_address: "6958 N. Oleander Ave",
         patient_city: "Chicago",
         patient_state: "IL",
         patient_zip_code: "60631",
         patient_phone_number: "4433019719",
-        patient_middle_initial: "F",
         deliver_medication_to_home: 2,
         patient_dob: "1988-04-28",
         patient_drug_allergies: "Some drug allergies, not many",
@@ -849,6 +918,11 @@ export default {
   justify-content: center;
   padding: 32px;
 }
+
+.submit button {
+  margin: 0 12px;
+}
+
 .medication {
   margin-bottom: 22px;
 }
@@ -858,5 +932,10 @@ export default {
 
 .medication-buttons button {
   margin: 12px;
+}
+
+.delete-footer {
+  display: flex;
+  justify-content: center;
 }
 </style>

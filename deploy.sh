@@ -13,7 +13,3 @@ AWS_ACCESS_SECRET=$AWS_ACCESS_SECRET \
 --name i-care-app --resource-group i-care-app_group
 
 az webapp restart --name i-care-app --resource-group i-care-app_group
-
-#    --settings          : Space-separated appsettings in KEY=VALUE format. Use @{file} to load from
-#                          a file. See https://go.microsoft.com/fwlink/?linkid=2219923 for more
-#                          information on file format and editing app settings in bulk.

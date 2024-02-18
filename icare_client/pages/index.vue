@@ -17,24 +17,24 @@
         <tr>
           <th></th>
           <th>Application Type</th>
-          <th>Patient First Name</th>
-          <th>Patient Last Name</th>
-          <th></th>
+          <th>Patient Name</th>
+          <th>Signed By Patient</th>
+          <th>Signed By Prescriber</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="application in data._embedded.patientApplications">
           <td>
-            <IButton size="sm" :to="`/applications/${application.id}`"
-              >View</IButton
-            >
+            <IButton size="sm" :to="`/applications/${application.id}`">
+              View
+            </IButton>
           </td>
-          <td>{{ application.type }}</td>
-          <td>{{ application.metadata.patient_first_name }}</td>
-          <td>{{ application.metadata.patient_last_name }}</td>
-          <td>
-            <DownloadPdf :id="application.id" />
-          </td>
+          <td>{{ application.displayApplicationName }}</td>
+          <td>{{ application.metadata.patient_first_name }} {{ application.metadata.patient_last_name }}</td>
+          <td v-if="application.signedByPatient"><IIcon name="ink-check" /></td>
+          <td v-else><IIcon name="ink-times" /></td>
+          <td v-if="application.signedByPrescriber"><IIcon name="ink-check" /></td>
+          <td v-else><IIcon name="ink-times" /></td>
         </tr>
       </tbody>
     </ITable>

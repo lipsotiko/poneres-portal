@@ -1,8 +1,8 @@
 <template>
   <div>
     <LillyCaresFormV1
+      showLoadTestData
       :metadata="metadata"
-      :hideLoadTestData="false"
       @submit="submit"
       @loadTestData="loadTestData"
     />

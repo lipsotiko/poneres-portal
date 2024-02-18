@@ -15,4 +15,23 @@ public class PatientApplication {
     private String id;
     private PatientApplicationType type;
     private Map<String, Object> metadata;
+    private String patientSignature;
+    private String prescriberSignature;
+
+    public boolean isSignedByPatient() {
+        return patientSignature != null;
+    }
+
+    public boolean isSignedByPrescriber() {
+        return prescriberSignature != null;
+    }
+
+    public boolean isSigned() {
+        return isSignedByPatient() || isSignedByPrescriber();
+    }
+
+    @SuppressWarnings("unused")
+    public String getDisplayApplicationName() {
+        return type.getDisplayName();
+    }
 }

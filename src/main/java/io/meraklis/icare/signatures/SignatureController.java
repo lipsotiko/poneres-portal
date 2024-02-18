@@ -5,9 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/image")
 public class SignatureController {
@@ -18,7 +15,7 @@ public class SignatureController {
     @GetMapping(value = "/signature/preview/text", produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody byte[] signaturePreviewText(
             @RequestParam("signature") String signature,
-            @RequestParam("font") SignatureFont font) throws IOException, FontFormatException {
+            @RequestParam("font") SignatureFont font) {
         return textToImageBuilder.convertToPng(signature, font);
     }
 

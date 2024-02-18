@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@inkline/inkline": "^4.2.1",
-    "file-saver": "^2.0.5"
+    "file-saver": "^2.0.5",
+    "signature_pad": "^4.1.7"
   }
 }

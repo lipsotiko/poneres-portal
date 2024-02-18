@@ -181,7 +181,8 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     @Override
-    public byte[] process(Map<String, Object> metadata, Boolean withPatientSignature, Boolean withPrescriberSignature) {
+    public byte[] process(Map<String, Object> metadata, File patientSignature, File prescriberSignature) {
+        int HEIGHT_BUFFER = 4;
         try (PDDocument doc = loadPdfDoc()) {
             // remove the medication page 9 (zero indexed)
             doc.removePage(8);
@@ -192,13 +193,18 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
             assignValues(metadata, doc);
             assignDerivedValues(metadata, doc);
 
-            if (withPatientSignature) {
-                applyPatientSignature(doc, metadata);
+            if (patientSignature != null) {
+                // Height & width reflect the bottom left of the signature area;
+                int height = 106 - HEIGHT_BUFFER;
+                int width = 18;
+                applyPatientSignature(doc, patientSignature, width, height);
             }
 
-            String prescriberName = (String) metadata.get("prescriber_name");
-            if (withPrescriberSignature) {
-                applyPrescriberSignature(doc, prescriberName);
+            if (prescriberSignature != null) {
+                // Height & width reflect the bottom left of the signature area;
+                int height = 226 - HEIGHT_BUFFER;
+                int width = 136;
+                applyPrescriberSignature(doc, prescriberSignature, width, height);
             }
 
             List<ByteArrayOutputStream> medicationDocuments = new ArrayList<>();
@@ -212,8 +218,11 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
                         assignValues(metadata, tmpDoc);
                         assignDerivedValues(metadata, tmpDoc);
 
-                        if (withPrescriberSignature) {
-                            applyPrescriberMedicationSignature(tmpDoc, prescriberName);
+                        if (prescriberSignature != null) {
+                            // Height & width reflect the bottom left of the signature area;
+                            int height = 248 - HEIGHT_BUFFER;
+                            int width = 22;
+                            applyPrescriberMedicationSignature(tmpDoc, prescriberSignature, width, height);
                         }
 
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -264,23 +273,22 @@ public class LillyCaresApplicationProcessorV1 implements ApplicationProcessor {
                 : String.format("%s %s", patientFirstName, patientLastName);
     }
 
-    private void applyPatientSignature(PDDocument doc, Map<String, Object> metadata) {
-        String patientFullName = getPatientFullName(metadata);
+    private void applyPatientSignature(PDDocument doc, File patientSignature, int xPos, int yPos) {
         List<SignatureConfig> configs = new ArrayList<>();
-        configs.add(SignatureConfig.builder().page(3).signature(patientFullName).xPos(22).yPos(82).build());
-        configs.add(SignatureConfig.builder().page(4).signature(patientFullName).xPos(22).yPos(82).build());
+        configs.add(SignatureConfig.builder().page(3).signature(patientSignature).xPos(xPos).yPos(yPos).build());
+        configs.add(SignatureConfig.builder().page(4).signature(patientSignature).xPos(xPos).yPos(yPos).build());
         signatureApplicator.apply(doc, configs);
     }
 
-    private void applyPrescriberSignature(PDDocument doc, String prescriberName) {
+    private void applyPrescriberSignature(PDDocument doc, File prescriberSignature, int xPos, int yPos) {
         List<SignatureConfig> configs = new ArrayList<>();
-        configs.add(SignatureConfig.builder().page(5).signature(prescriberName).xPos(140).yPos(202).build());
+        configs.add(SignatureConfig.builder().page(5).signature(prescriberSignature).xPos(xPos).yPos(yPos).build());
         signatureApplicator.apply(doc, configs);
     }
 
-    private void applyPrescriberMedicationSignature(PDDocument doc, String prescriberName) {
+    private void applyPrescriberMedicationSignature(PDDocument doc, File prescriberSignature, int xPos, int yPos) {
         List<SignatureConfig> configs = new ArrayList<>();
-        configs.add(SignatureConfig.builder().page(1).signature(prescriberName).xPos(22).yPos(223).build());
+        configs.add(SignatureConfig.builder().page(1).signature(prescriberSignature).xPos(xPos).yPos(yPos).build());
         signatureApplicator.apply(doc, configs);
     }
 

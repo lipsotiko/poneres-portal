@@ -16,32 +16,35 @@
       <template #header>
         <ITabTitle for="tab-1">Application</ITabTitle>
         <ITabTitle for="tab-2">Documents</ITabTitle>
-        <ITabTitle for="tab-3">Preview</ITabTitle>
-        <ITabTitle for="tab-4">With Signatures</ITabTitle>
+        <ITabTitle for="tab-3">Sign</ITabTitle>
+        <ITabTitle for="tab-4">Review</ITabTitle>
       </template>
       <ITab name="tab-1">
         <LillyCaresFormV1
           v-if="data.type === 'LILLY_CARES_V1'"
-          :id="route.params.id"
+          showDelete
+          :showLoadTestData="false"
+          :id="applicationId"
           :metadata="data.metadata"
-          :hideLoadTestData="true"
-          @submit="submit"
+          :disabled="data.signedByPatient"
+          @submit="submitFn"
+          @delete="deletePatientApplicationFn"
         />
       </ITab>
       <ITab name="tab-2">
         <div class="upload-section">
-          <input ref="file-input" type="file" @change="onFilePicked" multiple />
+          <input
+            ref="fileInput"
+            type="file"
+            @change="onFilePickedFn"
+            multiple
+          />
           <IButton
             size="sm"
             color="primary"
-            :disabled="files === null"
+            :disabled="files.length === 0"
             :loading="uploading"
-            @click="
-              async () => {
-                await onUpload();
-                await refreshPatientDocuments();
-              }
-            "
+            @click="uploadFn"
             >Upload</IButton
           >
         </div>
@@ -59,22 +62,19 @@
             <tbody>
               <tr v-for="doc in patientDocuments._embedded.patientDocuments">
                 <td>
-                  <a href="#" @click="downloadDocument(doc.id, doc.fileName)">{{
-                    doc.fileName
-                  }}</a>
+                  <a
+                    href="#"
+                    @click="downloadDocumentFn(doc.id, doc.fileName)"
+                    >{{ doc.fileName }}</a
+                  >
                 </td>
                 <td>{{ doc.uploadedBy }}</td>
                 <td>
-                  <IIcon
-                    class="delete-icon"
-                    name="ink-times"
-                    @click="
-                      async () => {
-                        await deletePatientDocument(doc.id);
-                        await refreshPatientDocuments();
-                      }
-                    "
-                  />
+                  <IButton size="sm" @click="deletePatientDocumentFn(doc.id)">
+                    <template #icon>
+                      <i class="fa-solid fa-trash"></i>
+                    </template>
+                </IButton>
                 </td>
               </tr>
             </tbody>
@@ -82,110 +82,189 @@
         </div>
       </ITab>
       <ITab name="tab-3">
-        <span v-if="loadingPreview">loading...</span>
-        <iframe id="pdf-preview"></iframe>
+        <IContainer>
+          <IRow>
+            <IColumn sm="12" xl="6">
+              <SignaturePad
+                label="Patient Signature"
+                :signature="data.patientSignature"
+                @clear="clearPatientSignatureFn"
+                @save="savePatientSignatureFn"
+              />
+            </IColumn>
+            <IColumn sm="12" xl="6">
+              <SignaturePad
+                label="Prescriber Signature"
+                :signature="data.prescriberSignature"
+                @clear="clearPrescriberSignatureFn"
+                @save="savePrescriberSignatureFn"
+              />
+            </IColumn>
+          </IRow>
+        </IContainer>        
       </ITab>
       <ITab name="tab-4">
+        <div class="download-section">
+          <DownloadPdf :id="applicationId" />
+        </div>
+        <hr />
         <span v-if="loadingPreview">loading...</span>
-        <iframe id="pdf-preview-with-signatures"></iframe>
+        <iframe ref="pdfPreview"></iframe>
       </ITab>
     </ITabs>
   </IContainer>
 </template>
 <script setup>
-const route = useRoute();
-const { pending, data } = useFetch(
-  `/api/patient-applications/${route.params.id}`,
-  {
-    lazy: true,
-    server: false,
-  }
-);
+import { ref } from "vue";
+import FileSaver from "file-saver";
+import { useToast } from "@inkline/inkline/composables";
+
+const toast = useToast();
+
+const {
+  params: { id: applicationId },
+} = useRoute();
+
+const router = useRouter()
+
+const active = ref("tab-1");
+let files = ref([]);
+let fileInput = ref(null);
+let uploading = ref(false);
+let loadingPreview = ref(false);
+let pdfPreview = ref(null);
+
+const {
+  pending,
+  data,
+  refresh: refreshPatientApplication,
+} = useFetch(`/api/patient-applications/${applicationId}`, {
+  lazy: true,
+  server: false,
+});
 
 const {
   pending: patientDocumentsPending,
   data: patientDocuments,
   refresh: refreshPatientDocuments,
 } = useFetch(
-  `/api/patient-documents/search/findByApplicationId?applicationId=${route.params.id}`,
+  `/api/patient-documents/search/findByApplicationId?applicationId=${applicationId}`,
   {
     lazy: true,
     server: false,
-  }
+  },
 );
-</script>
-<script>
-import FileSaver from "file-saver";
 
-export default {
-  data() {
-    return {
-      active: "tab-1",
-      loadingPreview: false,
-      files: null,
-      uploading: false,
-    };
-  },
-  watch: {
-    active: async function (val) {
-      const {
-        params: { id },
-      } = useRoute();
+watch(active, async (val) => {
+  if (val === 'tab-1') {
+    await refreshPatientApplication();
+  }
 
-      if (val === "tab-3") {
-        this.loadingPreview = true;
-        await getPatientApplicationPdfPreview(id).then((blob) => {
-          var file = window.URL.createObjectURL(blob);
-          document.querySelector("#pdf-preview").src = file;
-        });
-        this.loadingPreview = false;
-      } else if (val === "tab-4") {
-        await getPatientApplicationPdfPreviewWithSignatures(id).then((blob) => {
-          var file = window.URL.createObjectURL(blob);
-          document.querySelector("#pdf-preview-with-signatures").src = file;
-        });
-        this.loadingPreview = false;
-      } else {
-        document.querySelector("#pdf-preview").src = "";
-        document.querySelector("#pdf-preview-with-signatures").src = "";
-      }
-    },
-  },
-  methods: {
-    onFilePicked(e) {
-      this.files = e.target.files;
-    },
-    async onUpload() {
-      const {
-        params: { id: applicationId },
-      } = useRoute();
+  if (val === 'tab-4') {
+    loadingPreview.value = true;
+    await getPatientApplicationPdfPreviewWithSignatures(applicationId).then(
+      (blob) => {
+        var file = window.URL.createObjectURL(blob);
+        pdfPreview.value.src = file;
+      },
+    );
+    loadingPreview.value = false;
+  } else {
+    pdfPreview.value.src = "";
+  }
+});
 
-      let formData = new FormData();
-      for (let i = 0; i < this.files.length; i++) {
-        formData.append("files", this.files.item(i));
-      }
-
-      this.uploading = true;
-
-      await savePatientDocument({ applicationId, formData });
-
-      this.files = null;
-      this.$refs["file-input"].value = "";
-      this.uploading = false;
-    },
-    downloadDocument(id, fileName) {
-      getPatientDocument(id, fileName).then((blob) => {
-        FileSaver.saveAs(blob, fileName);
-      });
-    },
-    async submit(data) {
-      await savePatientApplication({
-        type: "LILLY_CARES_V1",
-        ...data,
-      });
-    },
-  },
+const submitFn = async (data) => {
+  await savePatientApplication({
+    type: "LILLY_CARES_V1",
+    ...data,
+  });
+  await refreshPatientApplication();
 };
+
+const onFilePickedFn = (e) => {
+  files.value = e.target.files;
+};
+
+const uploadFn = async () => {
+  let formData = new FormData();
+  for (let i = 0; i < files.value.length; i++) {
+    formData.append("files", files.value.item(i));
+  }
+
+  uploading.value = true;
+
+  await savePatientDocument({ applicationId, formData });
+
+  files.value = [];
+  fileInput.value.value = "";
+  uploading.value = false;
+
+  toast.show({
+    title: "Success",
+    message: "Patient documents uploaded!",
+    color: "success",
+  });
+
+  refreshPatientDocuments();
+};
+
+const downloadDocumentFn = (id, fileName) => {
+  getPatientDocument(id, fileName).then((blob) => {
+    FileSaver.saveAs(blob, fileName);
+  });
+};
+
+const deletePatientDocumentFn = async (id) => {
+  await deletePatientDocument(id);
+  await refreshPatientDocuments();
+  toast.show({
+    title: "Success",
+    message: "Patient document deleted!",
+    color: "success",
+  });
+};
+
+const savePatientSignatureFn = async (signature) => {
+  await savePatientSignature(applicationId, { signature });
+  toast.show({
+    title: "Success",
+    message: "Patient signed application!",
+    color: "success",
+  });
+};
+
+const clearPatientSignatureFn = async () => {
+  await savePatientSignature(applicationId, { clear: true });
+  toast.show({
+    title: "Success",
+    message: "Patient signature cleared!",
+    color: "success",
+  });
+};
+
+const savePrescriberSignatureFn = async (signature) => {
+  await savePrescriberSignature(applicationId, { signature });
+  toast.show({
+    title: "Success",
+    message: "Presciber signed application!",
+    color: "success",
+  });
+};
+
+const clearPrescriberSignatureFn = async () => {
+  await savePrescriberSignature(applicationId, { clear: true });
+  toast.show({
+    title: "Success",
+    message: "Prescriber signature cleared!",
+    color: "success",
+  });
+}
+
+const deletePatientApplicationFn = async () => {
+  await deletePatientApplication(applicationId)
+  router.push('/')
+}
 </script>
 <style>
 iframe {
@@ -198,7 +277,8 @@ iframe {
   justify-content: space-between;
 }
 
-.delete-icon {
-  cursor: pointer;
+.download-section {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

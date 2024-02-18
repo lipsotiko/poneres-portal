@@ -1,5 +1,5 @@
 <template>
-  <IFormGroup>
+  <IFormGroup :disabled="disabled">
     <IFormLabel>{{ label }}</IFormLabel>
     <IInput
       v-bind="$attrs"

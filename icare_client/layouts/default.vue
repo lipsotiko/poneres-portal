@@ -2,7 +2,9 @@
   <div>
     <ILayout>
       <ILayoutHeader>
-        <p v-if="!pendingUserData" class="auth">{{ userData.email }} | <a size="sm" href="/logout">Logout</a></p>
+        <p v-if="!pendingUserData" class="auth">
+          {{ userData.email }} | <a size="sm" href="/logout">Logout</a>
+        </p>
       </ILayoutHeader>
       <ILayoutContent>
         <slot />
@@ -12,19 +14,22 @@
   </div>
 </template>
 <script setup>
-const { pending: pendingUserData, data: userData } = useFetch("/api/user/info", {
-  lazy: true,
-  server: false,
-});
+const { pending: pendingUserData, data: userData } = useFetch(
+  "/api/user/info",
+  {
+    lazy: true,
+    server: false,
+  },
+);
 </script>
 <script>
 export default {
   methods: {
     logout() {
-      console.log('logout')
-    }
-  }
-}
+      console.log("logout");
+    },
+  },
+};
 </script>
 <style>
 .auth {

@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.meraklis.icare.helpers.Helpers.tmpFile;
-
 @Service
 public class SignatureApplicator {
 
@@ -43,8 +41,7 @@ public class SignatureApplicator {
     }
 
     @SneakyThrows
-    private PDDocument buildSignatureDocument(String signature, int xPos, int yPos) {
-        File signatureFile = tmpFile(textToImageBuilder.convertToPng(signature), ".png");
+    private PDDocument buildSignatureDocument(File signatureFile, int xPos, int yPos) {
         PDPage signaturePage = new PDPage();
         PDDocument signatureDoc = new PDDocument();
         signatureDoc.addPage(signaturePage);
