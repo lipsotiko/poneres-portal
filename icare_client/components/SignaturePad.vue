@@ -12,21 +12,24 @@
     </div>
     <div class="signature-buttons">
       <IButton @click="clear">Clear</IButton>
-      <IButton @click="save" color="primary">Save</IButton>
+      <IButton @click="save" color="primary" :disabled="signed">Save</IButton>
     </div>
   </div>
 </template>
 <script setup>
 import SignaturePad from "signature_pad";
+import trimCanvas from 'trim-canvas'
 
 const props = defineProps(["label", "signature"]);
 const signaturePadCanvas = ref()
-
+let signed = ref(false);
 let signaturePad;
+
 onMounted(() => {
   signaturePad = new SignaturePad(signaturePadCanvas.value, { throttle: 0, minWidth: 1, maxWidth: 3 });
 
   if (props.signature) {
+    signed.value = true;
     signaturePad.fromDataURL(props.signature);
   }
 });
@@ -34,6 +37,7 @@ onMounted(() => {
 const emit = defineEmits(["save", "clear"]);
 
 const clear = () => {
+  signed.value = false;
   signaturePad.clear();
   emit("clear");
 };
@@ -43,7 +47,14 @@ const save = () => {
     return alert("Please provide a signature first.");
   }
 
-  emit("save", signaturePad.toDataURL("image/png"));
+  let copy = document.createElement('canvas')
+  copy.width = signaturePadCanvas.value.width
+  copy.height = signaturePadCanvas.value.height
+  copy.getContext('2d').drawImage(signaturePadCanvas.value, 0, 0)
+
+  signed.value = true;
+
+  emit("save", trimCanvas(copy).toDataURL("image/png"));
 };
 </script>
 <style scoped>

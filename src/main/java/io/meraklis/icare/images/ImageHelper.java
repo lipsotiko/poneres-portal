@@ -17,11 +17,10 @@ public class ImageHelper {
             return null;
         }
 
-        BufferedImage trimmed = trim(input);
-        BufferedImage scaled = scale(trimmed, .5);
-//        applyBorder(scaled);
-
         try {
+            BufferedImage image = ImageIO.read(input);
+            BufferedImage scaled = scale(image, .5);
+
             File output = tmpFile(".png");
             ImageIO.write(scaled, "PNG", output);
             return output;
@@ -70,17 +69,6 @@ public class ImageHelper {
     private static BufferedImage scale(BufferedImage image, double percent) {
         int w = (int) (image.getWidth() * percent);
         int h = (int) (image.getHeight() * percent);
-//        BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-//        Graphics2D grph = (Graphics2D) after.getGraphics();
-//        grph.scale(percent, percent);
-//        grph.drawImage(image, 0, 0, null);
-//        grph.dispose();
-//        return after;
-
-//        Image resultingImage = image.getScaledInstance(w, h, Image.SCALE_SMOOTH);
-//        BufferedImage scaled = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-//        scaled.getGraphics().drawImage(resultingImage, 0, 0, null);
-
         return Scalr.resize(image, Scalr.Method.QUALITY, Scalr.Mode.AUTOMATIC, w, h, Scalr.OP_ANTIALIAS);
     }
 
