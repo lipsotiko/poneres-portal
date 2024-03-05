@@ -33,7 +33,7 @@ public class Helpers {
         }
     }
 
-    public static File base64ToBytes(String data) {
+    public static File base64ToFile(String data) {
         if (data == null) return null;
         String base64Image = data.split(",")[1];
         return tmpFile(parseBase64Binary(base64Image), ".png");

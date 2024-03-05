@@ -4,6 +4,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
@@ -56,6 +57,17 @@ public class DocumentHelper {
             }
         } else {
             System.err.println("No field found with name:" + name);
+        }
+    }
+
+    public static byte[] docToBytes(PDDocument document) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            document.save(byteArrayOutputStream);
+            document.close();
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

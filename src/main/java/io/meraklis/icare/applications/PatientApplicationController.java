@@ -1,19 +1,14 @@
 package io.meraklis.icare.applications;
 
-import io.meraklis.icare.images.ImageHelper;
 import io.meraklis.icare.images.TextToImageBuilder;
+import io.meraklis.icare.processors.BoehringerCaresApplicationProcessorV1;
 import io.meraklis.icare.processors.LillyCaresApplicationProcessorV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.util.Optional;
 import java.util.function.Consumer;
-
-import static io.meraklis.icare.helpers.Helpers.base64ToBytes;
-import static io.meraklis.icare.helpers.Helpers.tmpFile;
-import static io.meraklis.icare.images.ImageHelper.trimAndScale;
 
 @RestController
 @RequestMapping("/api/patient-applications")
@@ -23,20 +18,25 @@ public class PatientApplicationController {
     private TextToImageBuilder textToImageBuilder;
 
     @Autowired
-    private LillyCaresApplicationProcessorV1 processorV1;
+    private LillyCaresApplicationProcessorV1 lillyCaresProcessorV1;
+
+    @Autowired
+    private BoehringerCaresApplicationProcessorV1 boehringerCaresProcessorV1;
+
 
     @Autowired
     private PatientApplicationRepository patientApplicationRepository;
 
     @GetMapping(path = "/download/{applicationId}", produces = MediaType.APPLICATION_PDF_VALUE)
     public @ResponseBody byte[] preview(@PathVariable("applicationId") String applicationId) {
-        Optional<PatientApplication> optionalPatientApplication = patientApplicationRepository.findById(applicationId);
-        if (optionalPatientApplication.isPresent()) {
-            PatientApplication application = optionalPatientApplication.get();
-            if (application.getType().equals(PatientApplicationType.LILLY_CARES_V1)) {
-                File patientSignatureFile = ImageHelper.trimAndScale(base64ToBytes(application.getPatientSignature()));
-                File prescriberSignatureFile = ImageHelper.trimAndScale(base64ToBytes(application.getPrescriberSignature()));
-                return processorV1.process(application.getMetadata(), patientSignatureFile, prescriberSignatureFile);
+        Optional<PatientApplication> optionalApp = patientApplicationRepository.findById(applicationId);
+        if (optionalApp.isPresent()) {
+            PatientApplication app = optionalApp.get();
+
+            if (app.getType().equals(PatientApplicationType.LILLY_CARES_V1)) {
+                return lillyCaresProcessorV1.process(app.getMetadata(), app.getPatientSignature(), app.getPrescriberSignature());
+            } else if (app.getType().equals(PatientApplicationType.BOEHRINGER_CARES_V1)) {
+                return boehringerCaresProcessorV1.process(app.getMetadata(), app.getPatientSignature(), app.getPrescriberSignature());
             }
         }
         return null;

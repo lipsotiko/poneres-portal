@@ -30,6 +30,17 @@
           @submit="submitFn"
           @delete="deletePatientApplicationFn"
         />
+        <BoehringerCaresFormV1
+          v-else-if="data.type === 'BOEHRINGER_CARES_V1'"
+          showDelete
+          :showLoadTestData="false"
+          :id="applicationId"
+          :metadata="data.metadata"
+          :disabled="data.signedByPatient"
+          @submit="submitFn"
+          @delete="deletePatientApplicationFn"
+        />
+        <span v-else>Unable to load form.</span>
       </ITab>
       <ITab name="tab-2">
         <div class="upload-section">
@@ -176,7 +187,6 @@ watch(active, async (val) => {
 
 const submitFn = async (data) => {
   await savePatientApplication({
-    type: "LILLY_CARES_V1",
     ...data,
   });
   await refreshPatientApplication();

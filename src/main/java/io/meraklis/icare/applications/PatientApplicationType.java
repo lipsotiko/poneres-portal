@@ -4,12 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum PatientApplicationType {
-    LILLY_CARES_V1("Lilly Cares");
+    LILLY_CARES_V1("Lilly Cares", "pdfs/lilly_cares_v1.pdf"),
+    BOEHRINGER_CARES_V1("Boehringer Ingelheim Cares", "pdfs/bi_cares_v1.pdf");
 
     private final String displayName;
+    private final String formPath;
 
-    PatientApplicationType(String displayName) {
+    PatientApplicationType(String displayName, String formPath) {
         this.displayName = displayName;
+        this.formPath = formPath;
     }
 
 }

@@ -3,7 +3,7 @@
     <div class="top">
       <h1>Applications</h1>
       <div>
-        <IButton circle to="/new-application" color="primary">
+        <IButton circle color="primary" @click="toggleAddApplicationModal">
           <template #icon>
             <IIcon name="ink-plus" />
           </template>
@@ -39,10 +39,37 @@
       </tbody>
     </ITable>
   </IContainer>
+  <ClientOnly>
+    <IModal v-model="visible">
+      <template #header><strong>Select:</strong></template>
+      <IRadioGroup v-model="checked" :options="options" />
+      <template #footer>
+        <IButton color="primary" @click="handleNavigation">Next</IButton>
+      </template>
+    </IModal>
+  </ClientOnly>
 </template>
 <script setup>
 const { pending, data } = useFetch("/api/patient-applications", {
   lazy: true,
   server: false,
 });
+
+const visible = ref(false)
+const checked = ref();
+
+const options = ref([
+    { id: 'LILLY_CARES_V1', label: 'Lilly Cares' },
+    { id: 'BOEHRINGER_CARES_V1', label: 'Boehringer Ingelheim Cares' }
+]);
+
+const router = useRouter()
+
+const toggleAddApplicationModal = () => {
+  visible.value = true;
+}
+
+const handleNavigation = () => {
+  router.push(`/new-application?type=${checked.value}`)
+}
 </script>

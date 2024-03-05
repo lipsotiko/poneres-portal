@@ -723,7 +723,7 @@
         <template #header>
           <h3>Delete Application</h3  >
         </template>
-        Are you sure you want to delte this application?
+        Are you sure you want to delete this application?
         <template #footer>
           <div class="delete-footer">
             <IButton color="primary" @click="deleteApplication">Yes</IButton>
@@ -796,6 +796,7 @@ export default {
     async submit() {
       this.$emit("submit", {
         id: this.id,
+        type: 'LILLY_CARES_V1',
         metadata: this.metadata,
       });
 
