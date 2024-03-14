@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -23,6 +24,8 @@ public class PatientApplicationController {
     @Autowired
     private BoehringerCaresApplicationProcessorV1 boehringerCaresProcessorV1;
 
+    @Autowired
+    private LillyCaresApplicationProcessorV1 lillyCaresApplicationProcessorV1;
 
     @Autowired
     private PatientApplicationRepository patientApplicationRepository;
@@ -32,11 +35,16 @@ public class PatientApplicationController {
         Optional<PatientApplication> optionalApp = patientApplicationRepository.findById(applicationId);
         if (optionalApp.isPresent()) {
             PatientApplication app = optionalApp.get();
+            Map<String, Object> metadata = app.getMetadata();
+            String patientSignature = app.getPatientSignature();
+            String prescriberSignature = app.getPrescriberSignature();
 
             if (app.getType().equals(PatientApplicationType.LILLY_CARES_V1)) {
-                return lillyCaresProcessorV1.process(app.getMetadata(), app.getPatientSignature(), app.getPrescriberSignature());
+                return lillyCaresProcessorV1.process(metadata, patientSignature, prescriberSignature);
             } else if (app.getType().equals(PatientApplicationType.BOEHRINGER_CARES_V1)) {
-                return boehringerCaresProcessorV1.process(app.getMetadata(), app.getPatientSignature(), app.getPrescriberSignature());
+                return boehringerCaresProcessorV1.process(metadata, patientSignature, prescriberSignature);
+            } else if (app.getType().equals(PatientApplicationType.NOVO_NORDISK_V1)) {
+                return lillyCaresApplicationProcessorV1.process(metadata, patientSignature, prescriberSignature);
             }
         }
         return null;

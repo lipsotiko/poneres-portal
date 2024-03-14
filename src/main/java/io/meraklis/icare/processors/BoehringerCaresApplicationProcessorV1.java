@@ -22,17 +22,17 @@ import static io.meraklis.icare.processors.DocumentHelper.setField;
 public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
 
     @Override
-    PatientApplicationType applicationType() {
+    public PatientApplicationType applicationType() {
         return BOEHRINGER_CARES_V1;
     }
 
     @Override
-    List<String> checkboxFields() {
+    public List<String> checkboxFields() {
         return Collections.emptyList();
     }
 
     @Override
-    Map<String, String> pdfFieldsMap() {
+    public Map<String, String> pdfFieldsMap() {
         return new HashMap<>() {
             {
                 put("First Name", "patient_first_name");
@@ -109,7 +109,7 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
     }
 
     @Override
-    protected List<String> dateFields() {
+    public List<String> dateFields() {
         return List.of("patient_dob", "prescriber_sln_exp");
     }
 
@@ -120,7 +120,7 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
             doc.removePage(0);
 
             assignValues(metadata, doc);
-            assignDerivedValues(doc);
+            assignSignatureDate(doc);
 
             PDFMergerUtility pdfMerger = new PDFMergerUtility();
 
@@ -161,22 +161,8 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
         }
     }
 
-    public String getPrescriberFullName(Map<String, Object> metadata) {
-        String prescriberFirstName = (String) metadata.get("prescriber_first_name");
-        String prescriberLastName = (String) metadata.get("prescriber_last_name");
-
-        return String.format("%s %s", prescriberFirstName, prescriberLastName);
-    }
-
-    private void assignDerivedValues(PDDocument document) throws IOException {
-        for (String pdfFieldName : reverseMap().getOrDefault("signature_date", Collections.emptyList())) {
-            setField(document, pdfFieldName, LocalDate.now().format(formatter));
-        }
-    }
-
+    List<String> booleanRadioFields = List.of("patient_send_sms_notifications", "patient_gender", "patient_preferred_language", "patient_insurance_q1", "patient_insurance_q2", "patient_insurance_q3", "patient_insurance_q4", "patient_insurance_q5", "patient_insurance_q6", "rx_refill", "medication_allergies");
     private void assignValues(Map<String, Object> metadata, PDDocument doc) throws IOException {
-        List<String> booleanRadioFields = List.of("patient_send_sms_notifications", "patient_gender", "patient_preferred_language", "patient_insurance_q1", "patient_insurance_q2", "patient_insurance_q3", "patient_insurance_q4", "patient_insurance_q5", "patient_insurance_q6", "rx_refill", "medication_allergies");
-
         for (Map.Entry<String, Object> entry : metadata.entrySet()) {
             List<String> pdfFieldNames = findPdfFieldName(entry);
 

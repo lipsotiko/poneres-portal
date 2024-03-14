@@ -10,11 +10,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.meraklis.icare.helpers.Helpers.tmpFile;
+import static io.meraklis.icare.processors.DocumentHelper.setField;
 
 abstract class AbstractApplicationProcessor implements ApplicationProcessor {
 
@@ -60,11 +62,11 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
         return list;
     }
 
-    abstract PatientApplicationType applicationType();
-    abstract List<String> checkboxFields();
+    abstract public PatientApplicationType applicationType();
+    abstract public List<String> checkboxFields();
 
-    abstract Map<String, String> pdfFieldsMap();
-    abstract List<String> dateFields();
+    abstract public Map<String, String> pdfFieldsMap();
+    abstract public List<String> dateFields();
 
     boolean isDateField(String field) {
         return dateFields().contains(pdfFieldsMap().get(field));
@@ -84,5 +86,11 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
         return (patientMiddleInitial != null)
                 ? String.format("%s %s. %s", patientFirstName, patientMiddleInitial, patientLastName)
                 : String.format("%s %s", patientFirstName, patientLastName);
+    }
+
+    public void assignSignatureDate(PDDocument document) throws IOException {
+        for (String pdfFieldName : reverseMap().getOrDefault("signature_date", Collections.emptyList())) {
+            setField(document, pdfFieldName, LocalDate.now().format(formatter));
+        }
     }
 }

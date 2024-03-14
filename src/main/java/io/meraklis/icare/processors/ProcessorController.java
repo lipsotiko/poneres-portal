@@ -35,14 +35,29 @@ public class ProcessorController {
     @Autowired
     private BoehringerCaresApplicationProcessorV1 boehringerCaresApplicationProcessorV1;
 
+    @Autowired
+    private NovoNordiskApplicationProcessorV1 novoNordiskApplicationProcessorV1;
+
     @PostMapping(value = "/field-names", produces = MediaType.APPLICATION_PDF_VALUE)
-    public @ResponseBody byte[] getDocumentWithFieldNames(
-            @RequestParam PatientApplicationType type,
-            @RequestParam Boolean setTextFields) throws IOException {
+    public @ResponseBody byte[] documentWithFieldNames(@RequestParam PatientApplicationType type, @RequestParam Boolean skipAddedFields) throws IOException {
         try (PDDocument doc = Loader.loadPDF(new ClassPathResource(type.getFormPath()).getFile())) {
+            Map<String, String> stringStringMap;
+            if (type.equals(PatientApplicationType.LILLY_CARES_V1)) {
+                stringStringMap = lillyCaresApplicationProcessorV1.pdfFieldsMap();
+            } else if (type.equals(PatientApplicationType.BOEHRINGER_CARES_V1)) {
+                stringStringMap = boehringerCaresApplicationProcessorV1.pdfFieldsMap();
+            } else if (type.equals(PatientApplicationType.NOVO_NORDISK_V1)) {
+                stringStringMap = novoNordiskApplicationProcessorV1.pdfFieldsMap();
+            } else {
+                return null;
+            }
+
             for (PDField field : doc.getDocumentCatalog().getAcroForm().getFields()) {
+                if (skipAddedFields && stringStringMap.containsKey(field.getPartialName())) {
+                    continue;
+                }
                 System.out.println(field.getPartialName());
-                if (field instanceof PDTextField && setTextFields) {
+                if (field instanceof PDTextField) {
                     setField(doc, field.getPartialName(), field.getPartialName());
                 } else if (field instanceof PDCheckBox) {
                     setField(doc, field.getPartialName(), "X");
@@ -65,31 +80,10 @@ public class ProcessorController {
             return lillyCaresApplicationProcessorV1.process(data, null, null);
         } else if (type.equals(PatientApplicationType.BOEHRINGER_CARES_V1)) {
             return boehringerCaresApplicationProcessorV1.process(data, null, null);
+        } else if (type.equals(PatientApplicationType.NOVO_NORDISK_V1)) {
+            return novoNordiskApplicationProcessorV1.process(data, null, null);
         } else {
             return null;
         }
     }
-
-//    @GetMapping(value = "/preview-with-text-signature", produces = MediaType.APPLICATION_PDF_VALUE)
-//    public @ResponseBody byte[] previewWithTextSignature(@RequestParam PatientApplicationType type) throws IOException {
-//        try (PDDocument doc = Loader.loadPDF(new ClassPathResource(type.getFormPath()).getFile())) {
-//            List<SignatureConfig> configs = new ArrayList<>();
-//
-//            File johnWick = tmpFile(textToImageBuilder.convertToPng("John Wick"), ".png");
-//            File saulGoodman = tmpFile(textToImageBuilder.convertToPng("Saul Goodman"), ".png");
-//
-//            base64ToBytes()
-//
-//            configs.add(SignatureConfig.builder().page(6).signature(johnWick).xPos(22).yPos(82).build());
-//            configs.add(SignatureConfig.builder().page(7).signature(johnWick).xPos(22).yPos(82).build());
-//            configs.add(SignatureConfig.builder().page(8).signature(saulGoodman).xPos(140).yPos(202).build());
-//            configs.add(SignatureConfig.builder().page(9).signature(saulGoodman).xPos(22).yPos(223).build());
-//            signatureApplicator.apply(doc, configs);
-//
-//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//            doc.save(byteArrayOutputStream);
-//            doc.close();
-//            return byteArrayOutputStream.toByteArray();
-//        }
-//    }
 }

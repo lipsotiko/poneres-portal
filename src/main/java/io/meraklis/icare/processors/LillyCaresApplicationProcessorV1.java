@@ -22,7 +22,7 @@ import static io.meraklis.icare.processors.DocumentHelper.setField;
 public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
 
     @Override
-    PatientApplicationType applicationType() {
+    public PatientApplicationType applicationType() {
         return LILLY_CARES_V1;
     }
 
@@ -128,7 +128,7 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
     }
 
     @Override
-    List<String> dateFields() {
+    public List<String> dateFields() {
         return List.of("patient_dob", "administration_date_1", "administration_date_2", "administration_date_3");
     }
 
@@ -238,9 +238,7 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
             setField(document, pdfFieldName, patientFullName);
         }
 
-        for (String pdfFieldName : reverseMap().get("signature_date")) {
-            setField(document, pdfFieldName, LocalDate.now().format(formatter));
-        }
+        assignSignatureDate(document);
     }
 
     private void assignValues(Map<String, Object> metadata, PDDocument doc) throws IOException {
