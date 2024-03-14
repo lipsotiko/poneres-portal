@@ -2,14 +2,14 @@
   <div>
     <LillyCaresFormV1
       v-if="type === 'LILLY_CARES_V1'"
-      showLoadTestData
+      :showLoadTestData="$config.public.buildType !== 'production'"
       :metadata="metadata"
       @submit="submit"
       @loadTestData="loadTestData"
     />
     <BoehringerCaresFormV1
       v-else-if="type === 'BOEHRINGER_CARES_V1'"
-      showLoadTestData
+      :showLoadTestData="$config.public.buildType !== 'production'"
       :metadata="metadata"
       @submit="submit"
       @loadTestData="loadTestData"

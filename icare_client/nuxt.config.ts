@@ -17,4 +17,10 @@ export default defineNuxtConfig({
       },
     },
   },
+  runtimeConfig: {
+    public: {
+      buildDate: process.env.BUILD_DATE || 'local',
+      deploymentType: process.env.DEPLOYMENT_TYPE || 'local'
+    }
+  }
 });
