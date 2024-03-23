@@ -1,29 +1,27 @@
 package io.meraklis.icare.processors;
 
 import io.meraklis.icare.applications.PatientApplicationType;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
 import static io.meraklis.icare.applications.PatientApplicationType.BOEHRINGER_CARES_V1;
-import static io.meraklis.icare.helpers.Helpers.tmpFile;
-import static io.meraklis.icare.processors.DocumentHelper.docToBytes;
 import static io.meraklis.icare.processors.DocumentHelper.setField;
 
 @Service
 public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
 
     @Override
-    public PatientApplicationType applicationType() {
+    PatientApplicationType applicationType() {
         return BOEHRINGER_CARES_V1;
+    }
+
+    @Override
+    public List<Integer> pagesToRemove() {
+        return List.of(0);
     }
 
     @Override
@@ -32,7 +30,70 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
     }
 
     @Override
-    public Map<String, String> pdfFieldsMap() {
+    public List<String> singleCheckBoxFields() {
+        return List.of(
+                "patient_send_sms_notifications_yes",
+                "patient_send_sms_notifications_no",
+                "patient_gender_male",
+                "patient_gender_female",
+                "patient_preferred_language_english",
+                "patient_preferred_language_spanish",
+                "patient_insurance_q1_yes",
+                "patient_insurance_q1_no",
+                "patient_insurance_q2_yes",
+                "patient_insurance_q2_no",
+                "patient_insurance_q3_yes",
+                "patient_insurance_q3_no",
+                "patient_insurance_q4_yes",
+                "patient_insurance_q4_no",
+                "patient_insurance_q5_yes",
+                "patient_insurance_q5_no",
+                "patient_insurance_q6_yes",
+                "patient_insurance_q6_no",
+                "rx_refill_1",
+                "rx_refill_2",
+                "rx_refill_3",
+                "medication_allergies_yes",
+                "medication_allergies_no"
+        );
+    }
+
+    @Override
+    public List<String> radioFields() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<String> dateFields() {
+        return List.of("patient_dob", "prescriber_sln_exp");
+    }
+
+    @Override
+    public List<String> derivedFields() {
+        return List.of("patient_dob");
+    }
+
+    @Override
+    public List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature) {
+        List<SignatureConfig> configs = new ArrayList<>();
+
+        int mh = 32;
+        if (patientSignature != null) {
+            // Height & width reflect the middle left of the signature area;
+            configs.add(SignatureConfig.builder().page(1).signatureBase64(patientSignature).xPos(222).yPos(112).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(2).signatureBase64(patientSignature).xPos(222).yPos(89).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(3).signatureBase64(patientSignature).xPos(222).yPos(186).maxHeight(mh).build());
+        }
+
+        if (prescriberSignature != null) {
+            // Height & width reflect the middle left of the signature area;
+            configs.add(SignatureConfig.builder().page(4).signatureBase64(prescriberSignature).xPos(222).yPos(62).maxHeight(mh).build());
+        }
+        return configs;
+    }
+
+    @Override
+    Map<String, String> pdfFieldsMap() {
         return new HashMap<>() {
             {
                 put("First Name", "patient_first_name");
@@ -109,99 +170,19 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
     }
 
     @Override
-    public List<String> dateFields() {
-        return List.of("patient_dob", "prescriber_sln_exp");
-    }
-
-    @Override
-    public byte[] process(Map<String, Object> metadata, String patientSignature, String prescriberSignature) {
-        try (PDDocument doc = loadPdfDoc()) {
-            // remove the first page (zero indexed)
-            doc.removePage(0);
-
-            assignValues(metadata, doc);
-            assignSignatureDate(doc);
-
-            PDFMergerUtility pdfMerger = new PDFMergerUtility();
-
-            File tempFile = tmpFile();
-            try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                doc.save(baos);
-                doc.close();
-                outputStream.write(baos.toByteArray());
-                pdfMerger.addSource(tempFile);
+    public void setDerivedField(PDDocument doc, Map<String, Object> metadata, String key) {
+        try {
+            if (key.equals("patient_dob")) {
+                String patientDob = (String) metadata.get("patient_dob");
+                if (patientDob != null) {
+                    LocalDate dob = LocalDate.parse(patientDob);
+                    setAllFields(doc, "patient_dob_month", String.valueOf(dob.getMonthValue()));
+                    setAllFields(doc, "patient_dob_day", String.valueOf(dob.getDayOfMonth()));
+                    setAllFields(doc, "patient_dob_year", String.valueOf(dob.getYear()));
+                }
             }
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            pdfMerger.setDestinationStream(baos);
-            pdfMerger.mergeDocuments(() -> null);
-
-            List<SignatureConfig> configs = new ArrayList<>();
-
-            int mh = 32;
-            if (patientSignature != null) {
-                // Height & width reflect the middle left of the signature area;
-                configs.add(SignatureConfig.builder().page(1).signatureBase64(patientSignature).xPos(222).yPos(112).maxHeight(mh).build());
-                configs.add(SignatureConfig.builder().page(2).signatureBase64(patientSignature).xPos(222).yPos(89).maxHeight(mh).build());
-                configs.add(SignatureConfig.builder().page(3).signatureBase64(patientSignature).xPos(222).yPos(186).maxHeight(mh).build());
-            }
-
-            if (prescriberSignature != null) {
-                // Height & width reflect the middle left of the signature area;
-                configs.add(SignatureConfig.builder().page(4).signatureBase64(prescriberSignature).xPos(222).yPos(62).maxHeight(mh).build());
-            }
-
-            PDDocument mergedPdf = Loader.loadPDF(tmpFile(baos.toByteArray(), ".pdf"));
-            applySignatures(mergedPdf, configs);
-
-            return docToBytes(mergedPdf);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    List<String> booleanRadioFields = List.of("patient_send_sms_notifications", "patient_gender", "patient_preferred_language", "patient_insurance_q1", "patient_insurance_q2", "patient_insurance_q3", "patient_insurance_q4", "patient_insurance_q5", "patient_insurance_q6", "rx_refill", "medication_allergies");
-    private void assignValues(Map<String, Object> metadata, PDDocument doc) throws IOException {
-        for (Map.Entry<String, Object> entry : metadata.entrySet()) {
-            List<String> pdfFieldNames = findPdfFieldName(entry);
-
-            if (pdfFieldNames == null) {
-                continue;
-            }
-
-            for (String pdfFieldName : pdfFieldNames) {
-                if (pdfFieldName != null) {
-                    String value = (String) entry.getValue();
-
-                    if (isDateField(pdfFieldName)) {
-                        value = LocalDate.parse(value).format(formatter);
-                    }
-
-                    setField(doc, pdfFieldName, value);
-                }
-            }
-
-            for (String boolRadioField : booleanRadioFields) {
-                String pdfCheckBoxField = (String) metadata.get(boolRadioField);
-
-                if (pdfCheckBoxField == null) {
-                    continue;
-                }
-
-                List<String> pdfFields = reverseMap().getOrDefault(pdfCheckBoxField, Collections.emptyList());
-                for (String pdfField : pdfFields) {
-                    setField(doc, pdfField, CHECK);
-                }
-            }
-
-            String patientDob = (String) metadata.get("patient_dob");
-            if (patientDob != null) {
-                LocalDate dob = LocalDate.parse(patientDob);
-                setAllFields(doc, "patient_dob_month", String.valueOf(dob.getMonthValue()));
-                setAllFields(doc, "patient_dob_day", String.valueOf(dob.getDayOfMonth()));
-                setAllFields(doc, "patient_dob_year", String.valueOf(dob.getYear()));
-            }
         }
     }
 

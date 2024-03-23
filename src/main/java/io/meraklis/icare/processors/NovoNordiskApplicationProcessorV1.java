@@ -1,22 +1,26 @@
 package io.meraklis.icare.processors;
 
 import io.meraklis.icare.applications.PatientApplicationType;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static io.meraklis.icare.applications.PatientApplicationType.NOVO_NORDISK_V1;
-import static io.meraklis.icare.processors.DocumentHelper.docToBytes;
-import static io.meraklis.icare.processors.DocumentHelper.setField;
 
 @Service
 public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProcessor {
+
     @Override
-    public PatientApplicationType applicationType() {
+    PatientApplicationType applicationType() {
         return NOVO_NORDISK_V1;
+    }
+
+    @Override
+    public List<Integer> pagesToRemove() {
+        return List.of(0);
     }
 
     @Override
@@ -25,7 +29,34 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
     }
 
     @Override
-    public Map<String, String> pdfFieldsMap() {
+    public List<String> singleCheckBoxFields() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<String> radioFields() {
+        return List.of(
+                "patient_gender", "patient_coverage", "patient_authorized_representative_family_other",
+                "legal_representative_permission", "new_or_renewal", "rybelsus_60_day", "rybelsus_120_day");
+    }
+
+    @Override
+    public List<String> dateFields() {
+        return List.of("patient_dob");
+    }
+
+    @Override
+    public List<String> derivedFields() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    Map<String, String> pdfFieldsMap() {
         return new HashMap<>() {
             {
                 put("NewOrRenewal", "new_or_renewal");
@@ -212,101 +243,4 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
         };
     }
 
-    @Override
-    public List<String> dateFields() {
-        return List.of("patient_dob");
-    }
-
-    @Override
-    public byte[] process(Map<String, Object> metadata, String patientSignature, String prescriberSignature) {
-        try (PDDocument doc = loadPdfDoc()) {
-            // remove the first page (zero indexed)
-            doc.removePage(0);
-
-            assignValues(metadata, doc);
-
-            return docToBytes(doc);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private final Map<String, Map<String, String>> radioFields = new HashMap<>() {
-        {
-            put("patient_gender", new HashMap<>() {{
-                put("MALE", "Choice1");
-                put("FEMALE", "Choice2");
-                put("NOT_DISCLOSED", "Choice3");
-            }});
-
-            put("patient_coverage", new HashMap<>() {{
-                put("Yes", "Choice1");
-                put("No", "Choice2");
-            }});
-
-            put("patient_authorized_representative_family_other", new HashMap<>() {{
-                put("FAMILY", "Choice1");
-                put("OTHER", "Choice2");
-            }});
-
-            put("legal_representative_permission", new HashMap<>() {{
-                put("Yes", "Choice1");
-                put("No", "Choice2");
-            }});
-
-            put("new_or_renewal", new HashMap<>() {{
-                put("NEW_APPLICATION", "Choice1");
-                put("RE_ENROLLMENT", "Choice2");
-            }});
-
-            put("rybelsus_60_day", new HashMap<>() {{
-                put("THREE_SEVEN", "Choice1");
-                put("SEVEN_SEVEN", "Choice2");
-                put("SEVEN_FOURTEEN", "Choice3");
-                put("FOURTEEN_FOURTEEN", "Choice4");
-            }});
-
-            put("rybelsus_120_day", new HashMap<>() {{
-                put("SEVEN", "Choice1");
-                put("FOURTEEN", "Choice2");
-            }});
-        }
-    };
-
-    private void assignValues(Map<String, Object> metadata, PDDocument doc) throws IOException {
-        for (Map.Entry<String, Object> entry : metadata.entrySet()) {
-            List<String> pdfFieldNames = findPdfFieldName(entry);
-
-            if (pdfFieldNames == null) {
-                setField(doc, entry.getKey(), (String) entry.getValue());
-                continue;
-            }
-
-            if (multiCheckBoxFields().contains(entry.getKey())) {
-                for (String checkBoxField : pdfFieldNames) {
-                    setField(doc, checkBoxField, CHECK);
-                }
-                continue;
-            }
-
-
-            String value = (String) entry.getValue();
-            for (String pdfFieldName : pdfFieldNames) {
-                if (pdfFieldName != null) {
-                    if (radioFields.containsKey(entry.getKey())) {
-                        Map<String, String> checkBoxValues = radioFields.get(entry.getKey());
-                        value = checkBoxValues.get(value);
-                    }
-
-                    if (isDateField(pdfFieldName)) {
-                        value = LocalDate.parse(value).format(formatter);
-                    }
-
-                    setField(doc, pdfFieldName, value);
-                }
-            }
-
-            assignSignatureDate(doc);
-        }
-    }
 }

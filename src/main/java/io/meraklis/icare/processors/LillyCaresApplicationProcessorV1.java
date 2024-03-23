@@ -10,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 
 import static io.meraklis.icare.applications.PatientApplicationType.LILLY_CARES_V1;
@@ -22,8 +21,13 @@ import static io.meraklis.icare.processors.DocumentHelper.setField;
 public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
 
     @Override
-    public PatientApplicationType applicationType() {
+    PatientApplicationType applicationType() {
         return LILLY_CARES_V1;
+    }
+
+    @Override
+    public List<Integer> pagesToRemove() {
+        return List.of(8, 0, 0, 0);
     }
 
     @Override
@@ -32,7 +36,62 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
     }
 
     @Override
-    public Map<String, String> pdfFieldsMap() {
+    public List<String> singleCheckBoxFields() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<String> dateFields() {
+        return List.of("patient_dob", "administration_date_1", "administration_date_2", "administration_date_3");
+    }
+
+    @Override
+    public List<String> derivedFields() {
+        return List.of("patient_full_name");
+    }
+
+    @Override
+    public List<String> radioFields() {
+        return List.of(
+                "deliver_medication_to_home",
+                "directed_to_seek_enrollment",
+                "directed_to_seek_enrollment",
+                "prescription_auto_refill",
+                "authorize_representative",
+                "directed_to_seek_enrollment",
+                "prescription_auto_refill",
+                "authorize_representative",
+                "authorized_representative_1_relationship",
+                "authorized_representative_2_relationship",
+                "infused_oncology_replacement_request",
+                "prescribing_insulin",
+                "prescribed_insulin",
+                "quantity_dispensed",
+                "dispense_as_written");
+    }
+
+    private List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature, Integer medicationDocumentsCount) {
+        List<SignatureConfig> configs = new ArrayList<>();
+
+        int mh = 32;
+        if (patientSignature != null) {
+            configs.add(SignatureConfig.builder().page(3).signatureBase64(patientSignature).xPos(186).yPos(115).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(4).signatureBase64(patientSignature).xPos(186).yPos(115).maxHeight(mh).build());
+        }
+
+        if (prescriberSignature != null) {
+            configs.add(SignatureConfig.builder().page(5).signatureBase64(prescriberSignature).xPos(136).yPos(235).maxHeight(mh).build());
+
+            for (int i = 0; i < medicationDocumentsCount; i++) {
+                int pageNumber = i + 6;
+                configs.add(SignatureConfig.builder().page(pageNumber).signatureBase64(prescriberSignature).xPos(116).yPos(255).maxHeight(mh).build());
+            }
+        }
+        return configs;
+    }
+
+    @Override
+    Map<String, String> pdfFieldsMap() {
         return new HashMap<>() {
             {
                 put("Text Field 158", "patient_first_name");
@@ -127,22 +186,9 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
         };
     }
 
-    @Override
-    public List<String> dateFields() {
-        return List.of("patient_dob", "administration_date_1", "administration_date_2", "administration_date_3");
-    }
-
-    @Override
-    public byte[] process(Map<String, Object> metadata, String patientSignature, String prescriberSignature) {
-        try (PDDocument doc = loadPdfDoc()) {
-            // remove the medication page 9 (zero indexed)
-            doc.removePage(8);
-
-            // remove the first 3 pages (zero indexed)
-            for (int i = 0; i < 3; i++) doc.removePage(0);
-
-            assignValues(metadata, doc);
-            assignDerivedValues(metadata, doc);
+    public byte[] additionalProcessing(PDDocument doc, Map<String, Object> metadata, String patientSignature, String prescriberSignature) {
+        try {
+            addDerivedValues(metadata, doc);
 
             List<ByteArrayOutputStream> medicationDocuments = new ArrayList<>();
             if (metadata.get("medications") != null) {
@@ -151,9 +197,9 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
                     try (PDDocument tmpDoc = loadPdfDoc()) {
                         for (int i = 0; i < 8; i++) tmpDoc.removePage(0);
                         Map<String, Object> medicationMetadata = convertObjectToMap(medication);
-                        assignValues(medicationMetadata, tmpDoc);
-                        assignValues(metadata, tmpDoc);
-                        assignDerivedValues(metadata, tmpDoc);
+                        assignValues(tmpDoc, medicationMetadata);
+                        assignValues(tmpDoc, metadata);
+                        addDerivedValues(metadata, tmpDoc);
 
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         tmpDoc.save(baos);
@@ -187,51 +233,19 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
             pdfMerger.setDestinationStream(baos);
             pdfMerger.mergeDocuments(() -> null);
 
-            List<SignatureConfig> configs = new ArrayList<>();
-
-            int mh = 32;
-            if (patientSignature != null) {
-                configs.add(SignatureConfig.builder().page(3).signatureBase64(patientSignature).xPos(186).yPos(115).maxHeight(mh).build());
-                configs.add(SignatureConfig.builder().page(4).signatureBase64(patientSignature).xPos(186).yPos(115).maxHeight(mh).build());
-            }
-
-            if (prescriberSignature != null) {
-                configs.add(SignatureConfig.builder().page(5).signatureBase64(prescriberSignature).xPos(136).yPos(235).maxHeight(mh).build());
-
-                for (int i = 0; i < medicationDocuments.size(); i++) {
-                    int pageNumber = i + 6;
-                    configs.add(SignatureConfig.builder().page(pageNumber).signatureBase64(prescriberSignature).xPos(116).yPos(255).maxHeight(mh).build());
-                }
-            }
-
             PDDocument mergedPdf = Loader.loadPDF(tmpFile(baos.toByteArray(), ".pdf"));
-            applySignatures(mergedPdf, configs);
+
+            applySignatures(mergedPdf,
+                    signatureConfigs(patientSignature, prescriberSignature, medicationDocuments.size())
+            );
 
             return docToBytes(mergedPdf);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
-    private static List<?> convertObjectToList(Object obj) {
-        List<?> list = new ArrayList<>();
-        if (obj.getClass().isArray()) {
-            list = Arrays.asList((Object[]) obj);
-        } else if (obj instanceof Collection) {
-            list = new ArrayList<>((Collection<?>) obj);
-        }
-        return list;
-    }
-
-    private static Map<String, Object> convertObjectToMap(Object obj) {
-        Map<String, Object> map = new HashMap<>();
-        if (obj instanceof HashMap<?, ?> m) {
-            m.keySet().forEach(k -> map.put((String) k, m.get(k)));
-        }
-        return map;
-    }
-
-    private void assignDerivedValues(Map<String, Object> metadata, PDDocument document) throws IOException {
+    private void addDerivedValues(Map<String, Object> metadata, PDDocument document) throws IOException {
         String patientFullName = getPatientFullName(metadata);
 
         for (String pdfFieldName : reverseMap().get("patient_full_name")) {
@@ -241,44 +255,11 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
         assignSignatureDate(document);
     }
 
-    private void assignValues(Map<String, Object> metadata, PDDocument doc) throws IOException {
-        Map<Integer, String> radioChoices = new HashMap<>() {
-            {
-                put(1, "Choice1");
-                put(2, "Choice2");
-                put(3, "Choice3");
-                put(4, "Choice4");
-            }
-        };
-
-        for (Map.Entry<String, Object> entry : metadata.entrySet()) {
-            List<String> pdfFieldNames = findPdfFieldName(entry);
-
-            if (pdfFieldNames == null) {
-                continue;
-            }
-
-            for (String pdfFieldName : pdfFieldNames) {
-                if (pdfFieldName != null) {
-                    if (pdfFieldName.contains("Text Field")) {
-                        String value = (String) entry.getValue();
-
-                        if (isDateField(pdfFieldName)) {
-                            value = LocalDate.parse(value).format(formatter);
-                        }
-
-                        setField(doc, pdfFieldName, value);
-                    } else if (pdfFieldName.contains("Radio Button")) {
-                        Integer v = (Integer) entry.getValue();
-                        String radioChoice = radioChoices.get(v);
-                        if (radioChoice != null) {
-                            setField(doc, pdfFieldName, radioChoice);
-                        }
-                    } else if (pdfFieldName.contains("Check Box")) {
-                        setField(doc, pdfFieldName, CHECK);
-                    }
-                }
-            }
+    private static Map<String, Object> convertObjectToMap(Object obj) {
+        Map<String, Object> map = new HashMap<>();
+        if (obj instanceof HashMap<?, ?> m) {
+            m.keySet().forEach(k -> map.put((String) k, m.get(k)));
         }
+        return map;
     }
 }
