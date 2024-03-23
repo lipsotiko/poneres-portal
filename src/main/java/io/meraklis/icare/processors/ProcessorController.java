@@ -30,27 +30,14 @@ public class ProcessorController {
     private SignatureApplicator signatureApplicator;
 
     @Autowired
-    private LillyCaresApplicationProcessorV1 lillyCaresApplicationProcessorV1;
-
-    @Autowired
-    private BoehringerCaresApplicationProcessorV1 boehringerCaresApplicationProcessorV1;
-
-    @Autowired
-    private NovoNordiskApplicationProcessorV1 novoNordiskApplicationProcessorV1;
+    private ProcessorFactory processorFactory;
 
     @PostMapping(value = "/field-names", produces = MediaType.APPLICATION_PDF_VALUE)
-    public @ResponseBody byte[] documentWithFieldNames(@RequestParam PatientApplicationType type, @RequestParam Boolean skipAddedFields) throws IOException {
+    public @ResponseBody byte[] documentWithFieldNames(
+            @RequestParam PatientApplicationType type,
+            @RequestParam Boolean skipAddedFields) throws IOException {
         try (PDDocument doc = Loader.loadPDF(new ClassPathResource(type.getFormPath()).getFile())) {
-            Map<String, String> stringStringMap;
-            if (type.equals(PatientApplicationType.LILLY_CARES_V1)) {
-                stringStringMap = lillyCaresApplicationProcessorV1.pdfFieldsMap();
-            } else if (type.equals(PatientApplicationType.BOEHRINGER_CARES_V1)) {
-                stringStringMap = boehringerCaresApplicationProcessorV1.pdfFieldsMap();
-            } else if (type.equals(PatientApplicationType.NOVO_NORDISK_V1)) {
-                stringStringMap = novoNordiskApplicationProcessorV1.pdfFieldsMap();
-            } else {
-                return null;
-            }
+            Map<String, String> stringStringMap = processorFactory.get(type).pdfFieldsMap();
 
             for (PDField field : doc.getDocumentCatalog().getAcroForm().getFields()) {
                 if (skipAddedFields && stringStringMap.containsKey(field.getPartialName())) {
@@ -76,14 +63,7 @@ public class ProcessorController {
     @PostMapping(value = "/preview", produces = MediaType.APPLICATION_PDF_VALUE)
     public @ResponseBody byte[] preview(@RequestParam PatientApplicationType type,
                                         @RequestBody Map<String, Object> data) throws IOException {
-        if (type.equals(PatientApplicationType.LILLY_CARES_V1)) {
-            return lillyCaresApplicationProcessorV1.process(data, null, null);
-        } else if (type.equals(PatientApplicationType.BOEHRINGER_CARES_V1)) {
-            return boehringerCaresApplicationProcessorV1.process(data, null, null);
-        } else if (type.equals(PatientApplicationType.NOVO_NORDISK_V1)) {
-            return novoNordiskApplicationProcessorV1.process(data, null, null);
-        } else {
-            return null;
-        }
+        ApplicationProcessor applicationProcessor = processorFactory.get(type);
+        return applicationProcessor.process(data, null, null);
     }
 }

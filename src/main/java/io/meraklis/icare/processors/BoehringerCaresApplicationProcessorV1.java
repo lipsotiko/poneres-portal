@@ -27,7 +27,7 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
     }
 
     @Override
-    public List<String> checkboxFields() {
+    public List<String> multiCheckBoxFields() {
         return Collections.emptyList();
     }
 

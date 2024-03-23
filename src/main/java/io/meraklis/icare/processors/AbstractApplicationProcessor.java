@@ -37,7 +37,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
 
     public List<String> findPdfFieldName(Map.Entry<String, Object> entry) {
         String field = entry.getKey();
-        if (checkboxFields().contains(field)) {
+        if (multiCheckBoxFields().contains(field)) {
             List<String> checkBoxFields = convertObjectToList(entry.getValue()).stream().map(v -> (String) v).toList();
             return reverseMap().entrySet().stream()
                     .filter(es -> checkBoxFields.contains(es.getKey()))
@@ -63,7 +63,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
     }
 
     abstract public PatientApplicationType applicationType();
-    abstract public List<String> checkboxFields();
+    abstract public List<String> multiCheckBoxFields();
 
     abstract public Map<String, String> pdfFieldsMap();
     abstract public List<String> dateFields();

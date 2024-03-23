@@ -27,7 +27,7 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
     }
 
     @Override
-    public List<String> checkboxFields() {
+    public List<String> multiCheckBoxFields() {
         return List.of("patient_insurance", "electronic_prescription_or_fax");
     }
 

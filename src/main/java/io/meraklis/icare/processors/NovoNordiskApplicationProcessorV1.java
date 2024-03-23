@@ -20,7 +20,7 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
     }
 
     @Override
-    public List<String> checkboxFields() {
+    public List<String> multiCheckBoxFields() {
         return List.of("patient_insurance");
     }
 
@@ -282,7 +282,7 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
                 continue;
             }
 
-            if (checkboxFields().contains(entry.getKey())) {
+            if (multiCheckBoxFields().contains(entry.getKey())) {
                 for (String checkBoxField : pdfFieldNames) {
                     setField(doc, checkBoxField, CHECK);
                 }
