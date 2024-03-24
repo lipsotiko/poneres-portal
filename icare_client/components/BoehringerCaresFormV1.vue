@@ -103,6 +103,15 @@
                     label: 'Spanish',
                   },
                 ]"
+                @update:modelValue="(e) => {
+                  if (e === 'patient_preferred_language_english') {
+                    metadata.patient_preferred_language_english = true;
+                    metadata.patient_preferred_language_spanish = false;
+                  } else {
+                    metadata.patient_preferred_language_english = false;
+                    metadata.patient_preferred_language_spanish = true;
+                  }
+                }"
               />
             </IFormGroup>
           </IColumn>
