@@ -60,7 +60,8 @@ const checked = ref();
 
 const options = ref([
     { id: 'LILLY_CARES_V1', label: 'Lilly Cares' },
-    { id: 'BOEHRINGER_CARES_V1', label: 'Boehringer Ingelheim Cares' }
+    { id: 'BOEHRINGER_CARES_V1', label: 'Boehringer Ingelheim Cares' },
+    { id: 'NOVO_NORDISK_V1', label: 'Novo Nordisk' }
 ]);
 
 const router = useRouter()

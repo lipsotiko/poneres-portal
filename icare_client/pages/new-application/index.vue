@@ -14,6 +14,13 @@
       @submit="submit"
       @loadTestData="loadTestData"
     />
+    <NovoNordiskV1
+      v-else-if="type === 'NOVO_NORDISK_V1'"
+      :showLoadTestData="$config.public.buildType !== 'production'"
+      :metadata="metadata"
+      @submit="submit"
+      @loadTestData="loadTestData"
+    />
     <span v-else>Unable to load form.</span>
   </div>
 </template>

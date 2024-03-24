@@ -40,6 +40,16 @@
           @submit="submitFn"
           @delete="deletePatientApplicationFn"
         />
+        <NovoNordiskV1
+          v-else-if="data.type === 'NOVO_NORDISK_V1'"
+          showDelete
+          :showLoadTestData="false"
+          :id="applicationId"
+          :metadata="data.metadata"
+          :disabled="data.signedByPatient"
+          @submit="submitFn"
+          @delete="deletePatientApplicationFn"
+        />
         <span v-else>Unable to load form.</span>
       </ITab>
       <ITab name="tab-2">

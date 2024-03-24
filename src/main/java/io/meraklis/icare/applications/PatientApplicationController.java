@@ -1,8 +1,7 @@
 package io.meraklis.icare.applications;
 
 import io.meraklis.icare.images.TextToImageBuilder;
-import io.meraklis.icare.processors.BoehringerCaresApplicationProcessorV1;
-import io.meraklis.icare.processors.LillyCaresApplicationProcessorV1;
+import io.meraklis.icare.processors.ProcessorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +18,7 @@ public class PatientApplicationController {
     private TextToImageBuilder textToImageBuilder;
 
     @Autowired
-    private LillyCaresApplicationProcessorV1 lillyCaresProcessorV1;
-
-    @Autowired
-    private BoehringerCaresApplicationProcessorV1 boehringerCaresProcessorV1;
-
-    @Autowired
-    private LillyCaresApplicationProcessorV1 lillyCaresApplicationProcessorV1;
+    private ProcessorFactory processorFactory;
 
     @Autowired
     private PatientApplicationRepository patientApplicationRepository;
@@ -38,14 +31,7 @@ public class PatientApplicationController {
             Map<String, Object> metadata = app.getMetadata();
             String patientSignature = app.getPatientSignature();
             String prescriberSignature = app.getPrescriberSignature();
-
-            if (app.getType().equals(PatientApplicationType.LILLY_CARES_V1)) {
-                return lillyCaresProcessorV1.process(metadata, patientSignature, prescriberSignature);
-            } else if (app.getType().equals(PatientApplicationType.BOEHRINGER_CARES_V1)) {
-                return boehringerCaresProcessorV1.process(metadata, patientSignature, prescriberSignature);
-            } else if (app.getType().equals(PatientApplicationType.NOVO_NORDISK_V1)) {
-                return lillyCaresApplicationProcessorV1.process(metadata, patientSignature, prescriberSignature);
-            }
+            return processorFactory.get(app.getType()).process(metadata, patientSignature, prescriberSignature);
         }
         return null;
     }
