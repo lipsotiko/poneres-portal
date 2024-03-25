@@ -715,20 +715,26 @@
         </div>
       </IContainer>
       <IFormGroup class="submit">
-        <IButton v-if="showDelete == true" outline color="danger" @click="deleteModalVisible = true">Delete</IButton>
+        <IButton
+          v-if="showDelete == true"
+          outline
+          color="danger"
+          @click="deleteModalVisible = true"
+          >Delete</IButton
+        >
         <IButton color="primary" @click="submit">Save</IButton>
       </IFormGroup>
     </IForm>
     <IModal v-model="deleteModalVisible">
-        <template #header>
-          <h3>Delete Application</h3  >
-        </template>
-        Are you sure you want to delete this application?
-        <template #footer>
-          <div class="delete-footer">
-            <IButton color="primary" @click="deleteApplication">Yes</IButton>
-          </div>
-        </template>
+      <template #header>
+        <h3>Delete Application</h3>
+      </template>
+      Are you sure you want to delete this application?
+      <template #footer>
+        <div class="delete-footer">
+          <IButton color="primary" @click="deleteApplication">Yes</IButton>
+        </div>
+      </template>
     </IModal>
   </IContainer>
 </template>
@@ -743,7 +749,7 @@ export default {
     metadata: Object,
     disabled: Boolean,
     showDelete: Boolean,
-    showLoadTestData: Boolean
+    showLoadTestData: Boolean,
   },
   data() {
     return {
@@ -796,7 +802,7 @@ export default {
     async submit() {
       this.$emit("submit", {
         id: this.id,
-        type: 'LILLY_CARES_V1',
+        type: "LILLY_CARES_V1",
         metadata: this.metadata,
       });
 

@@ -18,15 +18,19 @@
 </template>
 <script setup>
 import SignaturePad from "signature_pad";
-import trimCanvas from 'trim-canvas'
+import trimCanvas from "trim-canvas";
 
 const props = defineProps(["label", "signature"]);
-const signaturePadCanvas = ref()
+const signaturePadCanvas = ref();
 let signed = ref(false);
 let signaturePad;
 
 onMounted(() => {
-  signaturePad = new SignaturePad(signaturePadCanvas.value, { throttle: 0, minWidth: 1, maxWidth: 3 });
+  signaturePad = new SignaturePad(signaturePadCanvas.value, {
+    throttle: 0,
+    minWidth: 1,
+    maxWidth: 3,
+  });
 
   if (props.signature) {
     signed.value = true;
@@ -47,10 +51,10 @@ const save = () => {
     return alert("Please provide a signature first.");
   }
 
-  let copy = document.createElement('canvas')
-  copy.width = signaturePadCanvas.value.width
-  copy.height = signaturePadCanvas.value.height
-  copy.getContext('2d').drawImage(signaturePadCanvas.value, 0, 0)
+  let copy = document.createElement("canvas");
+  copy.width = signaturePadCanvas.value.width;
+  copy.height = signaturePadCanvas.value.height;
+  copy.getContext("2d").drawImage(signaturePadCanvas.value, 0, 0);
 
   signed.value = true;
 

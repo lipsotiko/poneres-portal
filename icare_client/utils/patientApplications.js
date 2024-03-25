@@ -26,12 +26,9 @@ const savePrescriberSignature = async (applicationId, prescriberSignature) => {
 };
 
 const deletePatientApplication = async (applicationId) => {
-  await $fetch(
-    `/api/patient-applications/${applicationId}`,
-    {
-      method: "DELETE",
-    },
-  );
+  await $fetch(`/api/patient-applications/${applicationId}`, {
+    method: "DELETE",
+  });
 };
 
 const getPatientApplicationPdfPreview = async (id) => {

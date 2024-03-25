@@ -80,7 +80,7 @@
             />
           </IColumn>
           <IColumn xs="3">
-            <TextFieldInput 
+            <TextFieldInput
               v-model="metadata.last_4_ssn"
               name="last_4_ssn"
               label="Last 4 SSN"
@@ -90,9 +90,9 @@
           <IColumn xs="3">
             <IFormGroup>
               <IFormLabel>Preferred Language</IFormLabel>
-              <IRadioGroup
-                v-model="metadata.patient_preferred_language"
+              <RadioGroupSpecial
                 name="patient_preferred_language"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'patient_preferred_language_english',
@@ -103,24 +103,15 @@
                     label: 'Spanish',
                   },
                 ]"
-                @update:modelValue="(e) => {
-                  if (e === 'patient_preferred_language_english') {
-                    metadata.patient_preferred_language_english = true;
-                    metadata.patient_preferred_language_spanish = false;
-                  } else {
-                    metadata.patient_preferred_language_english = false;
-                    metadata.patient_preferred_language_spanish = true;
-                  }
-                }"
               />
             </IFormGroup>
           </IColumn>
           <IColumn xs="3">
             <IFormGroup>
               <IFormLabel>Gender</IFormLabel>
-              <IRadioGroup
-                v-model="metadata.patient_gender"
+              <RadioGroupSpecial
                 name="patient_gender"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'patient_gender_male',
@@ -151,8 +142,8 @@
               label="Phone #"
               :disabled="disabled"
             />
-            </IColumn>
-            <IColumn xs="4">
+          </IColumn>
+          <IColumn xs="4">
             <TextFieldInput
               v-model="metadata.patient_phone_3"
               name="patient_phone_3"
@@ -189,7 +180,7 @@
               label="Total patient household assets?"
               :disabled="disabled"
             />
-          </IColumn>          
+          </IColumn>
         </IRow>
         <hr />
         <IRow>
@@ -199,11 +190,12 @@
           <IColumn xs="12">
             <IFormGroup>
               <IFormLabel>
-                Have you received disability payments from Social Security for more than 24 months?
+                Have you received disability payments from Social Security for
+                more than 24 months?
               </IFormLabel>
-              <IRadioGroup
-                v-model="metadata.patient_insurance_q1"
+              <RadioGroupSpecial
                 name="patient_insurance_q1"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'patient_insurance_q1_yes',
@@ -212,7 +204,7 @@
                   {
                     id: 'patient_insurance_q1_no',
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -222,11 +214,13 @@
           <IColumn xs="12">
             <IFormGroup>
               <IFormLabel>
-                Have you received a denial letter from Medicare Low Income Subsidy? If yes, please attach a recent copy of this letter along with your application.
+                Have you received a denial letter from Medicare Low Income
+                Subsidy? If yes, please attach a recent copy of this letter
+                along with your application.
               </IFormLabel>
-              <IRadioGroup
-                v-model="metadata.patient_insurance_q2"
+              <RadioGroupSpecial
                 name="patient_insurance_q2"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'patient_insurance_q2_yes',
@@ -235,7 +229,7 @@
                   {
                     id: 'patient_insurance_q2_no',
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -247,9 +241,9 @@
               <IFormLabel>
                 Do you have Medicare Part D or Medicare Advantage?
               </IFormLabel>
-              <IRadioGroup
-                v-model="metadata.patient_insurance_q3"
+              <RadioGroupSpecial
                 name="patient_insurance_q3"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'patient_insurance_q3_yes',
@@ -258,7 +252,7 @@
                   {
                     id: 'patient_insurance_q3_no',
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -267,12 +261,10 @@
         <IRow>
           <IColumn xs="12">
             <IFormGroup>
-              <IFormLabel>
-                Do you have Medicaid?
-              </IFormLabel>
-              <IRadioGroup
-                v-model="metadata.patient_insurance_q4"
+              <IFormLabel> Do you have Medicaid? </IFormLabel>
+              <RadioGroupSpecial
                 name="patient_insurance_q4"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'patient_insurance_q4_yes',
@@ -281,7 +273,7 @@
                   {
                     id: 'patient_insurance_q4_no',
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -291,11 +283,13 @@
           <IColumn xs="12">
             <IFormGroup>
               <IFormLabel>
-                Do you have prescription drug coverage from a commercial or private health insurer? (Not including Medicare Part D prescription benefits)
+                Do you have prescription drug coverage from a commercial or
+                private health insurer? (Not including Medicare Part D
+                prescription benefits)
               </IFormLabel>
-              <IRadioGroup
-                v-model="metadata.patient_insurance_q5"
+              <RadioGroupSpecial
                 name="patient_insurance_q5"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'patient_insurance_q5_yes',
@@ -304,7 +298,7 @@
                   {
                     id: 'patient_insurance_q5_no',
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -314,11 +308,12 @@
           <IColumn xs="12">
             <IFormGroup>
               <IFormLabel>
-                Do you receive Veterans Affairs prescription drug coverage benefits? 
+                Do you receive Veterans Affairs prescription drug coverage
+                benefits?
               </IFormLabel>
-              <IRadioGroup
-                v-model="metadata.patient_insurance_q6"
+              <RadioGroupSpecial
                 name="patient_insurance_q6"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'patient_insurance_q6_yes',
@@ -327,7 +322,7 @@
                   {
                     id: 'patient_insurance_q6_no',
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -335,9 +330,7 @@
         </IRow>
         <hr />
         <IRow>
-          <h3>
-            Prescriber Information
-          </h3>
+          <h3>Prescriber Information</h3>
         </IRow>
         <IRow>
           <IColumn xs="8">
@@ -458,9 +451,7 @@
         </IRow>
         <hr />
         <IRow>
-          <h3>
-            Prescription & Medication Information
-          </h3>
+          <h3>Prescription & Medication Information</h3>
         </IRow>
         <IRow>
           <IColumn>
@@ -483,12 +474,10 @@
           </IColumn>
           <IColumn xs="4">
             <IFormGroup>
-              <IFormLabel>
-                Refills 
-              </IFormLabel>
-              <IRadioGroup
-                v-model="metadata.rx_refill"
+              <IFormLabel> Refills </IFormLabel>
+              <RadioGroupSpecial
                 name="rx_refill"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'rx_refill_1',
@@ -501,7 +490,7 @@
                   {
                     id: 'rx_refill_3',
                     label: '3',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -510,12 +499,10 @@
         <IRow>
           <IColumn xs="3">
             <IFormGroup>
-              <IFormLabel>
-                Medication Allergies? 
-              </IFormLabel>
-              <IRadioGroup
-                v-model="metadata.medication_allergies"
+              <IFormLabel> Medication Allergies? </IFormLabel>
+              <RadioGroupSpecial
                 name="medication_allergies"
+                :metadata="metadata"
                 :options="[
                   {
                     id: 'medication_allergies_yes',
@@ -524,7 +511,7 @@
                   {
                     id: 'medication_allergies_no',
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -589,14 +576,14 @@ export default {
   },
   data() {
     return {
-      deleteModalVisible: false
+      deleteModalVisible: false,
     };
   },
   methods: {
     async submit() {
       this.$emit("submit", {
         id: this.id,
-        type: 'BOEHRINGER_CARES_V1',
+        type: "BOEHRINGER_CARES_V1",
         metadata: this.metadata,
       });
 
@@ -630,34 +617,34 @@ export default {
         patient_phone_sms_2: "555",
         patient_phone_sms_3: "6666",
         patient_send_sms_notifications_yes: true,
-        patient_send_sms_notifications_no: true,
+        patient_send_sms_notifications_no: false,
         patient_dob: "2023-01-02",
         patient_gender_male: true,
-        patient_gender_female: true,
+        patient_gender_female: false,
         last_4_ssn: "1234",
         preferred_language_other: "Greek",
         number_of_people_in_household: "1000",
         annual_household_income_pretax: "2000",
         total_household_assets: "3000",
         patient_insurance_q1_yes: true,
-        patient_insurance_q1_no: true,
+        patient_insurance_q1_no: false,
         patient_insurance_q2_yes: true,
-        patient_insurance_q2_no: true,
+        patient_insurance_q2_no: false,
         patient_insurance_q3_yes: true,
-        patient_insurance_q3_no: true,
+        patient_insurance_q3_no: false,
         patient_insurance_q4_yes: true,
-        patient_insurance_q4_no: true,
+        patient_insurance_q4_no: false,
         patient_insurance_q5_yes: true,
-        patient_insurance_q5_no: true,
+        patient_insurance_q5_no: false,
         patient_insurance_q6_yes: true,
-        patient_insurance_q6_no: true,
+        patient_insurance_q6_no: false,
         patient_preferred_language_english: true,
-        patient_preferred_language_spanish: true,
-        rx_refill_1: true,
+        patient_preferred_language_spanish: false,
+        rx_refill_1: false,
         rx_refill_2: true,
-        rx_refill_3: true,
+        rx_refill_3: false,
         medication_allergies_yes: true,
-        medication_allergies_no: true,
+        medication_allergies_no: false,
         drug_allergies: "some",
         prescriber_name: "Saul Goodman",
         prescriber_npi: "AB123",

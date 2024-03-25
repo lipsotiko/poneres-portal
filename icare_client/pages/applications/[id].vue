@@ -95,7 +95,7 @@
                     <template #icon>
                       <i class="fa-solid fa-trash"></i>
                     </template>
-                </IButton>
+                  </IButton>
                 </td>
               </tr>
             </tbody>
@@ -122,7 +122,7 @@
               />
             </IColumn>
           </IRow>
-        </IContainer>        
+        </IContainer>
       </ITab>
       <ITab name="tab-4">
         <div class="download-section">
@@ -146,7 +146,7 @@ const {
   params: { id: applicationId },
 } = useRoute();
 
-const router = useRouter()
+const router = useRouter();
 
 const active = ref("tab-1");
 let files = ref([]);
@@ -177,11 +177,11 @@ const {
 );
 
 watch(active, async (val) => {
-  if (val === 'tab-1') {
+  if (val === "tab-1") {
     await refreshPatientApplication();
   }
 
-  if (val === 'tab-4') {
+  if (val === "tab-4") {
     loadingPreview.value = true;
     await getPatientApplicationPdfPreviewWithSignatures(applicationId).then(
       (blob) => {
@@ -279,12 +279,12 @@ const clearPrescriberSignatureFn = async () => {
     message: "Prescriber signature cleared!",
     color: "success",
   });
-}
+};
 
 const deletePatientApplicationFn = async () => {
-  await deletePatientApplication(applicationId)
-  router.push('/')
-}
+  await deletePatientApplication(applicationId);
+  router.push("/");
+};
 </script>
 <style>
 iframe {

@@ -36,7 +36,7 @@ export default {
       query: { type },
     } = useRoute();
 
-    if (type === 'LILLY_CARES_V1') {
+    if (type === "LILLY_CARES_V1") {
       return {
         metadata: {
           directed_to_seek_enrollment: 1,
@@ -53,8 +53,8 @@ export default {
       };
     } else {
       return {
-        metadata: {}
-      }
+        metadata: {},
+      };
     }
   },
   methods: {

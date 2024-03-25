@@ -30,10 +30,15 @@
             </IButton>
           </td>
           <td>{{ application.displayApplicationName }}</td>
-          <td>{{ application.metadata.patient_first_name }} {{ application.metadata.patient_last_name }}</td>
+          <td>
+            {{ application.metadata.patient_first_name }}
+            {{ application.metadata.patient_last_name }}
+          </td>
           <td v-if="application.signedByPatient"><IIcon name="ink-check" /></td>
           <td v-else><IIcon name="ink-times" /></td>
-          <td v-if="application.signedByPrescriber"><IIcon name="ink-check" /></td>
+          <td v-if="application.signedByPrescriber">
+            <IIcon name="ink-check" />
+          </td>
           <td v-else><IIcon name="ink-times" /></td>
         </tr>
       </tbody>
@@ -55,22 +60,22 @@ const { pending, data } = useFetch("/api/patient-applications", {
   server: false,
 });
 
-const visible = ref(false)
+const visible = ref(false);
 const checked = ref();
 
 const options = ref([
-    { id: 'LILLY_CARES_V1', label: 'Lilly Cares' },
-    { id: 'BOEHRINGER_CARES_V1', label: 'Boehringer Ingelheim Cares' },
-    { id: 'NOVO_NORDISK_V1', label: 'Novo Nordisk' }
+  { id: "LILLY_CARES_V1", label: "Lilly Cares" },
+  { id: "BOEHRINGER_CARES_V1", label: "Boehringer Ingelheim Cares" },
+  { id: "NOVO_NORDISK_V1", label: "Novo Nordisk" },
 ]);
 
-const router = useRouter()
+const router = useRouter();
 
 const toggleAddApplicationModal = () => {
   visible.value = true;
-}
+};
 
 const handleNavigation = () => {
-  router.push(`/new-application?type=${checked.value}`)
-}
+  router.push(`/new-application?type=${checked.value}`);
+};
 </script>
