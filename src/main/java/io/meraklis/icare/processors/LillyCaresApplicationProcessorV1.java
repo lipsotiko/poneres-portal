@@ -21,7 +21,7 @@ import static io.meraklis.icare.processors.DocumentHelper.setField;
 public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
 
     @Override
-    PatientApplicationType applicationType() {
+    public PatientApplicationType applicationType() {
         return LILLY_CARES_V1;
     }
 
@@ -91,7 +91,7 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
     }
 
     @Override
-    Map<String, String> pdfFieldsMap() {
+    public Map<String, String> pdfFieldsMap() {
         return new HashMap<>() {
             {
                 put("Text Field 158", "patient_first_name");

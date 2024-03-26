@@ -3,7 +3,6 @@ package io.meraklis.icare.processors;
 import io.meraklis.icare.applications.PatientApplicationType;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import static io.meraklis.icare.applications.PatientApplicationType.NOVO_NORDISK
 public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProcessor {
 
     @Override
-    PatientApplicationType applicationType() {
+    public PatientApplicationType applicationType() {
         return NOVO_NORDISK_V1;
     }
 
@@ -29,15 +28,16 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
     }
 
     @Override
-    public List<String> singleCheckBoxFields() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public List<String> radioFields() {
         return List.of(
-                "patient_gender", "patient_coverage", "patient_authorized_representative_family_other",
-                "legal_representative_permission", "new_or_renewal", "rybelsus_60_day", "rybelsus_120_day");
+                "patient_gender",
+                "patient_coverage",
+                "patient_authorized_representative_family_other",
+                "patient_authorized_representative",
+                "new_or_renewal",
+                "rybelsus_60_day",
+                "rybelsus_120_day"
+        );
     }
 
     @Override
@@ -46,17 +46,17 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
     }
 
     @Override
-    public List<String> derivedFields() {
-        return Collections.emptyList();
+    public List<String> singleCheckBoxFields() {
+        return List.of(
+                "allow_electronic_income_verification",
+                "hipaa_legal_representative_authorization",
+                "program_authorization_and_certification",
+                "auto_refill"
+        );
     }
 
     @Override
-    public List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    Map<String, String> pdfFieldsMap() {
+    public Map<String, String> pdfFieldsMap() {
         return new HashMap<>() {
             {
                 put("NewOrRenewal", "new_or_renewal");
@@ -72,9 +72,9 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
                 put("Text Field 348", "patient_email");
                 put("Gender", "patient_gender");
                 put("Coverage", "patient_coverage");
-                put("Text Field 428", "patient_plan_name");
-                put("Text Field 429", "patient_member_id");
-                put("Text Field 430", "patient_phone_number");
+                put("Text Field 428", "insurance_plan_name");
+                put("Text Field 429", "insurance_plan_member_id");
+                put("Text Field 430", "insurance_plan_phone_number");
                 put("Check Box 190", "insurance_employer_supplied_coverage");
                 put("Check Box 299", "insurance_medicare");
                 put("Check Box 188", "insurance_medicare_part_b");
@@ -90,19 +90,20 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
                 put("Text Field 412", "total_household_income");
                 put("Text Field 389", "number_of_people_in_household");
                 put("Text Field 390", "number_of_dependents");
-                put("Text Field 444", "enrollment_year");
+                put("Text Field 452", "medicare_drug_coverage_consent_member_number");
+                put("Text Field 444", "medicare_drug_coverage_consent_enrollment_year");
                 put("Text Field 443", "signature_date");
-                put("Check Box 368", "hipaa_authorization");
-                put("RepPermission", "legal_representative_permission");
-                put("FirstName 4", "legal_representative");
+                put("RepPermission", "patient_authorized_representative");
+                put("FirstName 4", "patient_authorized_representative_name");
                 put("Text Field 481", "signature_date");
-                put("Relationship 5", "legal_representative_relationship");
-                put("Text Field 457", "legal_representative_phone_number");
+                put("Relationship 5", "patient_authorized_representative_family_other");
+                put("Text Field 457", "patient_authorized_representative_phone_number");
                 put("Text Field 458", "tcpa_phone_number");
                 put("Check Box 367", "program_authorization_and_certification");
-                put("FirstName 5", "legal_representative");
-                put("Relationship 6", "legal_representative_relationship");
-                put("Text Field 482", "legal_representative_phone_number");
+                put("Check Box 368", "hipaa_legal_representative_authorization");
+                put("FirstName 5", "hipaa_legal_representative");
+                put("Relationship 6", "hipaa_legal_representative_relationship");
+                put("Text Field 482", "hipaa_legal_representative_phone_number");
                 put("Text Field 483", "signature_date");
                 put("Text Field 405", "known_drug_allergies");
                 put("FirstName 2", "prescriber_first_name");

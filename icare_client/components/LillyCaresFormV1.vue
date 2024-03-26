@@ -623,17 +623,17 @@
                     {
                       id: 1,
                       label:
-                        'Vial (not available for Basaglar®, Humalog® U-200, Humalog®	50/50, or Lyumjev™ U-200)',
+                        'Vial (not available for Basaglar, Humalog U-200, Humalog	50/50, or Lyumjev™ U-200)',
                     },
                     {
                       id: 2,
                       label:
-                        'KwikPen (not available for Humulin® R 100 units/mL)',
+                        'KwikPen (not available for Humulin R 100 units/mL)',
                     },
                     {
                       id: 3,
                       label:
-                        'Cartridge (only available for Humalog® 100 units/mL)',
+                        'Cartridge (only available for Humalog 100 units/mL)',
                     },
                   ]"
                   :disabled="isPrescribingInsulin(i)"

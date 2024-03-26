@@ -15,7 +15,7 @@ import static io.meraklis.icare.processors.DocumentHelper.setField;
 public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
 
     @Override
-    PatientApplicationType applicationType() {
+    public PatientApplicationType applicationType() {
         return BOEHRINGER_CARES_V1;
     }
 
@@ -93,7 +93,7 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
     }
 
     @Override
-    Map<String, String> pdfFieldsMap() {
+    public Map<String, String> pdfFieldsMap() {
         return new HashMap<>() {
             {
                 put("First Name", "patient_first_name");
