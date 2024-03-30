@@ -1,13 +1,10 @@
 package io.meraklis.icare.processors;
 
-import io.meraklis.icare.images.TextToImageBuilder;
-import lombok.SneakyThrows;
 import org.apache.pdfbox.multipdf.Overlay;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +19,7 @@ import java.util.Map;
 
 import static io.meraklis.icare.helpers.Helpers.base64ToFile;
 import static io.meraklis.icare.helpers.Helpers.tmpFile;
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class SignatureApplicator {
@@ -29,16 +27,33 @@ public class SignatureApplicator {
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
-    @Autowired
-    private TextToImageBuilder textToImageBuilder;
-
     public void apply(PDDocument doc, List<SignatureConfig> configs) {
         try (Overlay overlay = new Overlay()) {
             overlay.setInputPDF(doc);
 
             Map<Integer, PDDocument> overlays = new HashMap<>();
+            Map<Integer, List<SignatureConfig>> byPage = configs.stream().collect(groupingBy(SignatureConfig::getPage));
+            for (Map.Entry<Integer, List<SignatureConfig>> entry : byPage.entrySet()) {
+                Integer page = entry.getKey();
+                List<SignatureConfig> signatureConfigs = entry.getValue();
+                PDDocument signatureDoc = buildSignatureDocument(signatureConfigs);
+                overlays.put(page, signatureDoc);
+            }
+            overlay.setOverlayPosition(Overlay.Position.FOREGROUND);
+            overlay.overlayDocuments(overlays);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-            for (SignatureConfig config : configs) {
+    private PDDocument buildSignatureDocument(List<SignatureConfig> signatureConfigs) {
+        try {
+            PDPage signaturePage = new PDPage();
+            PDDocument signatureDoc = new PDDocument();
+            signatureDoc.addPage(signaturePage);
+            PDPageContentStream contents = new PDPageContentStream(signatureDoc, signaturePage);
+
+            for (SignatureConfig config : signatureConfigs) {
                 File signatureFile = base64ToFile(config.getSignatureBase64());
                 BufferedImage image = ImageIO.read(signatureFile);
 
@@ -63,31 +78,15 @@ public class SignatureApplicator {
                     height = (int) Math.round(height * scalePercent);
                 }
 
-                PDDocument signatureDoc =
-                        buildSignatureDocument(signatureFile, config.getXPos(), config.getYPos(), width, height);
-                overlays.put(config.getPage(), signatureDoc);
+                PDImageXObject pdImage = PDImageXObject.createFromFileByExtension(signatureFile, new PDDocument());
+                contents.drawImage(pdImage, config.getXPos(), config.getYPos(), width, height);
             }
-            overlay.setOverlayPosition(Overlay.Position.FOREGROUND);
-            overlay.overlayDocuments(overlays);
+            contents.close();
+            return signatureDoc;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-    @SneakyThrows
-    private PDDocument buildSignatureDocument(File signatureFile, int xPos, int yPos, int w, int h) {
-        PDPage signaturePage = new PDPage();
-        PDDocument signatureDoc = new PDDocument();
-        signatureDoc.addPage(signaturePage);
-
-        PDPageContentStream contents = new PDPageContentStream(signatureDoc, signaturePage);
-        PDImageXObject pdImage = PDImageXObject.createFromFileByExtension(signatureFile, new PDDocument());
-        contents.drawImage(pdImage, xPos, yPos, w, h);
-        contents.close();
-
-        return signatureDoc;
-    }
-
 
     private static void applyBorder(BufferedImage image) {
         int borderColor = 0x99FF0000;

@@ -3,6 +3,7 @@ package io.meraklis.icare.processors;
 import io.meraklis.icare.applications.PatientApplicationType;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,39 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
                 "allow_electronic_income_verification",
                 "hipaa_legal_representative_authorization",
                 "program_authorization_and_certification",
+                "fiasp_vial",
+                "fiasp_flex_touch",
+                "fiasp_cartridge",
+                "tresiba_u100_vial",
+                "tresiba_u100_flex_touch",
+                "degludec_u100_vial",
+                "degludec_u100_flex_touch",
+                "tresiba_u200_flex_touch",
+                "degludec_u200_flex_touch",
+                "novolog_u100_vial",
+                "novolog_u100_flex_pen",
+                "novolog_u100_cartridge",
+                "aspart_injection_u100_vial",
+                "aspart_injection_u100_flex_pen",
+                "aspart_injection_u100_cartridge",
+                "novolog_mix_70_30_u100_vial",
+                "novolog_mix_70_30_u100_flex_pen",
+                "novolin_70_30_u100_vial",
+                "aspart_mix_70_30_u100_vial",
+                "aspart_mix_70_30_u100_flex_pen",
+                "novolin_r_u100_vial",
+                "novolin_n_u100_vial",
+                "zegalogue_auto_1pack",
+                "zegalogue_auto_2pack",
+                "zegalogue_syringe_1pack",
+                "zegalogue_syringe_2pack",
+                "novopen_echo_pen",
+                "ozempic_0_25mg_0_5mg_1pack",
+                "ozempic_1mg_1pack",
+                "ozempic_2mg_1pack",
+                "vicotoza_1_2mg_2pack",
+                "vicotoza_1_8mg_3pack",
+                "xultophy_5pack",
                 "auto_refill"
         );
     }
@@ -244,4 +278,22 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
         };
     }
 
+    @Override
+    public List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature) {
+        List<SignatureConfig> configs = new ArrayList<>();
+        int mh = 32;
+        if (patientSignature != null) {
+            // Height & width reflect the middle left of the signature area;
+            configs.add(SignatureConfig.builder().page(1).signatureBase64(patientSignature).xPos(268).yPos(73).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(1).signatureBase64(patientSignature).xPos(110).yPos(344).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(2).signatureBase64(patientSignature).xPos(204).yPos(464).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(2).signatureBase64(patientSignature).xPos(204).yPos(138).maxHeight(mh).build());
+        }
+
+        if (prescriberSignature != null) {
+            // Height & width reflect the middle left of the signature area;
+            configs.add(SignatureConfig.builder().page(3).signatureBase64(prescriberSignature).xPos(168).yPos(400).maxHeight(mh).build());
+        }
+        return configs;
+    }
 }
