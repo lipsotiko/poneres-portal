@@ -105,7 +105,7 @@
       <ITab name="tab-3">
         <IContainer>
           <IRow>
-            <IColumn sm="12" xl="6">
+            <IColumn sm="12">
               <SignaturePad
                 label="Patient Signature"
                 :signature="data.patientSignature"
@@ -113,7 +113,10 @@
                 @save="savePatientSignatureFn"
               />
             </IColumn>
-            <IColumn sm="12" xl="6">
+          </IRow>
+          <hr />
+          <IRow>
+            <IColumn sm="12">
               <SignaturePad
                 label="Prescriber Signature"
                 :signature="data.prescriberSignature"

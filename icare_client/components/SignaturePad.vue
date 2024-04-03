@@ -1,6 +1,8 @@
 <template>
   <div class="signature-pad-container">
-    <label class="signature-label">{{ label }}</label>
+    <label class="signature-label">
+      <strong>{{ label }}</strong>
+    </label>
     <div class="signature-pad-wrapper">
       <canvas
         ref="signaturePadCanvas"
@@ -10,7 +12,15 @@
       >
       </canvas>
     </div>
+    <div class="upload-section">
+
+    </div>
     <div class="signature-buttons">
+      <input
+        type="file"
+        :disabled="signed"
+        @change="onFilePickedFn"
+      />
       <IButton @click="clear">Clear</IButton>
       <IButton @click="save" color="primary" :disabled="signed">Save</IButton>
     </div>
@@ -60,6 +70,17 @@ const save = () => {
 
   emit("save", trimCanvas(copy).toDataURL("image/png"));
 };
+
+const onFilePickedFn = (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    signaturePad.clear();
+    signaturePad.fromDataURL(reader.result);
+  };
+  reader.readAsDataURL(file);
+};
+
 </script>
 <style scoped>
 .signature-label {
