@@ -10,6 +10,7 @@ import java.util.*;
 
 import static io.meraklis.icare.applications.PatientApplicationType.BOEHRINGER_CARES_V1;
 import static io.meraklis.icare.processors.DocumentHelper.setField;
+import static io.meraklis.icare.processors.FieldType.*;
 
 @Service
 public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
@@ -22,50 +23,6 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
     @Override
     public List<Integer> pagesToRemove() {
         return List.of(0);
-    }
-
-    @Override
-    public List<String> multiCheckBoxFields() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<String> singleCheckBoxFields() {
-        return List.of(
-                "patient_send_sms_notifications_yes",
-                "patient_send_sms_notifications_no",
-                "patient_gender_male",
-                "patient_gender_female",
-                "patient_preferred_language_english",
-                "patient_preferred_language_spanish",
-                "patient_insurance_q1_yes",
-                "patient_insurance_q1_no",
-                "patient_insurance_q2_yes",
-                "patient_insurance_q2_no",
-                "patient_insurance_q3_yes",
-                "patient_insurance_q3_no",
-                "patient_insurance_q4_yes",
-                "patient_insurance_q4_no",
-                "patient_insurance_q5_yes",
-                "patient_insurance_q5_no",
-                "patient_insurance_q6_yes",
-                "patient_insurance_q6_no",
-                "rx_refill_1",
-                "rx_refill_2",
-                "rx_refill_3",
-                "medication_allergies_yes",
-                "medication_allergies_no"
-        );
-    }
-
-    @Override
-    public List<String> radioFields() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<String> dateFields() {
-        return List.of("patient_dob", "prescriber_sln_exp");
     }
 
     @Override
@@ -93,78 +50,78 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
     }
 
     @Override
-    public Map<String, String> pdfFieldsMap() {
+    public Map<String, FC> pdfFieldsMap() {
         return new HashMap<>() {
             {
-                put("First Name", "patient_first_name");
-                put("First Name_2", "patient_first_name");
-                put("Last Name", "patient_last_name");
-                put("Last Name_3", "patient_last_name");
-                put("Address", "patient_address");
-                put("Note Delivery will be to patients address unless otherwise indicated by the patient Aptivus will be shipped to the", "patient_city");
-                put("State", "patient_state");
-                put("Zip Code", "patient_zip_code");
-                put("Text1", "patient_phone_1");
-                put("Text2", "patient_phone_2");
-                put("Text3", "patient_phone_3");
-                put("Text4", "patient_phone_sms_1");
-                put("Text5", "patient_phone_sms_2");
-                put("Text6", "patient_phone_sms_3");
-                put("Text7", "patient_dob_month");
-                put("Text19", "patient_dob_month");
-                put("Text8", "patient_dob_day");
-                put("Text20", "patient_dob_day");
-                put("Text9", "patient_dob_year");
-                put("Text23", "patient_dob_year");
-                put("Other", "preferred_language_other");
-                put("Text10", "number_of_people_in_household");
-                put("Text11", "annual_household_income_pretax");
-                put("Text12", "total_household_assets");
-                put("Last 4 Digits of SSN", "last_4_ssn");
-                put("Check Box2", "patient_insurance_q1_yes");
-                put("Check Box3", "patient_insurance_q1_no");
-                put("Check Box4", "patient_insurance_q2_yes");
-                put("Check Box5", "patient_insurance_q2_no");
-                put("Check Box6", "patient_insurance_q3_yes");
-                put("Check Box7", "patient_insurance_q3_no");
-                put("Check Box8", "patient_insurance_q4_yes");
-                put("Check Box9", "patient_insurance_q4_no");
-                put("Check Box10", "patient_insurance_q5_yes");
-                put("Check Box11", "patient_insurance_q5_no");
-                put("Check Box12", "patient_insurance_q6_yes");
-                put("Check Box13", "patient_insurance_q6_no");
-                put("Check Box20", "patient_send_sms_notifications_yes");
-                put("Check Box19", "patient_send_sms_notifications_no");
-                put("Check Box1", "patient_preferred_language_english");
-                put("Check Box14", "patient_preferred_language_spanish");
-                put("Check Box15", "patient_gender_male");
-                put("Check Box16", "patient_gender_female");
-                put("Check Box24", "rx_refill_1");
-                put("Check Box25", "rx_refill_2");
-                put("Check Box26", "rx_refill_3");
-                put("Check Box17", "medication_allergies_yes");
-                put("Check Box18", "medication_allergies_no");
-                put("If Yes please list all drug allergies", "drug_allergies");
-                put("Prescriber Name", "prescriber_name");
-                put("NPI", "prescriber_npi");
-                put("Specialty", "prescriber_specialty");
-                put("SLN", "prescriber_sln");
-                put("SLN Exp Date", "prescriber_sln_exp");
-                put("Site Facility Name", "prescriber_facility_name");
-                put("Office Contact Name", "prescriber_office_contact_name");
-                put("Address_2", "prescriber_address");
-                put("City", "prescriber_city");
-                put("State_2", "prescriber_state");
-                put("Zip Code_2", "prescriber_zip_code");
-                put("Office Phone", "prescriber_phone");
-                put("Office Fax", "prescriber_fax");
-                put("Product Name Strength", "product_name_strength");
-                put("Directions", "directions");
-                put("Current Medications please list", "current_medications");
-                put("Date", "signature_date");
-                put("Date_2", "signature_date");
-                put("Date_3", "signature_date");
-                put("Date15_es_:signer:date", "signature_date");
+                put("First Name", new FC("patient_first_name", TEXT));
+                put("First Name_2", new FC("patient_first_name", TEXT));
+                put("Last Name", new FC("patient_last_name", TEXT));
+                put("Last Name_3", new FC("patient_last_name", TEXT));
+                put("Address", new FC("patient_address", TEXT));
+                put("Note Delivery will be to patients address unless otherwise indicated by the patient Aptivus will be shipped to the", new FC("patient_city", TEXT));
+                put("State", new FC("patient_state", TEXT));
+                put("Zip Code", new FC("patient_zip_code", TEXT));
+                put("Text1", new FC("patient_phone_1", TEXT));
+                put("Text2", new FC("patient_phone_2", TEXT));
+                put("Text3", new FC("patient_phone_3", TEXT));
+                put("Text4", new FC("patient_phone_sms_1", TEXT));
+                put("Text5", new FC("patient_phone_sms_2", TEXT));
+                put("Text6", new FC("patient_phone_sms_3", TEXT));
+                put("Text7", new FC("patient_dob_month", TEXT));
+                put("Text19", new FC("patient_dob_month", TEXT));
+                put("Text8", new FC("patient_dob_day", TEXT));
+                put("Text20", new FC("patient_dob_day", TEXT));
+                put("Text9", new FC("patient_dob_year", TEXT));
+                put("Text23", new FC("patient_dob_year", TEXT));
+                put("Other", new FC("preferred_language_other", TEXT));
+                put("Text10", new FC("number_of_people_in_household", TEXT));
+                put("Text11", new FC("annual_household_income_pretax", TEXT));
+                put("Text12", new FC("total_household_assets", TEXT));
+                put("Last 4 Digits of SSN", new FC("last_4_ssn", TEXT));
+                put("Check Box2", new FC("patient_insurance_q1_yes", SINGLE_CHECKBOX));
+                put("Check Box3", new FC("patient_insurance_q1_no", SINGLE_CHECKBOX));
+                put("Check Box4", new FC("patient_insurance_q2_yes", SINGLE_CHECKBOX));
+                put("Check Box5", new FC("patient_insurance_q2_no", SINGLE_CHECKBOX));
+                put("Check Box6", new FC("patient_insurance_q3_yes", SINGLE_CHECKBOX));
+                put("Check Box7", new FC("patient_insurance_q3_no", SINGLE_CHECKBOX));
+                put("Check Box8", new FC("patient_insurance_q4_yes", SINGLE_CHECKBOX));
+                put("Check Box9", new FC("patient_insurance_q4_no", SINGLE_CHECKBOX));
+                put("Check Box10", new FC("patient_insurance_q5_yes", SINGLE_CHECKBOX));
+                put("Check Box11", new FC("patient_insurance_q5_no", SINGLE_CHECKBOX));
+                put("Check Box12", new FC("patient_insurance_q6_yes", SINGLE_CHECKBOX));
+                put("Check Box13", new FC("patient_insurance_q6_no", SINGLE_CHECKBOX));
+                put("Check Box20", new FC("patient_send_sms_notifications_yes", SINGLE_CHECKBOX));
+                put("Check Box19", new FC("patient_send_sms_notifications_no", SINGLE_CHECKBOX));
+                put("Check Box1", new FC("patient_preferred_language_english", SINGLE_CHECKBOX));
+                put("Check Box14", new FC("patient_preferred_language_spanish", SINGLE_CHECKBOX));
+                put("Check Box15", new FC("patient_gender_male", SINGLE_CHECKBOX));
+                put("Check Box16", new FC("patient_gender_female", SINGLE_CHECKBOX));
+                put("Check Box24", new FC("rx_refill_1", SINGLE_CHECKBOX));
+                put("Check Box25", new FC("rx_refill_2", SINGLE_CHECKBOX));
+                put("Check Box26", new FC("rx_refill_3", SINGLE_CHECKBOX));
+                put("Check Box17", new FC("medication_allergies_yes", SINGLE_CHECKBOX));
+                put("Check Box18", new FC("medication_allergies_no", SINGLE_CHECKBOX));
+                put("If Yes please list all drug allergies", new FC("drug_allergies", TEXT));
+                put("Prescriber Name", new FC("prescriber_name", TEXT));
+                put("NPI", new FC("prescriber_npi", TEXT));
+                put("Specialty", new FC("prescriber_specialty", TEXT));
+                put("SLN", new FC("prescriber_sln", TEXT));
+                put("SLN Exp Date", new FC("prescriber_sln_exp", DATE));
+                put("Site Facility Name", new FC("prescriber_facility_name", TEXT));
+                put("Office Contact Name", new FC("prescriber_office_contact_name", TEXT));
+                put("Address_2", new FC("prescriber_address", TEXT));
+                put("City", new FC("prescriber_city", TEXT));
+                put("State_2", new FC("prescriber_state", TEXT));
+                put("Zip Code_2", new FC("prescriber_zip_code", TEXT));
+                put("Office Phone", new FC("prescriber_phone", TEXT));
+                put("Office Fax", new FC("prescriber_fax", TEXT));
+                put("Product Name Strength", new FC("product_name_strength", TEXT));
+                put("Directions", new FC("directions", TEXT));
+                put("Current Medications please list", new FC("current_medications", TEXT));
+                put("Date", new FC("signature_date", TEXT));
+                put("Date_2", new FC("signature_date", TEXT));
+                put("Date_3", new FC("signature_date", TEXT));
+                put("Date15_es_:signer:date", new FC("signature_date", TEXT));
             }
         };
     }

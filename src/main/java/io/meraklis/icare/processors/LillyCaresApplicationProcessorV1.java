@@ -16,6 +16,7 @@ import static io.meraklis.icare.applications.PatientApplicationType.LILLY_CARES_
 import static io.meraklis.icare.helpers.Helpers.tmpFile;
 import static io.meraklis.icare.processors.DocumentHelper.docToBytes;
 import static io.meraklis.icare.processors.DocumentHelper.setField;
+import static io.meraklis.icare.processors.FieldType.*;
 
 @Service
 public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
@@ -36,38 +37,8 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
     }
 
     @Override
-    public List<String> singleCheckBoxFields() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<String> dateFields() {
-        return List.of("patient_dob", "administration_date_1", "administration_date_2", "administration_date_3");
-    }
-
-    @Override
     public List<String> derivedFields() {
         return List.of("patient_full_name");
-    }
-
-    @Override
-    public List<String> radioFields() {
-        return List.of(
-                "deliver_medication_to_home",
-                "directed_to_seek_enrollment",
-                "directed_to_seek_enrollment",
-                "prescription_auto_refill",
-                "authorize_representative",
-                "directed_to_seek_enrollment",
-                "prescription_auto_refill",
-                "authorize_representative",
-                "authorized_representative_1_relationship",
-                "authorized_representative_2_relationship",
-                "infused_oncology_replacement_request",
-                "prescribing_insulin",
-                "prescribed_insulin",
-                "quantity_dispensed",
-                "dispense_as_written");
     }
 
     private List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature, Integer medicationDocumentsCount) {
@@ -91,97 +62,97 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
     }
 
     @Override
-    public Map<String, String> pdfFieldsMap() {
+    public Map<String, FC> pdfFieldsMap() {
         return new HashMap<>() {
             {
-                put("Text Field 158", "patient_first_name");
-                put("Text Field 167", "patient_middle_initial");
-                put("Text Field 165", "patient_last_name");
-                put("Text Field 164", "patient_address");
-                put("Text Field 159", "patient_city");
-                put("Text Field 168", "patient_state");
-                put("Text Field 166", "patient_zip_code");
-                put("Text Field 163", "patient_dob");
-                put("Text Field 169", "patient_phone_number");
-                put("Radio Button 4", "deliver_medication_to_home");
-                put("Text Field 160", "number_of_people_in_household");
-                put("Text Field 170", "annual_household_income_pretax");
-                put("Radio Button 5", "directed_to_seek_enrollment");
-                put("Check Box 22", "insurance_none");
-                put("Check Box 26", "insurance_medicaid");
-                put("Check Box 23", "insurance_medicaid_part_d");
-                put("Check Box 27", "insurance_va_or_military");
-                put("Check Box 24", "insurance_medicare_part_b_without_supplemental");
-                put("Check Box 28", "insurance_private_excluding_medicare_part_d");
-                put("Check Box 25", "insurance_medicare_part_b_with_supplemental");
-                put("Check Box 29", "insurance_other");
-                put("Text Field 162", "other_insurance");
-                put("Radio Button 6", "prescription_auto_refill");
-                put("Radio Button 12", "authorize_representative");
-                put("Text Field 172", "authorized_representative_1_name");
-                put("Radio Button 13", "authorized_representative_1_relationship");
-                put("Text Field 173", "authorized_representative_1_relationship_other");
-                put("Text Field 175", "authorized_representative_2_name");
-                put("Radio Button 14", "authorized_representative_2_relationship");
-                put("Text Field 174", "authorized_representative_2_relationship_other");
-                put("Text Field 180", "prescriber_name");
-                put("Text Field 186", "prescriber_signature");
-                put("Text Field 226", "signature_date");
-                put("Text Field 183", "prescriber_medications_requested");
-                put("Check Box 35", "electronic_prescription");
-                put("Check Box 36", "fax_prescription_utilizing_page_9");
-                put("Text Field 185", "infused_oncology_icd_10");
-                put("Radio Button 7", "infused_oncology_replacement_request");
-                put("Text Field 222", "administration_date_1");
-                put("Text Field 223", "dosage_1");
-                put("Text Field 224", "number_of_vials_1");
-                put("Text Field 225", "vial_size_1");
-                put("Text Field 184", "administration_date_2");
-                put("Text Field 188", "dosage_2");
-                put("Text Field 190", "number_of_vials_2");
-                put("Text Field 192", "vial_size_2");
-                put("Text Field 187", "administration_date_3");
-                put("Text Field 189", "dosage_3");
-                put("Text Field 191", "number_of_vials_3");
-                put("Text Field 193", "vial_size_3");
-                put("Text Field 177", "patient_full_name");
-                put("Text Field 176", "signature_date");
-                put("Text Field 179", "patient_full_name");
-                put("Text Field 178", "signature_date");
-                put("Text Field 181", "patient_full_name");
-                put("Text Field 182", "patient_dob");
-                put("Text Field 194", "patient_full_name");
-                put("Text Field 217", "patient_dob");
-                put("Text Field 195", "patient_address");
-                put("Text Field 197", "patient_city");
-                put("Text Field 207", "patient_state");
-                put("Text Field 210", "patient_zip_code");
-                put("Text Field 220", "patient_phone_number");
-                put("Text Field 219", "patient_drug_allergies");
-                put("Text Field 196", "other_medications");
-                put("Text Field 208", "medication");
-                put("Text Field 211", "strength");
-                put("Text Field 212", "max_dose_per_day");
-                put("Text Field 199", "directions");
-                put("Radio Button 8", "prescribing_insulin");
-                put("Radio Button 11", "prescribed_insulin");
-                put("Radio Button 9", "quantity_dispensed");
-                put("Radio Button 10", "dispense_as_written");
-                put("Text Field 221", "refill_number");
-                put("Text Field 198", "prescriber_signature");
-                put("Text Field 218", "signature_date");
-                put("Text Field 200", "prescriber_name");
-                put("Text Field 206", "healthcare_provider_dea_number");
-                put("Text Field 201", "healthcare_provider_license_and_state");
-                put("Text Field 204", "healthcare_provider_npi_number");
-                put("Text Field 203", "healthcare_provider_address");
-                put("Text Field 209", "healthcare_provider_city");
-                put("Text Field 213", "healthcare_provider_state");
-                put("Text Field 214", "healthcare_provider_zip_code");
-                put("Text Field 215", "healthcare_provider_phone_number");
-                put("Text Field 216", "healthcare_provider_fax_number");
-                put("Text Field 202", "healthcare_provider_office_contact_name");
-                put("Text Field 205", "healthcare_provider_office_contact_phone_number");
+                put("Text Field 158", new FC("patient_first_name", TEXT));
+                put("Text Field 167", new FC("patient_middle_initial", TEXT));
+                put("Text Field 165", new FC("patient_last_name", TEXT));
+                put("Text Field 164", new FC("patient_address", TEXT));
+                put("Text Field 159", new FC("patient_city", TEXT));
+                put("Text Field 168", new FC("patient_state", TEXT));
+                put("Text Field 166", new FC("patient_zip_code", TEXT));
+                put("Text Field 163", new FC("patient_dob", DATE));
+                put("Text Field 169", new FC("patient_phone_number", TEXT));
+                put("Radio Button 4", new FC("deliver_medication_to_home", RADIO));
+                put("Text Field 160", new FC("number_of_people_in_household", TEXT));
+                put("Text Field 170", new FC("annual_household_income_pretax", TEXT));
+                put("Radio Button 5", new FC("directed_to_seek_enrollment", RADIO));
+                put("Check Box 22", new FC("insurance_none", TEXT));
+                put("Check Box 26", new FC("insurance_medicaid", TEXT));
+                put("Check Box 23", new FC("insurance_medicaid_part_d", TEXT));
+                put("Check Box 27", new FC("insurance_va_or_military", TEXT));
+                put("Check Box 24", new FC("insurance_medicare_part_b_without_supplemental", TEXT));
+                put("Check Box 28", new FC("insurance_private_excluding_medicare_part_d", TEXT));
+                put("Check Box 25", new FC("insurance_medicare_part_b_with_supplemental", TEXT));
+                put("Check Box 29", new FC("insurance_other", TEXT));
+                put("Text Field 162", new FC("other_insurance", TEXT));
+                put("Radio Button 6", new FC("prescription_auto_refill", RADIO));
+                put("Radio Button 12", new FC("authorize_representative", RADIO));
+                put("Text Field 172", new FC("authorized_representative_1_name", TEXT));
+                put("Radio Button 13", new FC("authorized_representative_1_relationship", RADIO));
+                put("Text Field 173", new FC("authorized_representative_1_relationship_other", TEXT));
+                put("Text Field 175", new FC("authorized_representative_2_name", TEXT));
+                put("Radio Button 14", new FC("authorized_representative_2_relationship", RADIO));
+                put("Text Field 174", new FC("authorized_representative_2_relationship_other", TEXT));
+                put("Text Field 180", new FC("prescriber_name", TEXT));
+                put("Text Field 186", new FC("prescriber_signature", TEXT));
+                put("Text Field 226", new FC("signature_date", TEXT));
+                put("Text Field 183", new FC("prescriber_medications_requested", TEXT));
+                put("Check Box 35", new FC("electronic_prescription", TEXT));
+                put("Check Box 36", new FC("fax_prescription_utilizing_page_9", TEXT));
+                put("Text Field 185", new FC("infused_oncology_icd_10", TEXT));
+                put("Radio Button 7", new FC("infused_oncology_replacement_request", RADIO));
+                put("Text Field 222", new FC("administration_date_1", DATE));
+                put("Text Field 223", new FC("dosage_1", TEXT));
+                put("Text Field 224", new FC("number_of_vials_1", TEXT));
+                put("Text Field 225", new FC("vial_size_1", TEXT));
+                put("Text Field 184", new FC("administration_date_2", DATE));
+                put("Text Field 188", new FC("dosage_2", TEXT));
+                put("Text Field 190", new FC("number_of_vials_2", TEXT));
+                put("Text Field 192", new FC("vial_size_2", TEXT));
+                put("Text Field 187", new FC("administration_date_3", DATE));
+                put("Text Field 189", new FC("dosage_3", TEXT));
+                put("Text Field 191", new FC("number_of_vials_3", TEXT));
+                put("Text Field 193", new FC("vial_size_3", TEXT));
+                put("Text Field 177", new FC("patient_full_name", TEXT));
+                put("Text Field 176", new FC("signature_date", TEXT));
+                put("Text Field 179", new FC("patient_full_name", TEXT));
+                put("Text Field 178", new FC("signature_date", TEXT));
+                put("Text Field 181", new FC("patient_full_name", TEXT));
+                put("Text Field 182", new FC("patient_dob", TEXT));
+                put("Text Field 194", new FC("patient_full_name", TEXT));
+                put("Text Field 217", new FC("patient_dob", TEXT));
+                put("Text Field 195", new FC("patient_address", TEXT));
+                put("Text Field 197", new FC("patient_city", TEXT));
+                put("Text Field 207", new FC("patient_state", TEXT));
+                put("Text Field 210", new FC("patient_zip_code", TEXT));
+                put("Text Field 220", new FC("patient_phone_number", TEXT));
+                put("Text Field 219", new FC("patient_drug_allergies", TEXT));
+                put("Text Field 196", new FC("other_medications", TEXT));
+                put("Text Field 208", new FC("medication", TEXT));
+                put("Text Field 211", new FC("strength", TEXT));
+                put("Text Field 212", new FC("max_dose_per_day", TEXT));
+                put("Text Field 199", new FC("directions", TEXT));
+                put("Radio Button 8", new FC("prescribing_insulin", RADIO));
+                put("Radio Button 11", new FC("prescribed_insulin", RADIO));
+                put("Radio Button 9", new FC("quantity_dispensed", RADIO));
+                put("Radio Button 10", new FC("dispense_as_written", RADIO));
+                put("Text Field 221", new FC("refill_number", TEXT));
+                put("Text Field 198", new FC("prescriber_signature", TEXT));
+                put("Text Field 218", new FC("signature_date", TEXT));
+                put("Text Field 200", new FC("prescriber_name", TEXT));
+                put("Text Field 206", new FC("healthcare_provider_dea_number", TEXT));
+                put("Text Field 201", new FC("healthcare_provider_license_and_state", TEXT));
+                put("Text Field 204", new FC("healthcare_provider_npi_number", TEXT));
+                put("Text Field 203", new FC("healthcare_provider_address", TEXT));
+                put("Text Field 209", new FC("healthcare_provider_city", TEXT));
+                put("Text Field 213", new FC("healthcare_provider_state", TEXT));
+                put("Text Field 214", new FC("healthcare_provider_zip_code", TEXT));
+                put("Text Field 215", new FC("healthcare_provider_phone_number", TEXT));
+                put("Text Field 216", new FC("healthcare_provider_fax_number", TEXT));
+                put("Text Field 202", new FC("healthcare_provider_office_contact_name", TEXT));
+                put("Text Field 205", new FC("healthcare_provider_office_contact_phone_number", TEXT));
             }
         };
     }

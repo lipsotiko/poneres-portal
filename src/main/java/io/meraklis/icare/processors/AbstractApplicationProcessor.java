@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static io.meraklis.icare.helpers.Helpers.tmpFile;
 import static io.meraklis.icare.processors.DocumentHelper.*;
+import static io.meraklis.icare.processors.FieldType.*;
 
 @Slf4j
 abstract class AbstractApplicationProcessor implements ApplicationProcessor {
@@ -37,21 +38,8 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
 
     abstract PatientApplicationType applicationType();
 
-    abstract Map<String, String> pdfFieldsMap();
-
-    public List<String> dateFields() {
-        return Collections.emptyList();
-    }
-
+    abstract Map<String, FC> pdfFieldsMap();
     public List<String> multiCheckBoxFields() {
-        return Collections.emptyList();
-    }
-
-    public List<String> radioFields() {
-        return Collections.emptyList();
-    }
-
-    public List<String> singleCheckBoxFields() {
         return Collections.emptyList();
     }
 
@@ -91,7 +79,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
 
     protected Map<String, List<String>> reverseMap() {
         return pdfFieldsMap().entrySet().stream().collect(Collectors.groupingBy(
-                Map.Entry::getValue, Collectors.mapping(Map.Entry::getKey, Collectors.toList())));
+                e -> e.getValue().getName(), Collectors.mapping(Map.Entry::getKey, Collectors.toList())));
     }
 
     protected void removePages(PDDocument doc, List<Integer> pages) {
@@ -108,10 +96,6 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
             list = new ArrayList<>((Collection<?>) obj);
         }
         return list;
-    }
-
-    protected boolean isDateField(String field) {
-        return dateFields().contains(pdfFieldsMap().get(field));
     }
 
     protected void applySignatures(PDDocument doc, List<SignatureConfig> configs) {
@@ -184,13 +168,13 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
                 String value;
                 for (String pdfFieldName : pdfFieldNames) {
                     if (pdfFieldName != null) {
-                        if (isRadioField(entry)) {
+                        if (isRadioField(pdfFieldName)) {
                             Integer v = (Integer) entry.getValue();
                             value = radioChoices.get(v);
                         } else if (isDateField(pdfFieldName)) {
                             value = (String) entry.getValue();
                             value = LocalDate.parse(value).format(formatter);
-                        } else if (isSingleCheckBoxField(metadataKey)) {
+                        } else if (isSingleCheckBoxField(pdfFieldName)) {
                             if ((Boolean) entry.getValue()) {
                                 value = CHECK;
                             } else {
@@ -217,12 +201,16 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
         return derivedFields().contains(key);
     }
 
-    private boolean isSingleCheckBoxField(String key) {
-        return singleCheckBoxFields().contains(key);
+    protected boolean isDateField(String field) {
+        return pdfFieldsMap().get(field).getType().equals(DATE);
     }
 
-    private boolean isRadioField(Map.Entry<String, Object> entry) {
-        return radioFields().contains(entry.getKey());
+    protected boolean isRadioField(String field) {
+        return pdfFieldsMap().get(field).getType().equals(RADIO);
+    }
+
+    private boolean isSingleCheckBoxField(String field) {
+        return pdfFieldsMap().get(field).getType().equals(SINGLE_CHECKBOX);
     }
 
     public byte[] previewWithFieldsPopulated(Boolean skipAddedFields) {

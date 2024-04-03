@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.meraklis.icare.applications.PatientApplicationType.NOVO_NORDISK_V1;
+import static io.meraklis.icare.processors.FieldType.*;
 
 @Service
 public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProcessor {
@@ -29,251 +30,166 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
     }
 
     @Override
-    public List<String> radioFields() {
-        return List.of(
-                "patient_gender",
-                "patient_coverage",
-                "patient_authorized_representative_family_other",
-                "patient_authorized_representative",
-                "new_or_renewal",
-                "rybelsus_60_day",
-                "rybelsus_120_day"
-        );
-    }
-
-    @Override
-    public List<String> dateFields() {
-        return List.of("patient_dob");
-    }
-
-    @Override
-    public List<String> singleCheckBoxFields() {
-        return List.of(
-                "allow_electronic_income_verification",
-                "hipaa_legal_representative_authorization",
-                "program_authorization_and_certification",
-                "fiasp_vial",
-                "fiasp_flex_touch",
-                "fiasp_cartridge",
-                "tresiba_u100_vial",
-                "tresiba_u100_flex_touch",
-                "degludec_u100_vial",
-                "degludec_u100_flex_touch",
-                "tresiba_u200_flex_touch",
-                "degludec_u200_flex_touch",
-                "novolog_u100_vial",
-                "novolog_u100_flex_pen",
-                "novolog_u100_cartridge",
-                "aspart_injection_u100_vial",
-                "aspart_injection_u100_flex_pen",
-                "aspart_injection_u100_cartridge",
-                "novolog_mix_70_30_u100_vial",
-                "novolog_mix_70_30_u100_flex_pen",
-                "novolin_70_30_u100_vial",
-                "aspart_mix_70_30_u100_vial",
-                "aspart_mix_70_30_u100_flex_pen",
-                "novolin_r_u100_vial",
-                "novolin_n_u100_vial",
-                "zegalogue_auto_1pack",
-                "zegalogue_auto_2pack",
-                "zegalogue_syringe_1pack",
-                "zegalogue_syringe_2pack",
-                "novopen_echo_pen",
-                "ozempic_0_25mg_0_5mg_1pack",
-                "ozempic_1mg_1pack",
-                "ozempic_2mg_1pack",
-                "vicotoza_1_2mg_2pack",
-                "vicotoza_1_8mg_3pack",
-                "xultophy_5pack",
-                "auto_refill"
-        );
-    }
-
-    @Override
-    public Map<String, String> pdfFieldsMap() {
+    public Map<String, FC> pdfFieldsMap() {
         return new HashMap<>() {
             {
-                put("NewOrRenewal", "new_or_renewal");
-                put("FirstName", "patient_first_name");
-                put("LastName", "patient_last_name");
-                put("PatientDOB", "patient_dob");
-                put("Text Field 344", "patient_address");
-                put("Text Field 345", "patient_city");
-                put("PatientDOB 2", "patient_state");
-                put("PatientDOB 3", "patient_zip_code");
-                put("Text Field 346", "patient_home_number");
-                put("Text Field 347", "patient_mobile_number");
-                put("Text Field 348", "patient_email");
-                put("Gender", "patient_gender");
-                put("Coverage", "patient_coverage");
-                put("Text Field 428", "insurance_plan_name");
-                put("Text Field 429", "insurance_plan_member_id");
-                put("Text Field 430", "insurance_plan_phone_number");
-                put("Check Box 190", "insurance_employer_supplied_coverage");
-                put("Check Box 299", "insurance_medicare");
-                put("Check Box 188", "insurance_medicare_part_b");
-                put("Check Box 167", "insurance_va_military_benefits");
-                put("Check Box 300", "insurance_medicaid");
-                put("Check Box 187", "insurance_medicaid_low_income_subsidy");
-                put("Text Field 480", "patient_authorized_representative_name");
-                put("Text Field 479", "patient_authorized_representative_phone_number");
-                put("FamilyOther", "patient_authorized_representative_family_other");
-                put("Text Field 478", "patient_authorized_representative_caregiver");
-                put("Text Field 477", "signature_date");
-                put("Check Box 366", "allow_electronic_income_verification");
-                put("Text Field 412", "total_household_income");
-                put("Text Field 389", "number_of_people_in_household");
-                put("Text Field 390", "number_of_dependents");
-                put("Text Field 452", "medicare_drug_coverage_consent_member_number");
-                put("Text Field 444", "medicare_drug_coverage_consent_enrollment_year");
-                put("Text Field 443", "signature_date");
-                put("RepPermission", "patient_authorized_representative");
-                put("FirstName 4", "patient_authorized_representative_name");
-                put("Text Field 481", "signature_date");
-                put("Relationship 5", "patient_authorized_representative_family_other");
-                put("Text Field 457", "patient_authorized_representative_phone_number");
-                put("Text Field 458", "tcpa_phone_number");
-                put("Check Box 367", "program_authorization_and_certification");
-                put("Check Box 368", "hipaa_legal_representative_authorization");
-                put("FirstName 5", "hipaa_legal_representative");
-                put("Relationship 6", "hipaa_legal_representative_relationship");
-                put("Text Field 482", "hipaa_legal_representative_phone_number");
-                put("Text Field 483", "signature_date");
-                put("Text Field 405", "known_drug_allergies");
-                put("FirstName 2", "prescriber_first_name");
-                put("LastName 2", "prescriber_last_name");
-                put("Text Field 394", "prescriber_designation");
-                put("Text Field 463", "prescriber_address");
-                put("Text Field 464", "prescriber_address_2");
-                put("Text Field 453", "prescriber_city");
-                put("PatientDOB 5", "prescriber_state");
-                put("PatientDOB 4", "prescriber_zip_code");
-                put("Text Field 396", "prescriber_phone_number");
-                put("Text Field 398", "prescriber_state_license_number");
-                put("Text Field 432", "prescriber_state_license");
-                put("Text Field 401", "prescriber_fax");
-                put("Text Field 404", "prescriber_office_contact");
-                put("Text Field 4019", "prescriber_office_email");
-                put("Text Field 484", "prescriber_npi");
-                put("Text Field 4025", "days_closed_for_deliveries");
-                put("Text Field 392", "signature_date");
-
-                put("Text Field 4022", "fiasp_max");
-                put("Text Field 4033", "fiasp_sig_directions");
-                put("Check Box 365", "fiasp_vial");
-                put("Check Box 364", "fiasp_flex_touch");
-                put("Check Box 363", "fiasp_cartridge");
-                put("Text Field 408", "fiasp_qty");
-
-                put("Text Field 4023", "tresiba_u100_max");
-                put("Text Field 4034", "tresiba_u100_sig_directions");
-                put("Check Box 362", "tresiba_u100_vial");
-                put("Check Box 361", "tresiba_u100_flex_touch");
-                put("Text Field 409", "tresiba_u100_qty");
-
-                put("Text Field 4053", "degludec_u100_max");
-                put("Text Field 4052", "degludec_u100_sig_directions");
-                put("Check Box 3022", "degludec_u100_vial");
-                put("Check Box 3021", "degludec_u100_flex_touch");
-                put("Text Field 4051", "degludec_u100_qty");
-
-                put("Text Field 4024", "tresiba_u200_max");
-                put("Text Field 4035", "tresiba_u200_sig_directions");
-                put("Check Box 360", "tresiba_u200_flex_touch");
-                put("Text Field 4010", "tresiba_u200_qty");
-
-                put("Text Field 4049", "degludec_u200_max");
-                put("Text Field 4048", "degludec_u200_sig_directions");
-                put("Check Box 3020", "degludec_u200_flex_touch");
-                put("Text Field 4047", "degludec_u200_qty");
-
-                put("Text Field 4026", "novolog_u100_max");
-                put("Text Field 4037", "novolog_u100_sig_directions");
-                put("Check Box 357", "novolog_u100_vial");
-                put("Check Box 356", "novolog_u100_flex_pen");
-                put("Check Box 355", "novolog_u100_cartridge");
-                put("Text Field 4012", "novolog_u100_qty");
-
-                put("Text Field 4027", "aspart_injection_u100_max");
-                put("Text Field 4038", "aspart_injection_u100_sig_directions");
-                put("Check Box 354", "aspart_injection_u100_vial");
-                put("Check Box 3019", "aspart_injection_u100_flex_pen");
-                put("Check Box 3018", "aspart_injection_u100_cartridge");
-                put("Text Field 4013", "aspart_injection_u100_qty");
-
-                put("Text Field 4028", "novolog_mix_70_30_u100_vial_max");
-                put("Text Field 4039", "novolog_mix_70_30_u100_vial_sig_directions");
-                put("Check Box 3017", "novolog_mix_70_30_u100_vial");
-                put("Check Box 3016", "novolog_mix_70_30_u100_flex_pen");
-                put("Text Field 4014", "novolog_mix_70_30_u100_vial_qty");
-
-                put("Text Field 4032", "aspart_mix_70_30_u100_max");
-                put("Text Field 4046", "aspart_mix_70_30_u100_sig_directions");
-                put("Check Box 3015", "aspart_mix_70_30_u100_vial");
-                put("Check Box 3014", "aspart_mix_70_30_u100_flex_pen");
-                put("Text Field 4021", "aspart_mix_70_30_u100_qty");
-
-                put("Text Field 4029", "novolin_r_u100_max");
-                put("Text Field 4040", "novolin_r_u100_sig_directions");
-                put("Check Box 353", "novolin_r_u100_vial");
-                put("Text Field 4015", "novolin_r_u100_qty");
-
-                put("Text Field 4030", "novolin_n_u100_max");
-                put("Text Field 4041", "novolin_n_u100_sig_directions");
-                put("Check Box 352", "novolin_n_u100_vial");
-                put("Text Field 4016", "novolin_n_u100_qty");
-
-                put("Text Field 4031", "novolin_70_30_u100_max");
-                put("Text Field 4043", "novolin_70_30_u100_sig_directions");
-                put("Check Box 351", "novolin_70_30_u100_vial");
-                put("Text Field 4017", "novolin_70_30_u100_qty");
-
-                put("Text Field 4018", "novo_fine_qty");
-
-                put("Check Box 305", "zegalogue_auto_1pack");
-                put("Check Box 306", "zegalogue_auto_2pack");
-                put("Check Box 308", "zegalogue_syringe_1pack");
-                put("Check Box 307", "zegalogue_syringe_2pack");
-                put("Text Field 4042", "zegalogue_qty");
-
-                put("Check Box 303", "novopen_echo_pen");
-
-                put("Text Field 4076", "ozempic_0_25mg_0_5mg_1pack_sig_directions");
-                put("Check Box 278", "ozempic_0_25mg_0_5mg_1pack");
-                put("Text Field 4075", "ozempic_0_25mg_0_5mg_1pack_qty");
-
-                put("Text Field 4078", "ozempic_1mg_1pack_sig_directions");
-                put("Check Box 279", "ozempic_1mg_1pack");
-                put("Text Field 4080", "ozempic_1mg_1pack_qty");
-
-                put("Text Field 4079", "ozempic_2mg_1pack_sig_directions");
-                put("Check Box 301", "ozempic_2mg_1pack");
-                put("Text Field 4081", "ozempic_2mg_1pack_qty");
-
-                put("Text Field 4071", "vicotoza_1_2mg_2pack_max");
-                put("Text Field 4070", "vicotoza_1_2mg_2pack_sig_directions");
-                put("Check Box 280", "vicotoza_1_2mg_2pack");
-                put("Text Field 4069", "vicotoza_1_2mg_2pack_qty");
-
-                put("Text Field 4068", "vicotoza_1_8mg_3pack_max");
-                put("Text Field 4067", "vicotoza_1_8mg_3pack_sig_directions");
-                put("Check Box 281", "vicotoza_1_8mg_3pack");
-                put("Text Field 4066", "vicotoza_1_8mg_3pack_qty");
-
-                put("Text Field 4065", "xultophy_5pack_max");
-                put("Text Field 4064", "xultophy_5pack_sig_directions");
-                put("Check Box 282", "xultophy_5pack");
-                put("Text Field 4063", "xultophy_5pack_qty");
-
-                put("Text Field 4062", "rybelsus_60_day_max");
-                put("Text Field 4061", "rybelsus_60_day_sig_directions");
-                put("RYB60", "rybelsus_60_day");
-
-                put("Text Field 4059", "rybelsus_120_day_max");
-                put("Text Field 4058", "rybelsus_120_day_sig_directions");
-                put("RYB120", "rybelsus_120_day");
-
-                put("Check Box 295", "auto_refill");
+                put("NewOrRenewal", new FC("new_or_renewal", RADIO));
+                put("FirstName", new FC("patient_first_name", TEXT));
+                put("LastName", new FC("patient_last_name", TEXT));
+                put("PatientDOB", new FC("patient_dob", DATE));
+                put("Text Field 344", new FC("patient_address", TEXT));
+                put("Text Field 345", new FC("patient_city", TEXT));
+                put("PatientDOB 2", new FC("patient_state", TEXT));
+                put("PatientDOB 3", new FC("patient_zip_code", TEXT));
+                put("Text Field 346", new FC("patient_home_number", TEXT));
+                put("Text Field 347", new FC("patient_mobile_number", TEXT));
+                put("Text Field 348", new FC("patient_email", TEXT));
+                put("Gender", new FC("patient_gender", RADIO));
+                put("Coverage", new FC("patient_coverage", RADIO));
+                put("Text Field 428", new FC("insurance_plan_name", TEXT));
+                put("Text Field 429", new FC("insurance_plan_member_id", TEXT));
+                put("Text Field 430", new FC("insurance_plan_phone_number", TEXT));
+                put("Check Box 190", new FC("insurance_employer_supplied_coverage", SINGLE_CHECKBOX));
+                put("Check Box 299", new FC("insurance_medicare", SINGLE_CHECKBOX));
+                put("Check Box 188", new FC("insurance_medicare_part_b", SINGLE_CHECKBOX));
+                put("Check Box 167", new FC("insurance_va_military_benefits", SINGLE_CHECKBOX));
+                put("Check Box 300", new FC("insurance_medicaid", SINGLE_CHECKBOX));
+                put("Check Box 187", new FC("insurance_medicaid_low_income_subsidy", SINGLE_CHECKBOX));
+                put("Text Field 480", new FC("patient_authorized_representative_name", TEXT));
+                put("Text Field 479", new FC("patient_authorized_representative_phone_number", TEXT));
+                put("FamilyOther", new FC("patient_authorized_representative_family_other", RADIO));
+                put("Text Field 478", new FC("patient_authorized_representative_caregiver", TEXT));
+                put("Text Field 477", new FC("signature_date", TEXT));
+                put("Check Box 366", new FC("allow_electronic_income_verification", SINGLE_CHECKBOX));
+                put("Text Field 412", new FC("total_household_income", TEXT));
+                put("Text Field 389", new FC("number_of_people_in_household", TEXT));
+                put("Text Field 390", new FC("number_of_dependents", TEXT));
+                put("Text Field 452", new FC("medicare_drug_coverage_consent_member_number", TEXT));
+                put("Text Field 444", new FC("medicare_drug_coverage_consent_enrollment_year", TEXT));
+                put("Text Field 443", new FC("signature_date", TEXT));
+                put("RepPermission", new FC("patient_authorized_representative", RADIO));
+                put("FirstName 4", new FC("patient_authorized_representative_name", TEXT));
+                put("Text Field 481", new FC("signature_date", TEXT));
+                put("Relationship 5", new FC("patient_authorized_representative_family_other", RADIO));
+                put("Text Field 457", new FC("patient_authorized_representative_phone_number", TEXT));
+                put("Text Field 458", new FC("tcpa_phone_number", TEXT));
+                put("Check Box 367", new FC("program_authorization_and_certification", SINGLE_CHECKBOX));
+                put("Check Box 368", new FC("hipaa_legal_representative_authorization", SINGLE_CHECKBOX));
+                put("FirstName 5", new FC("hipaa_legal_representative", TEXT));
+                put("Relationship 6", new FC("hipaa_legal_representative_relationship", TEXT));
+                put("Text Field 482", new FC("hipaa_legal_representative_phone_number", TEXT));
+                put("Text Field 483", new FC("signature_date", TEXT));
+                put("Text Field 405", new FC("known_drug_allergies", TEXT));
+                put("FirstName 2", new FC("prescriber_first_name", TEXT));
+                put("LastName 2", new FC("prescriber_last_name", TEXT));
+                put("Text Field 394", new FC("prescriber_designation", TEXT));
+                put("Text Field 463", new FC("prescriber_address", TEXT));
+                put("Text Field 464", new FC("prescriber_address_2", TEXT));
+                put("Text Field 453", new FC("prescriber_city", TEXT));
+                put("PatientDOB 5", new FC("prescriber_state", TEXT));
+                put("PatientDOB 4", new FC("prescriber_zip_code", TEXT));
+                put("Text Field 396", new FC("prescriber_phone_number", TEXT));
+                put("Text Field 398", new FC("prescriber_state_license_number", TEXT));
+                put("Text Field 432", new FC("prescriber_state_license", TEXT));
+                put("Text Field 401", new FC("prescriber_fax", TEXT));
+                put("Text Field 404", new FC("prescriber_office_contact", TEXT));
+                put("Text Field 4019", new FC("prescriber_office_email", TEXT));
+                put("Text Field 484", new FC("prescriber_npi", TEXT));
+                put("Text Field 4025", new FC("days_closed_for_deliveries", TEXT));
+                put("Text Field 392", new FC("signature_date", TEXT));
+                put("Text Field 4022", new FC("fiasp_max", TEXT));
+                put("Text Field 4033", new FC("fiasp_sig_directions", TEXT));
+                put("Check Box 365", new FC("fiasp_vial", SINGLE_CHECKBOX));
+                put("Check Box 364", new FC("fiasp_flex_touch", SINGLE_CHECKBOX));
+                put("Check Box 363", new FC("fiasp_cartridge", SINGLE_CHECKBOX));
+                put("Text Field 408", new FC("fiasp_qty", TEXT));
+                put("Text Field 4023", new FC("tresiba_u100_max", TEXT));
+                put("Text Field 4034", new FC("tresiba_u100_sig_directions", TEXT));
+                put("Check Box 362", new FC("tresiba_u100_vial", SINGLE_CHECKBOX));
+                put("Check Box 361", new FC("tresiba_u100_flex_touch", SINGLE_CHECKBOX));
+                put("Text Field 409", new FC("tresiba_u100_qty", TEXT));
+                put("Text Field 4053", new FC("degludec_u100_max", TEXT));
+                put("Text Field 4052", new FC("degludec_u100_sig_directions", TEXT));
+                put("Check Box 3022", new FC("degludec_u100_vial", SINGLE_CHECKBOX));
+                put("Check Box 3021", new FC("degludec_u100_flex_touch", SINGLE_CHECKBOX));
+                put("Text Field 4051", new FC("degludec_u100_qty", TEXT));
+                put("Text Field 4024", new FC("tresiba_u200_max", TEXT));
+                put("Text Field 4035", new FC("tresiba_u200_sig_directions", TEXT));
+                put("Check Box 360", new FC("tresiba_u200_flex_touch", SINGLE_CHECKBOX));
+                put("Text Field 4010", new FC("tresiba_u200_qty", TEXT));
+                put("Text Field 4049", new FC("degludec_u200_max", TEXT));
+                put("Text Field 4048", new FC("degludec_u200_sig_directions", TEXT));
+                put("Check Box 3020", new FC("degludec_u200_flex_touch", SINGLE_CHECKBOX));
+                put("Text Field 4047", new FC("degludec_u200_qty", TEXT));
+                put("Text Field 4026", new FC("novolog_u100_max", TEXT));
+                put("Text Field 4037", new FC("novolog_u100_sig_directions", TEXT));
+                put("Check Box 357", new FC("novolog_u100_vial", SINGLE_CHECKBOX));
+                put("Check Box 356", new FC("novolog_u100_flex_pen", SINGLE_CHECKBOX));
+                put("Check Box 355", new FC("novolog_u100_cartridge", SINGLE_CHECKBOX));
+                put("Text Field 4012", new FC("novolog_u100_qty", TEXT));
+                put("Text Field 4027", new FC("aspart_injection_u100_max", TEXT));
+                put("Text Field 4038", new FC("aspart_injection_u100_sig_directions", TEXT));
+                put("Check Box 354", new FC("aspart_injection_u100_vial", SINGLE_CHECKBOX));
+                put("Check Box 3019", new FC("aspart_injection_u100_flex_pen", SINGLE_CHECKBOX));
+                put("Check Box 3018", new FC("aspart_injection_u100_cartridge", SINGLE_CHECKBOX));
+                put("Text Field 4013", new FC("aspart_injection_u100_qty", TEXT));
+                put("Text Field 4028", new FC("novolog_mix_70_30_u100_vial_max", TEXT));
+                put("Text Field 4039", new FC("novolog_mix_70_30_u100_vial_sig_directions", TEXT));
+                put("Check Box 3017", new FC("novolog_mix_70_30_u100_vial", SINGLE_CHECKBOX));
+                put("Check Box 3016", new FC("novolog_mix_70_30_u100_flex_pen", SINGLE_CHECKBOX));
+                put("Text Field 4014", new FC("novolog_mix_70_30_u100_vial_qty", TEXT));
+                put("Text Field 4032", new FC("aspart_mix_70_30_u100_max", TEXT));
+                put("Text Field 4046", new FC("aspart_mix_70_30_u100_sig_directions", TEXT));
+                put("Check Box 3015", new FC("aspart_mix_70_30_u100_vial", SINGLE_CHECKBOX));
+                put("Check Box 3014", new FC("aspart_mix_70_30_u100_flex_pen", SINGLE_CHECKBOX));
+                put("Text Field 4021", new FC("aspart_mix_70_30_u100_qty", TEXT));
+                put("Text Field 4029", new FC("novolin_r_u100_max", TEXT));
+                put("Text Field 4040", new FC("novolin_r_u100_sig_directions", TEXT));
+                put("Check Box 353", new FC("novolin_r_u100_vial", SINGLE_CHECKBOX));
+                put("Text Field 4015", new FC("novolin_r_u100_qty", TEXT));
+                put("Text Field 4030", new FC("novolin_n_u100_max", TEXT));
+                put("Text Field 4041", new FC("novolin_n_u100_sig_directions", TEXT));
+                put("Check Box 352", new FC("novolin_n_u100_vial", SINGLE_CHECKBOX));
+                put("Text Field 4016", new FC("novolin_n_u100_qty", TEXT));
+                put("Text Field 4031", new FC("novolin_70_30_u100_max", TEXT));
+                put("Text Field 4043", new FC("novolin_70_30_u100_sig_directions", TEXT));
+                put("Check Box 351", new FC("novolin_70_30_u100_vial", SINGLE_CHECKBOX));
+                put("Text Field 4017", new FC("novolin_70_30_u100_qty", TEXT));
+                put("Text Field 4018", new FC("novo_fine_qty", TEXT));
+                put("Check Box 305", new FC("zegalogue_auto_1pack", SINGLE_CHECKBOX));
+                put("Check Box 306", new FC("zegalogue_auto_2pack", SINGLE_CHECKBOX));
+                put("Check Box 308", new FC("zegalogue_syringe_1pack", SINGLE_CHECKBOX));
+                put("Check Box 307", new FC("zegalogue_syringe_2pack", SINGLE_CHECKBOX));
+                put("Text Field 4042", new FC("zegalogue_qty", TEXT));
+                put("Check Box 303", new FC("novopen_echo_pen", SINGLE_CHECKBOX));
+                put("Text Field 4076", new FC("ozempic_0_25mg_0_5mg_1pack_sig_directions", TEXT));
+                put("Check Box 278", new FC("ozempic_0_25mg_0_5mg_1pack", SINGLE_CHECKBOX));
+                put("Text Field 4075", new FC("ozempic_0_25mg_0_5mg_1pack_qty", TEXT));
+                put("Text Field 4078", new FC("ozempic_1mg_1pack_sig_directions", TEXT));
+                put("Check Box 279", new FC("ozempic_1mg_1pack", SINGLE_CHECKBOX));
+                put("Text Field 4080", new FC("ozempic_1mg_1pack_qty", TEXT));
+                put("Text Field 4079", new FC("ozempic_2mg_1pack_sig_directions", TEXT));
+                put("Check Box 301", new FC("ozempic_2mg_1pack", SINGLE_CHECKBOX));
+                put("Text Field 4081", new FC("ozempic_2mg_1pack_qty", TEXT));
+                put("Text Field 4071", new FC("vicotoza_1_2mg_2pack_max", TEXT));
+                put("Text Field 4070", new FC("vicotoza_1_2mg_2pack_sig_directions", TEXT));
+                put("Check Box 280", new FC("vicotoza_1_2mg_2pack", SINGLE_CHECKBOX));
+                put("Text Field 4069", new FC("vicotoza_1_2mg_2pack_qty", TEXT));
+                put("Text Field 4068", new FC("vicotoza_1_8mg_3pack_max", TEXT));
+                put("Text Field 4067", new FC("vicotoza_1_8mg_3pack_sig_directions", TEXT));
+                put("Check Box 281", new FC("vicotoza_1_8mg_3pack", SINGLE_CHECKBOX));
+                put("Text Field 4066", new FC("vicotoza_1_8mg_3pack_qty", TEXT));
+                put("Text Field 4065", new FC("xultophy_5pack_max", TEXT));
+                put("Text Field 4064", new FC("xultophy_5pack_sig_directions", TEXT));
+                put("Check Box 282", new FC("xultophy_5pack", SINGLE_CHECKBOX));
+                put("Text Field 4063", new FC("xultophy_5pack_qty", TEXT));
+                put("Text Field 4062", new FC("rybelsus_60_day_max", TEXT));
+                put("Text Field 4061", new FC("rybelsus_60_day_sig_directions", TEXT));
+                put("RYB60", new FC("rybelsus_60_day", RADIO));
+                put("Text Field 4059", new FC("rybelsus_120_day_max", TEXT));
+                put("Text Field 4058", new FC("rybelsus_120_day_sig_directions", TEXT));
+                put("RYB120", new FC("rybelsus_120_day", RADIO));
+                put("Check Box 295", new FC("auto_refill", SINGLE_CHECKBOX));
             }
         };
     }
