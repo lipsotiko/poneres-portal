@@ -4,34 +4,31 @@
       <strong>{{ label }}</strong>
     </label>
     <div class="signature-pad-wrapper">
-      <canvas
-        ref="signaturePadCanvas"
-        class="signature-pad"
-        width="600"
-        height="200"
-      >
-      </canvas>
-    </div>
-    <div class="upload-section">
-
+      <canvas ref="signaturePadCanvas" class="signature-pad" width="600" height="200" />
     </div>
     <div class="signature-buttons">
-      <input
-        type="file"
-        :disabled="signed"
-        @change="onFilePickedFn"
-      />
-      <IButton @click="clear">Clear</IButton>
-      <IButton @click="save" color="primary" :disabled="signed">Save</IButton>
+      <input ref="fileInput" type="file" :disabled="signed || isUploading" @change="onFilePickedFn" />
+      <IButton @click="clear" :disabled="isUploading">Clear</IButton>
+      <IButton @click="save" color="primary" :disabled="signed" :loading="isUploading">Save</IButton>
     </div>
+    <div class="upload-section">
+        <ICheckbox v-if="isUpload" v-model="removeBackground" :disabled="isUploading">Remove background</ICheckbox>
+    </div>
+    <canvas style="display: none" ref="tmpCanvas" width="600" height="200" />
   </div>
 </template>
 <script setup>
 import SignaturePad from "signature_pad";
 import trimCanvas from "trim-canvas";
+import imglyRemoveBackground from "@imgly/background-removal"
 
 const props = defineProps(["label", "signature"]);
+const isUpload = ref(false);
+const isUploading = ref(false);
+const removeBackground = ref(false);
+const tmpCanvas = ref();
 const signaturePadCanvas = ref();
+const fileInput = ref();
 let signed = ref(false);
 let signaturePad;
 
@@ -51,27 +48,61 @@ onMounted(() => {
 const emit = defineEmits(["save", "clear"]);
 
 const clear = () => {
+  fileInput.value.value = "";
+  isUpload.value = false;
   signed.value = false;
   signaturePad.clear();
   emit("clear");
 };
 
-const save = () => {
+const save = async () => {
   if (signaturePad.isEmpty()) {
     return alert("Please provide a signature first.");
   }
 
-  let copy = document.createElement("canvas");
-  copy.width = signaturePadCanvas.value.width;
-  copy.height = signaturePadCanvas.value.height;
-  copy.getContext("2d").drawImage(signaturePadCanvas.value, 0, 0);
+  if (isUpload.value) {
+    isUploading.value = true;
+    if (removeBackground.value) {
+      const removedBgBlob = await imglyRemoveBackground(signaturePadCanvas.value.toDataURL(), {
+        model: 'small',
+        progress: (key, current, total) => {
+          console.log(key, current, total);
+        }
+      });
 
+      const image = await blobToImage(removedBgBlob);
+      const ctx = tmpCanvas.value.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(image, 0, 0);
+
+      const trimmed = trimCanvas(tmpCanvas.value).toDataURL("image/png");
+      emit("save", trimmed);
+    } else {
+      emit("save", signaturePadCanvas.value.toDataURL());
+    }
+  } else {
+    const trimmed = trimCanvas(signaturePadCanvas.value).toDataURL("image/png");
+    emit("save", trimmed);
+  }
   signed.value = true;
-
-  emit("save", trimCanvas(copy).toDataURL("image/png"));
+  isUpload.value = false;
+  isUploading.value = false;
+  fileInput.value.value = "";
 };
 
+const blobToImage = async (blob) => {
+  return new Promise(resolve => {
+    const url = URL.createObjectURL(blob)
+    let img = new Image()
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      resolve(img)
+    }
+    img.src = url
+  })
+}
+
 const onFilePickedFn = (e) => {
+  isUpload.value = true;
   const file = e.target.files[0];
   const reader = new FileReader();
   reader.onloadend = () => {
@@ -86,6 +117,7 @@ const onFilePickedFn = (e) => {
 .signature-label {
   margin-bottom: 8px;
 }
+
 .signature-pad-container {
   display: block;
   width: 600px;
@@ -100,7 +132,6 @@ const onFilePickedFn = (e) => {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border: solid black 1px;
   margin-bottom: 22px;
 }
 
@@ -111,6 +142,13 @@ const onFilePickedFn = (e) => {
   width: 600px;
   height: 200px;
   background-color: white;
+  border: solid var(--color-light) 1px;
+  border-radius: 4px;
+}
+
+.upload-section {
+  margin-bottom: 8px;
+  padding: 0 26px;
 }
 
 .signature-buttons {

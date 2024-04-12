@@ -144,8 +144,4 @@ public class TextToImageBuilder {
         }
         return baos.toByteArray();
     }
-
-    public byte[] convertToPng(String signature) {
-        return convertToPng(signature, SignatureFont.BERLIMAN);
-    }
 }
