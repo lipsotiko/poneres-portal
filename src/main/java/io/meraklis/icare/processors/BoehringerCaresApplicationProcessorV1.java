@@ -31,20 +31,20 @@ public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationPr
     }
 
     @Override
-    public List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature) {
+    public List<SignatureConfig> signatureConfigs(String patientSignatureId, String prescriberSignatureId) {
         List<SignatureConfig> configs = new ArrayList<>();
 
         int mh = 32;
-        if (patientSignature != null) {
+        if (patientSignatureId != null) {
             // Height & width reflect the middle left of the signature area;
-            configs.add(SignatureConfig.builder().page(1).signatureBase64(patientSignature).xPos(222).yPos(112).maxHeight(mh).build());
-            configs.add(SignatureConfig.builder().page(2).signatureBase64(patientSignature).xPos(222).yPos(89).maxHeight(mh).build());
-            configs.add(SignatureConfig.builder().page(3).signatureBase64(patientSignature).xPos(222).yPos(186).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(1).signatureId(patientSignatureId).xPos(222).yPos(112).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(2).signatureId(patientSignatureId).xPos(222).yPos(89).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(3).signatureId(patientSignatureId).xPos(222).yPos(186).maxHeight(mh).build());
         }
 
-        if (prescriberSignature != null) {
+        if (prescriberSignatureId != null) {
             // Height & width reflect the middle left of the signature area;
-            configs.add(SignatureConfig.builder().page(4).signatureBase64(prescriberSignature).xPos(222).yPos(62).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(4).signatureId(prescriberSignatureId).xPos(222).yPos(62).maxHeight(mh).build());
         }
         return configs;
     }

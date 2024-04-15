@@ -41,21 +41,21 @@ public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcess
         return List.of("patient_full_name");
     }
 
-    private List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature, Integer medicationDocumentsCount) {
+    private List<SignatureConfig> signatureConfigs(String patientSignatureId, String prescriberSignatureId, Integer medicationDocumentsCount) {
         List<SignatureConfig> configs = new ArrayList<>();
 
         int mh = 32;
-        if (patientSignature != null) {
-            configs.add(SignatureConfig.builder().page(3).signatureBase64(patientSignature).xPos(186).yPos(115).maxHeight(mh).build());
-            configs.add(SignatureConfig.builder().page(4).signatureBase64(patientSignature).xPos(186).yPos(115).maxHeight(mh).build());
+        if (patientSignatureId != null) {
+            configs.add(SignatureConfig.builder().page(3).signatureId(patientSignatureId).xPos(186).yPos(115).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(4).signatureId(patientSignatureId).xPos(186).yPos(115).maxHeight(mh).build());
         }
 
-        if (prescriberSignature != null) {
-            configs.add(SignatureConfig.builder().page(5).signatureBase64(prescriberSignature).xPos(136).yPos(235).maxHeight(mh).build());
+        if (prescriberSignatureId != null) {
+            configs.add(SignatureConfig.builder().page(5).signatureId(prescriberSignatureId).xPos(136).yPos(235).maxHeight(mh).build());
 
             for (int i = 0; i < medicationDocumentsCount; i++) {
                 int pageNumber = i + 6;
-                configs.add(SignatureConfig.builder().page(pageNumber).signatureBase64(prescriberSignature).xPos(116).yPos(255).maxHeight(mh).build());
+                configs.add(SignatureConfig.builder().page(pageNumber).signatureId(prescriberSignatureId).xPos(116).yPos(255).maxHeight(mh).build());
             }
         }
         return configs;

@@ -195,20 +195,20 @@ public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProces
     }
 
     @Override
-    public List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature) {
+    public List<SignatureConfig> signatureConfigs(String patientSignatureId, String prescriberSignatureId) {
         List<SignatureConfig> configs = new ArrayList<>();
         int mh = 32;
-        if (patientSignature != null) {
+        if (patientSignatureId != null) {
             // Height & width reflect the middle left of the signature area;
-            configs.add(SignatureConfig.builder().page(1).signatureBase64(patientSignature).xPos(268).yPos(73).maxHeight(mh).build());
-            configs.add(SignatureConfig.builder().page(1).signatureBase64(patientSignature).xPos(110).yPos(344).maxHeight(mh).build());
-            configs.add(SignatureConfig.builder().page(2).signatureBase64(patientSignature).xPos(204).yPos(464).maxHeight(mh).build());
-            configs.add(SignatureConfig.builder().page(2).signatureBase64(patientSignature).xPos(204).yPos(138).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(1).signatureId(patientSignatureId).xPos(268).yPos(73).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(1).signatureId(patientSignatureId).xPos(110).yPos(344).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(2).signatureId(patientSignatureId).xPos(204).yPos(464).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(2).signatureId(patientSignatureId).xPos(204).yPos(138).maxHeight(mh).build());
         }
 
-        if (prescriberSignature != null) {
+        if (prescriberSignatureId != null) {
             // Height & width reflect the middle left of the signature area;
-            configs.add(SignatureConfig.builder().page(3).signatureBase64(prescriberSignature).xPos(168).yPos(400).maxHeight(mh).build());
+            configs.add(SignatureConfig.builder().page(3).signatureId(prescriberSignatureId).xPos(168).yPos(400).maxHeight(mh).build());
         }
         return configs;
     }

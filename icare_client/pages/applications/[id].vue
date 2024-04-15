@@ -3,8 +3,8 @@
     <div class="top">
       <h1 v-if="pending">...</h1>
       <h1 v-else>
-        {{ data.metadata.patient_first_name }}
-        {{ data.metadata.patient_last_name }}
+        {{ data.application.metadata.patient_first_name }}
+        {{ data.application.metadata.patient_last_name }}
       </h1>
       <div>
         <IButton size="sm" to="/">Home</IButton>
@@ -21,32 +21,32 @@
       </template>
       <ITab name="tab-1">
         <LillyCaresFormV1
-          v-if="data.type === 'LILLY_CARES_V1'"
+          v-if="data.application.type === 'LILLY_CARES_V1'"
           showDelete
           :showLoadTestData="false"
           :id="applicationId"
-          :metadata="data.metadata"
-          :disabled="data.signedByPatient"
+          :metadata="data.application.metadata"
+          :disabled="data.application.signedByPatient"
           @submit="submitFn"
           @delete="deletePatientApplicationFn"
         />
         <BoehringerCaresFormV1
-          v-else-if="data.type === 'BOEHRINGER_CARES_V1'"
+          v-else-if="data.application.type === 'BOEHRINGER_CARES_V1'"
           showDelete
           :showLoadTestData="false"
           :id="applicationId"
-          :metadata="data.metadata"
-          :disabled="data.signedByPatient"
+          :metadata="data.application.metadata"
+          :disabled="data.application.signedByPatient"
           @submit="submitFn"
           @delete="deletePatientApplicationFn"
         />
         <NovoNordiskV1
-          v-else-if="data.type === 'NOVO_NORDISK_V1'"
+          v-else-if="data.application.type === 'NOVO_NORDISK_V1'"
           showDelete
           :showLoadTestData="false"
           :id="applicationId"
-          :metadata="data.metadata"
-          :disabled="data.signedByPatient"
+          :metadata="data.application.metadata"
+          :disabled="data.application.signedByPatient"
           @submit="submitFn"
           @delete="deletePatientApplicationFn"
         />
@@ -104,27 +104,21 @@
       </ITab>
       <ITab name="tab-3">
         <IContainer>
-          <IRow>
-            <IColumn sm="12">
-              <SignaturePad
-                label="Patient Signature"
-                :signature="data.patientSignature"
-                @clear="clearPatientSignatureFn"
-                @save="savePatientSignatureFn"
-              />
-            </IColumn>
-          </IRow>
+          <SignaturePad
+            label="Patient Signature"
+            type="PATIENT"
+            :signature="data.patientSignature"
+            @clear="clearPatientSignatureFn"
+            @save="savePatientSignatureFn"
+          />
           <hr />
-          <IRow>
-            <IColumn sm="12">
-              <SignaturePad
-                label="Prescriber Signature"
-                :signature="data.prescriberSignature"
-                @clear="clearPrescriberSignatureFn"
-                @save="savePrescriberSignatureFn"
-              />
-            </IColumn>
-          </IRow>
+          <SignaturePad
+            label="Prescriber Signature"
+            type="PRESCRIBER"
+            :signature="data.prescriberSignature"
+            @clear="clearPrescriberSignatureFn"
+            @save="savePrescriberSignatureFn"
+          />
         </IContainer>
       </ITab>
       <ITab name="tab-4">
@@ -258,7 +252,7 @@ const savePatientSignatureFn = async (signature) => {
 };
 
 const clearPatientSignatureFn = async () => {
-  await savePatientSignature(applicationId, { clear: true });
+  await clearPatientSignature(applicationId);
   toast.show({
     title: "Success",
     message: "Patient signature cleared!",
@@ -276,7 +270,7 @@ const savePrescriberSignatureFn = async (signature) => {
 };
 
 const clearPrescriberSignatureFn = async () => {
-  await savePrescriberSignature(applicationId, { clear: true });
+  await clearPrescriberSignature(applicationId);
   toast.show({
     title: "Success",
     message: "Prescriber signature cleared!",

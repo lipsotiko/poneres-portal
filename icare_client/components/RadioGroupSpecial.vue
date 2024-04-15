@@ -7,7 +7,7 @@
   />
 </template>
 <script setup>
-import { ref, defineProps, onUpdated, onMounted } from "vue";
+import { ref, onUpdated, onMounted } from "vue";
 
 /**
  * Some applications have fields with check boxes rather than radio fields;

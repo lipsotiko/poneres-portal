@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class SignatureConfig {
     private int page;
-    private String signatureBase64;
+    private String signatureId;
     private int xPos;
     private int yPos;
     private int maxHeight;

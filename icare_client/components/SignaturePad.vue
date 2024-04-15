@@ -1,28 +1,42 @@
 <template>
-  <div class="signature-pad-container">
-    <label class="signature-label">
-      <strong>{{ label }}</strong>
-    </label>
-    <div class="signature-pad-wrapper">
-      <canvas ref="signaturePadCanvas" class="signature-pad" width="600" height="200" />
-    </div>
-    <div class="signature-buttons">
-      <input ref="fileInput" type="file" :disabled="signed || isUploading" @change="onFilePickedFn" />
-      <IButton @click="clear" :disabled="isUploading">Clear</IButton>
-      <IButton @click="save" color="primary" :disabled="signed" :loading="isUploading">Save</IButton>
-    </div>
-    <div class="upload-section">
-        <ICheckbox v-if="isUpload" v-model="removeBackground" :disabled="isUploading">Remove background</ICheckbox>
-    </div>
-    <canvas style="display: none" ref="tmpCanvas" width="600" height="200" />
-  </div>
+  <IRow>
+    <IColumn sm="8">
+      <div class="signature-pad-container">
+        <label class="signature-label">
+          <strong>{{ label }}</strong>
+        </label>
+        <div class="signature-pad-wrapper">
+          <canvas ref="signaturePadCanvas" class="signature-pad" width="600" height="200" />
+        </div>
+        <div class="signature-buttons">
+          <input ref="fileInput" type="file" :disabled="signed || isUploading" @change="onFilePickedFn" />
+          <IButton @click="clear" :disabled="isUploading">Clear</IButton>
+          <IButton @click="save" color="primary" :disabled="signed" :loading="isUploading">Save</IButton>
+        </div>
+        <div class="upload-section">
+            <ICheckbox v-if="isUpload" v-model="removeBackground" :disabled="isUploading">Remove background</ICheckbox>
+        </div>
+        <canvas style="display: none" ref="tmpCanvas" width="600" height="200" />
+      </div>
+    </IColumn>
+    <IColumn sm="4">
+      <label class="signature-label">
+        <strong>
+          Apply Previous Signature
+        </strong>
+      </label>
+      <ul>
+        <li v-for="s in previousSignaatures">{{ s.uploadedAt }}</li>
+      </ul>
+    </IColumn>
+  </IRow>
 </template>
 <script setup>
 import SignaturePad from "signature_pad";
 import trimCanvas from "trim-canvas";
 import imglyRemoveBackground from "@imgly/background-removal"
 
-const props = defineProps(["label", "signature"]);
+const props = defineProps(["label", "signature", "type"]);
 const isUpload = ref(false);
 const isUploading = ref(false);
 const removeBackground = ref(false);
@@ -32,7 +46,9 @@ const fileInput = ref();
 let signed = ref(false);
 let signaturePad;
 
-onMounted(() => {
+const previousSignaatures = ref([]);
+
+onMounted(async () => {
   signaturePad = new SignaturePad(signaturePadCanvas.value, {
     throttle: 0,
     minWidth: 1,
@@ -43,6 +59,8 @@ onMounted(() => {
     signed.value = true;
     signaturePad.fromDataURL(props.signature);
   }
+
+  previousSignaatures.value = await previousSignatures(props.type);
 });
 
 const emit = defineEmits(["save", "clear"]);

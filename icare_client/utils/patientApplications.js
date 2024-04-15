@@ -7,7 +7,7 @@ const savePatientApplication = async (data) => {
 
 const savePatientSignature = async (applicationId, patientSignature) => {
   await $fetch(
-    `/api/patient-applications/save-patient-signature/${applicationId}`,
+    `/api/patient-applications/patient-signature/${applicationId}`,
     {
       method: "POST",
       body: patientSignature,
@@ -15,12 +15,36 @@ const savePatientSignature = async (applicationId, patientSignature) => {
   );
 };
 
+const previousSignatures = async (type) => {
+  return $fetch(
+    `/api/patient-applications/previous-signatures/${type}`,
+  );
+}
+
+const clearPatientSignature = async (applicationId) => {
+  await $fetch(
+    `/api/patient-applications/patient-signature/${applicationId}/clear`,
+    {
+      method: "POST",
+    },
+  );
+};
+
 const savePrescriberSignature = async (applicationId, prescriberSignature) => {
   await $fetch(
-    `/api/patient-applications/save-prescriber-signature/${applicationId}`,
+    `/api/patient-applications/prescriber-signature/${applicationId}`,
     {
       method: "POST",
       body: prescriberSignature,
+    },
+  );
+};
+
+const clearPrescriberSignature = async (applicationId) => {
+  await $fetch(
+    `/api/patient-applications/prescriber-signature/${applicationId}/clear`,
+    {
+      method: "POST",
     },
   );
 };
@@ -40,10 +64,13 @@ const getPatientApplicationPdfPreviewWithSignatures = async (id) => {
 };
 
 export {
+  previousSignatures,
   savePatientApplication,
+  deletePatientApplication,
   savePatientSignature,
   savePrescriberSignature,
-  deletePatientApplication,
+  clearPatientSignature,
+  clearPrescriberSignature,
   getPatientApplicationPdfPreview,
   getPatientApplicationPdfPreviewWithSignatures,
 };

@@ -1,5 +1,6 @@
 package io.meraklis.icare.processors;
 
+import io.meraklis.icare.applications.PatientApplication;
 import io.meraklis.icare.applications.PatientApplicationType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
@@ -120,12 +121,15 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
         }
     }
 
-    public byte[] process(Map<String, Object> metadata, String patientSignature, String prescriberSignature) {
+    public byte[] process(PatientApplication application) {
+        Map<String, Object> metadata = application.getMetadata();
+        String patientSignatureId = application.getPatientSignatureId();
+        String prescriberSignatureId = application.getPrescriberSignatureId();
         try (PDDocument doc = loadPdfDoc()) {
             removePages(doc, pagesToRemove());
             assignValues(doc, metadata);
             assignSignatureDate(doc);
-            return additionalProcessing(doc, metadata, patientSignature, prescriberSignature);
+            return additionalProcessing(doc, metadata, patientSignatureId, prescriberSignatureId);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,10 +1,13 @@
 package io.meraklis.icare.processors;
 
+import io.meraklis.icare.signatures.Signature;
+import io.meraklis.icare.signatures.SignatureRepository;
 import org.apache.pdfbox.multipdf.Overlay;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static io.meraklis.icare.helpers.Helpers.base64ToFile;
 import static io.meraklis.icare.helpers.Helpers.tmpFile;
@@ -26,6 +30,9 @@ public class SignatureApplicator {
 
     @Value("${spring.profiles.active}")
     private String activeProfile;
+
+    @Autowired
+    private SignatureRepository signatureRepository;
 
     public void apply(PDDocument doc, List<SignatureConfig> configs) {
         try (Overlay overlay = new Overlay()) {
@@ -54,7 +61,13 @@ public class SignatureApplicator {
             PDPageContentStream contents = new PDPageContentStream(signatureDoc, signaturePage);
 
             for (SignatureConfig config : signatureConfigs) {
-                File signatureFile = base64ToFile(config.getSignatureBase64());
+                Optional<Signature> signatureOptional = signatureRepository.findById(config.getSignatureId());
+
+                if (signatureOptional.isEmpty()) {
+                    continue;
+                }
+                
+                File signatureFile = base64ToFile(signatureOptional.get().getBase64());
                 BufferedImage image = ImageIO.read(signatureFile);
 
                 if (activeProfile.equals("develop")) {

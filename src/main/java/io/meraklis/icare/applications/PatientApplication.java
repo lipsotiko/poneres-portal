@@ -15,15 +15,16 @@ public class PatientApplication {
     private String id;
     private PatientApplicationType type;
     private Map<String, Object> metadata;
-    private String patientSignature;
-    private String prescriberSignature;
+    private String patientSignatureId;
+    private String prescriberSignatureId;
+    private Boolean submitted;
 
     public boolean isSignedByPatient() {
-        return patientSignature != null;
+        return patientSignatureId != null;
     }
 
     public boolean isSignedByPrescriber() {
-        return prescriberSignature != null;
+        return prescriberSignatureId != null;
     }
 
     public boolean isSigned() {

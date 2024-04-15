@@ -1,5 +1,6 @@
 package io.meraklis.icare.processors;
 
+import io.meraklis.icare.applications.PatientApplication;
 import io.meraklis.icare.applications.PatientApplicationType;
 import io.meraklis.icare.images.TextToImageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class ProcessorController {
     @PostMapping(value = "/preview", produces = MediaType.APPLICATION_PDF_VALUE)
     public @ResponseBody byte[] preview(@RequestParam PatientApplicationType type,
                                         @RequestBody Map<String, Object> data) throws IOException {
-        return processorFactory.get(type).process(data, null, null);
+        PatientApplication application = new PatientApplication();
+        application.setMetadata(data);
+        return processorFactory.get(type).process(application);
     }
 }
