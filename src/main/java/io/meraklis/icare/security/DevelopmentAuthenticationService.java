@@ -50,4 +50,9 @@ public class DevelopmentAuthenticationService implements AuthenticationService {
             }
         };
     }
+
+    @Override
+    public String getEmail() {
+        return getPrincipal().getEmail();
+    }
 }

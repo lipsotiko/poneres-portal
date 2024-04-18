@@ -6,7 +6,6 @@ import io.meraklis.icare.storage.StorageService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +20,7 @@ public class PatientDocumentController {
     private StorageService storage;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private AuthenticationService auth;
 
     @Autowired
     private PatientDocumentRepository patientDocumentRepository;
@@ -29,8 +28,7 @@ public class PatientDocumentController {
     @PostMapping("/application/{applicationId}")
     public void save(@PathVariable("applicationId") String applicationId, @RequestBody MultipartFile[] files)
             throws IOException {
-        OidcUser principal = authenticationService.getPrincipal();
-        String email = (String) principal.getClaims().get("email");
+        String email = auth.getEmail();
         for (MultipartFile file : files) {
             String fileName = file.getOriginalFilename();
             PatientDocument patientDocument =

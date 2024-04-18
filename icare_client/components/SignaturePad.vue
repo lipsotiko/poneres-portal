@@ -19,7 +19,7 @@
         <canvas style="display: none" ref="tmpCanvas" width="600" height="200" />
       </div>
     </IColumn>
-    <IColumn sm="4">
+    <!-- <IColumn sm="4">
       <label class="signature-label">
         <strong>
           Apply Previous Signature
@@ -28,7 +28,7 @@
       <ul>
         <li v-for="s in previousSignaatures">{{ s.uploadedAt }}</li>
       </ul>
-    </IColumn>
+    </IColumn> -->
   </IRow>
 </template>
 <script setup>
@@ -46,7 +46,7 @@ const fileInput = ref();
 let signed = ref(false);
 let signaturePad;
 
-const previousSignaatures = ref([]);
+// const previousSignaatures = ref([]);
 
 onMounted(async () => {
   signaturePad = new SignaturePad(signaturePadCanvas.value, {
@@ -60,7 +60,7 @@ onMounted(async () => {
     signaturePad.fromDataURL(props.signature);
   }
 
-  previousSignaatures.value = await previousSignatures(props.type);
+  // previousSignaatures.value = await previousSignatures(props.type);
 });
 
 const emit = defineEmits(["save", "clear"]);

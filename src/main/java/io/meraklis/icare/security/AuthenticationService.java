@@ -4,4 +4,5 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 public interface AuthenticationService {
     OidcUser getPrincipal();
+    String getEmail();
 }

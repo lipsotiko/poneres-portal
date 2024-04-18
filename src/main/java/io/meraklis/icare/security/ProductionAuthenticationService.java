@@ -12,4 +12,9 @@ public class ProductionAuthenticationService implements AuthenticationService {
     public OidcUser getPrincipal() {
         return (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+    @Override
+    public String getEmail() {
+        return getPrincipal().getEmail();
+    }
 }

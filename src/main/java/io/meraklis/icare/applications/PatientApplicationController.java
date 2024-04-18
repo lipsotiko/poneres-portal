@@ -1,5 +1,6 @@
 package io.meraklis.icare.applications;
 
+import io.meraklis.icare.documents.PatientDocumentService;
 import io.meraklis.icare.images.TextToImageBuilder;
 import io.meraklis.icare.processors.ProcessorFactory;
 import io.meraklis.icare.security.AuthenticationService;
@@ -30,6 +31,9 @@ public class PatientApplicationController {
     private SignatureRepository signatureRepository;
 
     @Autowired
+    private PatientDocumentService patientDocumentService;
+
+    @Autowired
     private PatientApplicationRepository patientApplicationRepository;
 
     @Autowired
@@ -56,6 +60,14 @@ public class PatientApplicationController {
         });
 
         return graph;
+    }
+
+    @DeleteMapping("/{applicationId}")
+    public void delete(@PathVariable("applicationId") String applicationId) {
+        patientApplicationRepository.findById(applicationId).ifPresent(application -> {
+            patientDocumentService.delete(application.getId());
+            patientApplicationRepository.deleteById(applicationId);
+        });
     }
 
     @GetMapping("/previous-signatures/{type}")

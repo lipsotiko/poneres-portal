@@ -13,10 +13,18 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private AuthenticationService authenticationService;
 
     @GetMapping("/info")
     public Map<String, Object> home() {
         return authenticationService.getPrincipal().getClaims();
+    }
+
+    @GetMapping("/role")
+    public Role role() {
+        return roleRepository.findByEmail(authenticationService.getEmail());
     }
 }
