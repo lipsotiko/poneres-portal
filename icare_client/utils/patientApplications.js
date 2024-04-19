@@ -1,5 +1,15 @@
+const getPatientApplications = (email) => {
+  return $fetch("/api/patient-applications/find", {
+    query: {
+      email,
+      page: 0,
+      pageSize: 10
+    }
+  })
+}
+
 const savePatientApplication = async (data) => {
-  await $fetch("/api/patient-applications", {
+  await $fetch('/api/patient-applications/save', {
     method: "POST",
     body: data,
   });
@@ -64,6 +74,7 @@ const getPatientApplicationPdfPreviewWithSignatures = async (id) => {
 };
 
 export {
+  getPatientApplications,
   previousSignatures,
   savePatientApplication,
   deletePatientApplication,

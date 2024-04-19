@@ -3,6 +3,11 @@ const isAdmin = async () => {
     return response.type === 'ADMIN';
 }
 
+const getPrescribers = async () => {
+    return $fetch('/api/user-profile/prescribers');
+}
+
 export {
-    isAdmin
+    isAdmin,
+    getPrescribers
 }

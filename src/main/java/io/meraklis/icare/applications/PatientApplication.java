@@ -13,6 +13,7 @@ import java.util.Map;
 public class PatientApplication {
     @Id
     private String id;
+    private String prescriberEmail;
     private PatientApplicationType type;
     private Map<String, Object> metadata;
     private String patientSignatureId;

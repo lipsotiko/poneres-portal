@@ -6,21 +6,51 @@
       :metadata="metadata"
       @submit="submit"
       @loadTestData="loadTestData"
-    />
+    >
+      <IRow>
+        <h3>Prescriber</h3>
+      </IRow>
+      <IRow>
+        <IColumn xs="4">
+          <ISelect v-model="selected" :options="options" placeholder="Choose a prescriber..." />
+        </IColumn>
+      </IRow>
+      <hr />
+    </LillyCaresFormV1>
     <BoehringerCaresFormV1
       v-else-if="type === 'BOEHRINGER_CARES_V1'"
       :showLoadTestData="$config.public.buildType !== 'production'"
       :metadata="metadata"
       @submit="submit"
       @loadTestData="loadTestData"
-    />
+    >
+      <IRow>
+        <h3>Prescriber</h3>
+      </IRow>
+      <IRow>
+        <IColumn xs="4">
+          <ISelect v-model="selected" :options="options" placeholder="Choose a prescriber..." />
+        </IColumn>
+      </IRow>
+      <hr />
+    </BoehringerCaresFormV1>
     <NovoNordiskV1
       v-else-if="type === 'NOVO_NORDISK_V1'"
       :showLoadTestData="$config.public.buildType !== 'production'"
       :metadata="metadata"
       @submit="submit"
       @loadTestData="loadTestData"
-    />
+    >
+      <IRow>
+        <h3>Prescriber</h3>
+      </IRow>
+      <IRow>
+        <IColumn xs="4">
+          <ISelect v-model="selected" :options="options" placeholder="Choose a prescriber..." />
+        </IColumn>
+      </IRow>
+      <hr />
+    </NovoNordiskV1>
     <span v-else>Unable to load form.</span>
   </div>
 </template>
@@ -64,6 +94,7 @@ export default {
     async submit() {
       await savePatientApplication({
         type: this.$route.query.type,
+        prescriberEmail: this.$route.query.prescriberEmail,
         metadata: this.metadata,
       });
       this.$router.push({ path: "/" });

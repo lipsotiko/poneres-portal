@@ -1,5 +1,9 @@
 package io.meraklis.icare.security;
 
+import io.meraklis.icare.user.Role;
+import io.meraklis.icare.user.UserProfileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -13,14 +17,20 @@ import java.util.Map;
 
 @Service
 @Profile("develop")
-public class DevelopmentAuthenticationService implements AuthenticationService {
+public class DevelopmentAuthenticationService extends AbstractAuthenticationService implements AuthenticationService {
+
+    @Autowired
+    private UserProfileRepository userProfileRepository;
+
+    @Value("${mock-user.as}") String mockUserAs;
+
     @Override
     public OidcUser getPrincipal() {
         return new OidcUser() {
             @Override
             public Map<String, Object> getClaims() {
                 Map<String, Object> claims = new HashMap<>();
-                claims.put("email", "test@meraklis.io");
+                claims.put("email", mockUserAs);
                 return claims;
             }
 
@@ -55,4 +65,5 @@ public class DevelopmentAuthenticationService implements AuthenticationService {
     public String getEmail() {
         return getPrincipal().getEmail();
     }
+
 }

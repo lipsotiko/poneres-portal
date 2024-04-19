@@ -2,8 +2,9 @@
   <IContainer>
     <div class="top">
       <h1>Applications</h1>
-      <div v-if="admin">
-        <IButton circle color="primary" @click="toggleAddApplicationModal">
+      <div v-if="admin" class="admin-section">
+        <ISelect v-model="selectedPrescriber" :options="prescriberOptions" size="sm" placeholder="Choose a prescriber..." clearable />
+        <IButton circle color="primary" @click="toggleAddApplicationModal" :disabled="selectedPrescriber === null">
           <template #icon>
             <IIcon name="ink-plus" />
           </template>
@@ -19,29 +20,29 @@
       </template>
       <ITab name="tab-1">
         <div v-if="pending">Loading ...</div>
-        <div v-else-if="data._embedded.patientApplications.length === 0">No pending applications</div>
+        <div v-else-if="data.content.length === 0">No pending applications</div>
         <ITable v-else>
           <thead>
             <tr>
               <th></th>
-              <th>Application Type</th>
               <th>Patient Name</th>
+              <th>Application Type</th>
               <th>Signed By Patient</th>
               <th>Signed By Prescriber</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="application in data._embedded.patientApplications">
+            <tr v-for="application in data.content">
               <td>
                 <IButton size="sm" :to="`/applications/${application.id}`">
                   View
                 </IButton>
               </td>
-              <td>{{ application.displayApplicationName }}</td>
               <td>
                 {{ application.metadata.patient_first_name }}
                 {{ application.metadata.patient_last_name }}
               </td>
+              <td>{{ application.displayApplicationName }}</td>
               <td v-if="application.signedByPatient"><IIcon name="ink-check" /></td>
               <td v-else><IIcon name="ink-times" /></td>
               <td v-if="application.signedByPrescriber">
@@ -71,18 +72,25 @@
   </ClientOnly>
 </template>
 <script setup>
-const { pending, data } = useFetch("/api/patient-applications", {
-  lazy: true,
-  server: false,
-});
-
+const router = useRouter();
 const admin = ref(false);
 const active = ref("tab-1");
 const addApplicationModal = ref(false);
 const checked = ref();
+const prescriberOptions = ref([]);
+const selectedPrescriber = ref('all');
+
+const { pending, data } = useFetch("/api/patient-applications/find", {
+  lazy: true,
+  server: false,
+  query: {
+    email: selectedPrescriber
+  },
+});
 
 onMounted(async () => {
   admin.value = await isAdmin();
+  prescriberOptions.value = await getPrescribers().then(results => results.map(({ email, firstName, lastName }) => ({ id: email, label: `${lastName}, ${firstName}` })));
 })
 
 const options = ref([
@@ -91,13 +99,21 @@ const options = ref([
   { id: "NOVO_NORDISK_V1", label: "Novo Nordisk" },
 ]);
 
-const router = useRouter();
-
 const toggleAddApplicationModal = () => {
   addApplicationModal.value = true;
 };
 
 const handleNavigation = () => {
-  router.push(`/new-application?type=${checked.value}`);
+  const encodedPrescriberEmail = selectedPrescriber.value
+  router.push({ name: 'new-application', query: { type: checked.value, prescriberEmail: encodedPrescriberEmail }});
 };
 </script>
+<style>
+.admin-section {
+  display: flex;
+}
+
+.admin-section .input {
+  margin: 4px 22px;
+}
+</style>

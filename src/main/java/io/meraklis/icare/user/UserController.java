@@ -13,7 +13,7 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private RoleRepository roleRepository;
+    private UserProfileRepository userProfileRepository;
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/role")
-    public Role role() {
-        return roleRepository.findByEmail(authenticationService.getEmail());
+    public UserProfile role() {
+        return userProfileRepository.findByEmail(authenticationService.getEmail());
     }
 }
