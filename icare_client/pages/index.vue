@@ -78,7 +78,7 @@ const active = ref("tab-1");
 const addApplicationModal = ref(false);
 const checked = ref();
 const prescriberOptions = ref([]);
-const selectedPrescriber = ref('all');
+const selectedPrescriber = ref(null);
 
 const { pending, data } = useFetch("/api/patient-applications/find", {
   lazy: true,

@@ -81,7 +81,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="doc in patientDocuments._embedded.patientDocuments">
+              <tr v-for="doc in patientDocuments">
                 <td>
                   <a
                     href="#"
@@ -166,7 +166,7 @@ const {
   data: patientDocuments,
   refresh: refreshPatientDocuments,
 } = useFetch(
-  `/api/patient-documents/search/findByApplicationId?applicationId=${applicationId}`,
+  `/api/patient-documents/application/${applicationId}/get`,
   {
     lazy: true,
     server: false,

@@ -25,4 +25,3 @@ public class ProductionSecurityConfiguration {
         return http.build();
     }
 }
-
