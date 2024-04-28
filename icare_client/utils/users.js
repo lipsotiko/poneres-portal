@@ -1,13 +1,20 @@
-const isAdmin = async () => {
-    const response = await $fetch("/api/user/role");
-    return response.type === 'ADMIN';
-}
+import { ref } from "vue";
+
+const useAuth = () => {
+  const isAdmin = ref(false);
+  fetch("/api/user/role")
+    .then((res) => res.json())
+    .then((json) => {
+      isAdmin.value = json.type === "ADMIN";
+    });
+
+  return {
+    isAdmin,
+  };
+};
 
 const getPrescribers = async () => {
-    return $fetch('/api/user-profile/prescribers');
-}
+  return $fetch("/api/user-profile/prescribers");
+};
 
-export {
-    isAdmin,
-    getPrescribers
-}
+export { useAuth, getPrescribers };

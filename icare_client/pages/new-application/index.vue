@@ -12,7 +12,11 @@
       </IRow>
       <IRow>
         <IColumn xs="4">
-          <ISelect v-model="selected" :options="options" placeholder="Choose a prescriber..." />
+          <ISelect
+            v-model="selected"
+            :options="options"
+            placeholder="Choose a prescriber..."
+          />
         </IColumn>
       </IRow>
       <hr />
@@ -29,7 +33,11 @@
       </IRow>
       <IRow>
         <IColumn xs="4">
-          <ISelect v-model="selected" :options="options" placeholder="Choose a prescriber..." />
+          <ISelect
+            v-model="selected"
+            :options="options"
+            placeholder="Choose a prescriber..."
+          />
         </IColumn>
       </IRow>
       <hr />
@@ -46,7 +54,11 @@
       </IRow>
       <IRow>
         <IColumn xs="4">
-          <ISelect v-model="selected" :options="options" placeholder="Choose a prescriber..." />
+          <ISelect
+            v-model="selected"
+            :options="options"
+            placeholder="Choose a prescriber..."
+          />
         </IColumn>
       </IRow>
       <hr />

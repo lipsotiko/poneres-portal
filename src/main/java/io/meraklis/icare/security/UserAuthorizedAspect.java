@@ -2,7 +2,6 @@ package io.meraklis.icare.security;
 
 import io.meraklis.icare.applications.PatientApplicationRepository;
 import io.meraklis.icare.documents.PatientDocumentRepository;
-import io.meraklis.icare.documents.PatientDocumentService;
 import io.meraklis.icare.user.Role;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -40,27 +39,25 @@ public class UserAuthorizedAspect {
         String value = userAuthorized.value();
         if (value.equals("applicationId")) {
             String applicationId = (String) joinPoint.getArgs()[userAuthorized.position()];
-            applicationRepository.findById(applicationId).ifPresent(application -> {
-                if (!authenticationService.isAuthorized(application)) {
-                    throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
-                }
-            });
+            authorizedForApplication(applicationId);
             return;
         }
 
         if (value.equals("documentId")) {
             String documentId = (String) joinPoint.getArgs()[userAuthorized.position()];
-            documentRepository.findById(documentId)
-                    .flatMap(document -> applicationRepository.findById(document.getApplicationId()))
-                    .ifPresent(application -> {
-                        if (!authenticationService.isAuthorized(application)) {
-                            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
-                        }
-                    });
+            documentRepository.findById(documentId).ifPresent(document -> authorizedForApplication(document.getApplicationId()));
         }
 
         if (value.equals("isAdmin") && !authenticationService.hasRole(Role.ADMIN)) {
             throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    private void authorizedForApplication(String applicationId) {
+        applicationRepository.findById(applicationId).ifPresent(application -> {
+            if (!authenticationService.isAuthorized(application)) {
+                throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
+            }
+        });
     }
 }

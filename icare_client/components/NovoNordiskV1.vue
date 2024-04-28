@@ -43,9 +43,7 @@
           </IColumn>
           <IColumn xs="12" sm="3">
             <IFormGroup>
-              <IFormLabel>
-                New Application or Renewal?
-              </IFormLabel>
+              <IFormLabel> New Application or Renewal? </IFormLabel>
               <IRadioGroup
                 v-model="metadata.new_or_renewal"
                 name="new_or_renewal"
@@ -120,9 +118,7 @@
         <IRow>
           <IColumn xs="6">
             <IFormGroup>
-              <IFormLabel>
-                Gender
-              </IFormLabel>
+              <IFormLabel> Gender </IFormLabel>
               <IRadioGroup
                 v-model="metadata.patient_gender"
                 name="patient_gender"
@@ -138,7 +134,7 @@
                   {
                     id: 3,
                     label: 'Do Not Disclose',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -159,9 +155,7 @@
         <IRow>
           <IColumn xs="12">
             <IFormGroup>
-              <IFormLabel>
-                Any form of prescription drug coverage?
-              </IFormLabel>
+              <IFormLabel> Any form of prescription drug coverage? </IFormLabel>
               <IRadioGroup
                 v-model="metadata.patient_coverage"
                 name="patient_coverage"
@@ -173,7 +167,7 @@
                   {
                     id: 2,
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -217,7 +211,8 @@
                 :options="[
                   {
                     id: 'insurance_employer_supplied_coverage',
-                    label: 'Employer-supplied or commercial/private drug coverage',
+                    label:
+                      'Employer-supplied or commercial/private drug coverage',
                   },
                   {
                     id: 'insurance_medicare',
@@ -225,7 +220,8 @@
                   },
                   {
                     id: 'insurance_medicare_part_b',
-                    label: 'Medicare Part B (medical benefit that covers some prescription medications)',
+                    label:
+                      'Medicare Part B (medical benefit that covers some prescription medications)',
                   },
                   {
                     id: 'insurance_va_military_benefits',
@@ -241,7 +237,7 @@
                   },
                 ]"
               />
-              </IFormGroup>
+            </IFormGroup>
           </IColumn>
         </IRow>
         <hr />
@@ -265,18 +261,18 @@
                   {
                     id: 2,
                     label: 'No',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
           </IColumn>
           <IColumn xs="3">
             <IFormGroup>
-              <IFormLabel>
-                Relationship to patient?
-              </IFormLabel>
+              <IFormLabel> Relationship to patient? </IFormLabel>
               <IRadioGroup
-                v-model="metadata.patient_authorized_representative_family_other"
+                v-model="
+                  metadata.patient_authorized_representative_family_other
+                "
                 name="patient_authorized_representative_family_other"
                 :options="[
                   {
@@ -286,7 +282,7 @@
                   {
                     id: 2,
                     label: 'Other',
-                  }
+                  },
                 ]"
               />
             </IFormGroup>
@@ -326,11 +322,13 @@
           <IColumn xs="12">
             <IFormGroup>
               <IFormLabel>
-                Allow PAP to perform an electronic income verification to process application.
+                Allow PAP to perform an electronic income verification to
+                process application.
               </IFormLabel>
               <ICheckbox
                 v-model="metadata.allow_electronic_income_verification"
-                name="allow_electronic_income_verification">
+                name="allow_electronic_income_verification"
+              >
                 Yes
               </ICheckbox>
             </IFormGroup>
@@ -362,7 +360,10 @@
         </IRow>
         <hr />
         <IRow>
-          <h3>Patient Medicare Prescription Drug Coverage (Part D) Enrollee Consent</h3>
+          <h3>
+            Patient Medicare Prescription Drug Coverage (Part D) Enrollee
+            Consent
+          </h3>
         </IRow>
         <IRow>
           <IColumn>
@@ -394,7 +395,8 @@
               </IFormLabel>
               <ICheckbox
                 v-model="metadata.hipaa_legal_representative_authorization"
-                name="hipaa_legal_representative_authorization">
+                name="hipaa_legal_representative_authorization"
+              >
                 Yes
               </ICheckbox>
             </IFormGroup>
@@ -428,7 +430,9 @@
         </IRow>
         <hr />
         <IRow>
-          <h3>Telephone Consumer Protection Act (“TCPA”) Communication Consent</h3>
+          <h3>
+            Telephone Consumer Protection Act (“TCPA”) Communication Consent
+          </h3>
         </IRow>
         <IRow>
           <IColumn xs="3">
@@ -596,16 +600,17 @@
               <tr>
                 <th>Product</th>
                 <th>Max Dose/Day (units)</th>
-                <th>Sig/Directions <br /> (e.g., QD, BID)</th>
+                <th>
+                  Sig/Directions <br />
+                  (e.g., QD, BID)
+                </th>
                 <th>Formulation</th>
                 <th>Quantity</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>
-                  Fiasp (insulin aspart) injection 100 U/mL
-                </td>
+                <td>Fiasp (insulin aspart) injection 100 U/mL</td>
                 <td>
                   <IInput
                     v-model="metadata.fiasp_max"
@@ -623,9 +628,19 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.fiasp_vial" name="fiasp_vial">Vial</ICheckbox>
-                  <ICheckbox v-model="metadata.fiasp_flex_touch" name="fiasp_flex_touch">FlexTouch</ICheckbox>
-                  <ICheckbox v-model="metadata.fiasp_cartridge" name="fiasp_cartridge">Cartridge</ICheckbox>
+                  <ICheckbox v-model="metadata.fiasp_vial" name="fiasp_vial"
+                    >Vial</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.fiasp_flex_touch"
+                    name="fiasp_flex_touch"
+                    >FlexTouch</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.fiasp_cartridge"
+                    name="fiasp_cartridge"
+                    >Cartridge</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -637,9 +652,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Tresiba (insulin degludec) injection U-100
-                </td>
+                <td>Tresiba (insulin degludec) injection U-100</td>
                 <td>
                   <IInput
                     v-model="metadata.tresiba_u100_max"
@@ -657,8 +670,16 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.tresiba_u100_vial" name="tresiba_u100_vial">Vial</ICheckbox>
-                  <ICheckbox v-model="metadata.tresiba_u100_flex_touch" name="tresiba_u100_flex_touch">FlexTouch</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.tresiba_u100_vial"
+                    name="tresiba_u100_vial"
+                    >Vial</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.tresiba_u100_flex_touch"
+                    name="tresiba_u100_flex_touch"
+                    >FlexTouch</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -670,9 +691,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Insulin Degludec Injection U-100 (UB)
-                </td>
+                <td>Insulin Degludec Injection U-100 (UB)</td>
                 <td>
                   <IInput
                     v-model="metadata.degludec_u100_max"
@@ -690,8 +709,16 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.degludec_u100_vial" name="degludec_u100_vial">Vial</ICheckbox>
-                  <ICheckbox v-model="metadata.degludec_u100_flex_touch" name="degludec_u100_flex_touch">FlexTouch</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.degludec_u100_vial"
+                    name="degludec_u100_vial"
+                    >Vial</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.degludec_u100_flex_touch"
+                    name="degludec_u100_flex_touch"
+                    >FlexTouch</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -703,9 +730,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Tresiba (insulin degludec) injection U-200
-                </td>
+                <td>Tresiba (insulin degludec) injection U-200</td>
                 <td>
                   <IInput
                     v-model="metadata.tresiba_u200_max"
@@ -723,7 +748,11 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.tresiba_u200_flex_touch" name="tresiba_u200_flex_touch">FlexTouch</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.tresiba_u200_flex_touch"
+                    name="tresiba_u200_flex_touch"
+                    >FlexTouch</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -735,9 +764,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Insulin Degludec Injection U-200 (UB)
-                </td>
+                <td>Insulin Degludec Injection U-200 (UB)</td>
                 <td>
                   <IInput
                     v-model="metadata.degludec_u200_max"
@@ -755,7 +782,11 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.degludec_u200_flex_touch" name="degludec_u200_flex_touch">FlexTouch</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.degludec_u200_flex_touch"
+                    name="degludec_u200_flex_touch"
+                    >FlexTouch</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -767,9 +798,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  NovoLog (insulin aspart) injection 100 U/mL
-                </td>
+                <td>NovoLog (insulin aspart) injection 100 U/mL</td>
                 <td>
                   <IInput
                     v-model="metadata.novolog_u100_max"
@@ -787,9 +816,21 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.novolog_u100_vial" name="novolog_u100_vial">Vial</ICheckbox>
-                  <ICheckbox v-model="metadata.novolog_u100_flex_pen" name="novolog_u100_flex_pen">FlexPen</ICheckbox>
-                  <ICheckbox v-model="metadata.novolog_u100_cartridge" name="novolog_u100_cartridge">Cartridge</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.novolog_u100_vial"
+                    name="novolog_u100_vial"
+                    >Vial</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.novolog_u100_flex_pen"
+                    name="novolog_u100_flex_pen"
+                    >FlexPen</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.novolog_u100_cartridge"
+                    name="novolog_u100_cartridge"
+                    >Cartridge</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -801,9 +842,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Insulin Aspart Injection 100 U/mL (UB)
-                </td>
+                <td>Insulin Aspart Injection 100 U/mL (UB)</td>
                 <td>
                   <IInput
                     v-model="metadata.aspart_injection_u100_max"
@@ -821,9 +860,21 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.aspart_injection_u100_vial" name="aspart_injection_u100_vial">Vial</ICheckbox>
-                  <ICheckbox v-model="metadata.aspart_injection_u100_flex_pen" name="aspart_injection_u100_flex_pen">FlexPen</ICheckbox>
-                  <ICheckbox v-model="metadata.aspart_injection_u100_cartridge" name="aspart_injection_u100_cartridge">Cartridge</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.aspart_injection_u100_vial"
+                    name="aspart_injection_u100_vial"
+                    >Vial</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.aspart_injection_u100_flex_pen"
+                    name="aspart_injection_u100_flex_pen"
+                    >FlexPen</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.aspart_injection_u100_cartridge"
+                    name="aspart_injection_u100_cartridge"
+                    >Cartridge</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -836,7 +887,8 @@
               </tr>
               <tr>
                 <td>
-                  NovoLog Mix 70/30 (insulin aspart protamine and insulin aspart injectable suspension) 100 U/mL
+                  NovoLog Mix 70/30 (insulin aspart protamine and insulin aspart
+                  injectable suspension) 100 U/mL
                 </td>
                 <td>
                   <IInput
@@ -848,15 +900,25 @@
                 </td>
                 <td>
                   <IInput
-                    v-model="metadata.novolog_mix_70_30_u100_vial_sig_directions"
+                    v-model="
+                      metadata.novolog_mix_70_30_u100_vial_sig_directions
+                    "
                     name="novolog_mix_70_30_u100_vial_sig_directions"
                     type="text"
                     :disabled="disabled"
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.novolog_mix_70_30_u100_vial" name="novolog_mix_70_30_u100_vial">Vial</ICheckbox>
-                  <ICheckbox v-model="metadata.novolog_mix_70_30_u100_flex_pen" name="novolog_mix_70_30_u100_flex_pen">FlexPen</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.novolog_mix_70_30_u100_vial"
+                    name="novolog_mix_70_30_u100_vial"
+                    >Vial</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.novolog_mix_70_30_u100_flex_pen"
+                    name="novolog_mix_70_30_u100_flex_pen"
+                    >FlexPen</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -869,7 +931,8 @@
               </tr>
               <tr>
                 <td>
-                  Insulin Aspart Protamine and Insulin Aspart Injectable Suspension Mix 70/30 100 U/mL (UB)
+                  Insulin Aspart Protamine and Insulin Aspart Injectable
+                  Suspension Mix 70/30 100 U/mL (UB)
                 </td>
                 <td>
                   <IInput
@@ -888,8 +951,16 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.aspart_mix_70_30_u100_vial" name="aspart_mix_70_30_u100_vial">Vial</ICheckbox>
-                  <ICheckbox v-model="metadata.aspart_mix_70_30_u100_flex_pen" name="aspart_mix_70_30_u100_flex_pen">FlexPen</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.aspart_mix_70_30_u100_vial"
+                    name="aspart_mix_70_30_u100_vial"
+                    >Vial</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.aspart_mix_70_30_u100_flex_pen"
+                    name="aspart_mix_70_30_u100_flex_pen"
+                    >FlexPen</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -901,9 +972,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Novolin R (insulin human injection) 100 U/mL
-                </td>
+                <td>Novolin R (insulin human injection) 100 U/mL</td>
                 <td>
                   <IInput
                     v-model="metadata.novolin_r_u100_max"
@@ -921,7 +990,11 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.novolin_r_u100_vial" name="novolin_r_u100_vial">Vial</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.novolin_r_u100_vial"
+                    name="novolin_r_u100_vial"
+                    >Vial</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -933,9 +1006,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Novolin N (isophane insulin human suspension) 100 U/mL
-                </td>
+                <td>Novolin N (isophane insulin human suspension) 100 U/mL</td>
                 <td>
                   <IInput
                     v-model="metadata.novolin_n_u100_max"
@@ -953,7 +1024,11 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.novolin_n_u100_vial" name="novolin_n_u100_vial">Vial</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.novolin_n_u100_vial"
+                    name="novolin_n_u100_vial"
+                    >Vial</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -966,7 +1041,8 @@
               </tr>
               <tr>
                 <td>
-                  Novolin 70/30 (human insulin isophane suspension and human insulin injection) 100 U/mL
+                  Novolin 70/30 (human insulin isophane suspension and human
+                  insulin injection) 100 U/mL
                 </td>
                 <td>
                   <IInput
@@ -985,7 +1061,11 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.novolin_70_30_u100_vial" name="novolin_70_30_u100_vial">Vial</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.novolin_70_30_u100_vial"
+                    name="novolin_70_30_u100_vial"
+                    >Vial</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -997,15 +1077,10 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  NovoFine 32G 6mm (100 needles/box)
-                </td>
-                <td>
-                </td>
-                <td>
-                </td>
-                <td>
-                </td>
+                <td>NovoFine 32G 6mm (100 needles/box)</td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td>
                   <IInput
                     v-model="metadata.novo_fine_qty"
@@ -1016,18 +1091,30 @@
                 </td>
               </tr>
               <tr>
+                <td>Zegalogue (dasiglucagon) injection 0.6 mg/0.6 mL</td>
+                <td></td>
+                <td></td>
                 <td>
-                  Zegalogue (dasiglucagon) injection 0.6 mg/0.6 mL
-                </td>
-                <td>
-                </td>
-                <td>
-                </td>
-                <td>
-                  <ICheckbox v-model="metadata.zegalogue_auto_1pack" name="zegalogue_auto_1pack">Auto-injector 1-pack</ICheckbox>
-                  <ICheckbox v-model="metadata.zegalogue_auto_2pack" name="zegalogue_auto_2pack">Auto-injector 2-pack</ICheckbox>
-                  <ICheckbox v-model="metadata.zegalogue_syringe_1pack" name="zegalogue_syringe_1pack">Prefilled Syringe 1-pack</ICheckbox>
-                  <ICheckbox v-model="metadata.zegalogue_syringe_2pack" name="zegalogue_syringe_2pack">Prefilled Syringe 2-pack</ICheckbox>
+                  <ICheckbox
+                    v-model="metadata.zegalogue_auto_1pack"
+                    name="zegalogue_auto_1pack"
+                    >Auto-injector 1-pack</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.zegalogue_auto_2pack"
+                    name="zegalogue_auto_2pack"
+                    >Auto-injector 2-pack</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.zegalogue_syringe_1pack"
+                    name="zegalogue_syringe_1pack"
+                    >Prefilled Syringe 1-pack</ICheckbox
+                  >
+                  <ICheckbox
+                    v-model="metadata.zegalogue_syringe_2pack"
+                    name="zegalogue_syringe_2pack"
+                    >Prefilled Syringe 2-pack</ICheckbox
+                  >
                 </td>
                 <td>
                   <IInput
@@ -1039,22 +1126,22 @@
                 </td>
               </tr>
               <tr>
+                <td>NovoPen Echo</td>
+                <td></td>
+                <td></td>
                 <td>
-                  NovoPen Echo
+                  <ICheckbox
+                    v-model="metadata.novopen_echo_pen"
+                    name="novopen_echo_pen"
+                    >1 Pen</ICheckbox
+                  >
                 </td>
-                <td>
-                </td>
-                <td>
-                </td>
-                <td>
-                  <ICheckbox v-model="metadata.novopen_echo_pen" name="novopen_echo_pen">1 Pen</ICheckbox>
-                </td>
-                <td>
-                </td>
+                <td></td>
               </tr>
               <tr>
                 <td>
-                  Ozempic (semaglutide) injection<br />3 mL Pen that delivers doses of 0.25 mg or 0.5 mg
+                  Ozempic (semaglutide) injection<br />3 mL Pen that delivers
+                  doses of 0.25 mg or 0.5 mg
                 </td>
                 <td></td>
                 <td>
@@ -1066,7 +1153,10 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.ozempic_0_25mg_0_5mg_1pack" name="ozempic_0_25mg_0_5mg_1pack">
+                  <ICheckbox
+                    v-model="metadata.ozempic_0_25mg_0_5mg_1pack"
+                    name="ozempic_0_25mg_0_5mg_1pack"
+                  >
                     1 Pen Pack
                   </ICheckbox>
                 </td>
@@ -1094,7 +1184,10 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.ozempic_1mg_1pack" name="ozempic_1mg_1pack">
+                  <ICheckbox
+                    v-model="metadata.ozempic_1mg_1pack"
+                    name="ozempic_1mg_1pack"
+                  >
                     1 Pen Pack
                   </ICheckbox>
                 </td>
@@ -1122,7 +1215,10 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.ozempic_2mg_1pack" name="ozempic_2mg_1pack">
+                  <ICheckbox
+                    v-model="metadata.ozempic_2mg_1pack"
+                    name="ozempic_2mg_1pack"
+                  >
                     1 Pen Pack
                   </ICheckbox>
                 </td>
@@ -1136,9 +1232,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Victoza (liraglutide) injection 1.2 mg (2 pen pack)
-                </td>
+                <td>Victoza (liraglutide) injection 1.2 mg (2 pen pack)</td>
                 <td>
                   <IInput
                     v-model="metadata.vicotoza_1_2mg_2pack_max"
@@ -1156,7 +1250,10 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.vicotoza_1_2mg_2pack" name="vicotoza_1_2mg_2pack">
+                  <ICheckbox
+                    v-model="metadata.vicotoza_1_2mg_2pack"
+                    name="vicotoza_1_2mg_2pack"
+                  >
                     2 Pen Pack
                   </ICheckbox>
                 </td>
@@ -1170,9 +1267,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Victoza (liraglutide) injection 1.8 mg (3 pen pack)
-                </td>
+                <td>Victoza (liraglutide) injection 1.8 mg (3 pen pack)</td>
                 <td>
                   <IInput
                     v-model="metadata.vicotoza_1_8mg_3pack_max"
@@ -1190,7 +1285,10 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.vicotoza_1_8mg_3pack" name="vicotoza_1_8mg_3pack">
+                  <ICheckbox
+                    v-model="metadata.vicotoza_1_8mg_3pack"
+                    name="vicotoza_1_8mg_3pack"
+                  >
                     3 Pen Pack
                   </ICheckbox>
                 </td>
@@ -1205,7 +1303,8 @@
               </tr>
               <tr>
                 <td>
-                  Xultophy 100/3.6 (insulin degludec & liraglutide injection) 100 U/mL & 3.6 mg/mL
+                  Xultophy 100/3.6 (insulin degludec & liraglutide injection)
+                  100 U/mL & 3.6 mg/mL
                 </td>
                 <td>
                   <IInput
@@ -1224,7 +1323,10 @@
                   />
                 </td>
                 <td>
-                  <ICheckbox v-model="metadata.xultophy_5pack" name="xultophy_5pack">
+                  <ICheckbox
+                    v-model="metadata.xultophy_5pack"
+                    name="xultophy_5pack"
+                  >
                     5 Pen Pack
                   </ICheckbox>
                 </td>
@@ -1274,19 +1376,18 @@
                       {
                         id: 3,
                         label: '7mg / 14mg',
-                      }, 
+                      },
                       {
                         id: 4,
                         label: '14mg / 14mg',
-                      }
+                      },
                     ]"
                   />
                 </td>
                 <td>60-day supply</td>
               </tr>
               <tr>
-                <td>
-                </td>
+                <td></td>
                 <td>
                   <IInput
                     v-model="metadata.rybelsus_120_day_max"
@@ -1315,7 +1416,7 @@
                       {
                         id: 2,
                         label: '14mg',
-                      }
+                      },
                     ]"
                   />
                 </td>
@@ -1330,7 +1431,9 @@
         </IRow>
         <IRow>
           <IColumn>
-            <ICheckbox v-model="metadata.auto_refill">Opt-out of auto-refills.</ICheckbox>
+            <ICheckbox v-model="metadata.auto_refill"
+              >Opt-out of auto-refills.</ICheckbox
+            >
           </IColumn>
         </IRow>
       </IContainer>

@@ -6,17 +6,43 @@
           <strong>{{ label }}</strong>
         </label>
         <div class="signature-pad-wrapper">
-          <canvas ref="signaturePadCanvas" class="signature-pad" width="600" height="200" />
+          <canvas
+            ref="signaturePadCanvas"
+            class="signature-pad"
+            width="600"
+            height="200"
+          />
         </div>
         <div class="signature-buttons">
-          <input ref="fileInput" type="file" :disabled="signed || isUploading" @change="onFilePickedFn" />
+          <input
+            ref="fileInput"
+            type="file"
+            :disabled="signed || isUploading"
+            @change="onFilePickedFn"
+          />
           <IButton @click="clear" :disabled="isUploading">Clear</IButton>
-          <IButton @click="save" color="primary" :disabled="signed" :loading="isUploading">Save</IButton>
+          <IButton
+            @click="save"
+            color="primary"
+            :disabled="signed"
+            :loading="isUploading"
+            >Save</IButton
+          >
         </div>
         <div class="upload-section">
-            <ICheckbox v-if="isUpload" v-model="removeBackground" :disabled="isUploading">Remove background</ICheckbox>
+          <ICheckbox
+            v-if="isUpload"
+            v-model="removeBackground"
+            :disabled="isUploading"
+            >Remove background</ICheckbox
+          >
         </div>
-        <canvas style="display: none" ref="tmpCanvas" width="600" height="200" />
+        <canvas
+          style="display: none"
+          ref="tmpCanvas"
+          width="600"
+          height="200"
+        />
       </div>
     </IColumn>
     <!-- <IColumn sm="4">
@@ -34,7 +60,7 @@
 <script setup>
 import SignaturePad from "signature_pad";
 import trimCanvas from "trim-canvas";
-import imglyRemoveBackground from "@imgly/background-removal"
+import imglyRemoveBackground from "@imgly/background-removal";
 
 const props = defineProps(["label", "signature", "type"]);
 const isUpload = ref(false);
@@ -81,15 +107,20 @@ const save = async () => {
   if (isUpload.value) {
     isUploading.value = true;
     if (removeBackground.value) {
-      const removedBgBlob = await imglyRemoveBackground(signaturePadCanvas.value.toDataURL(), {
-        model: 'small',
-        progress: (key, current, total) => {
-          console.log(key, current, total);
-        }
-      });
+      const removedBgBlob = await imglyRemoveBackground(
+        signaturePadCanvas.value.toDataURL(),
+        {
+          model: "small",
+          progress: (key, current, total) => {
+            console.log(key, current, total);
+          },
+        },
+      );
 
       const image = await blobToImage(removedBgBlob);
-      const ctx = tmpCanvas.value.getContext('2d', { willReadFrequently: true });
+      const ctx = tmpCanvas.value.getContext("2d", {
+        willReadFrequently: true,
+      });
       ctx.drawImage(image, 0, 0);
 
       const trimmed = trimCanvas(tmpCanvas.value).toDataURL("image/png");
@@ -108,16 +139,16 @@ const save = async () => {
 };
 
 const blobToImage = async (blob) => {
-  return new Promise(resolve => {
-    const url = URL.createObjectURL(blob)
-    let img = new Image()
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(blob);
+    let img = new Image();
     img.onload = () => {
-      URL.revokeObjectURL(url)
-      resolve(img)
-    }
-    img.src = url
-  })
-}
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    img.src = url;
+  });
+};
 
 const onFilePickedFn = (e) => {
   isUpload.value = true;
@@ -129,7 +160,6 @@ const onFilePickedFn = (e) => {
   };
   reader.readAsDataURL(file);
 };
-
 </script>
 <style scoped>
 .signature-label {

@@ -123,7 +123,9 @@
       </ITab>
       <ITab name="tab-4">
         <div class="download-section">
-          <DownloadPdf :id="applicationId" />
+          <IToggle v-if="isAdmin" v-model="data.application.submitted"
+            >This application has been submitted</IToggle
+          >
         </div>
         <hr />
         <span v-if="loadingPreview">loading...</span>
@@ -136,7 +138,7 @@
 import { ref } from "vue";
 import FileSaver from "file-saver";
 import { useToast } from "@inkline/inkline/composables";
-
+const { isAdmin } = useAuth();
 const toast = useToast();
 
 const {
@@ -151,27 +153,22 @@ let fileInput = ref(null);
 let uploading = ref(false);
 let loadingPreview = ref(false);
 let pdfPreview = ref(null);
+let submitted = ref(null);
 
 const {
   pending,
   data,
   refresh: refreshPatientApplication,
-} = useFetch(`/api/patient-applications/${applicationId}`, {
-  lazy: true,
-  server: false,
-});
+} = useFetch(`/api/patient-applications/${applicationId}`);
 
 const {
   pending: patientDocumentsPending,
   data: patientDocuments,
   refresh: refreshPatientDocuments,
-} = useFetch(
-  `/api/patient-documents/application/${applicationId}/get`,
-  {
-    lazy: true,
-    server: false,
-  },
-);
+} = useFetch(`/api/patient-documents/application/${applicationId}/get`, {
+  lazy: true,
+  server: false,
+});
 
 watch(active, async (val) => {
   if (val === "tab-1") {
@@ -191,6 +188,16 @@ watch(active, async (val) => {
     pdfPreview.value.src = "";
   }
 });
+
+watch(
+  data,
+  (val) => {
+    submittedApplication(applicationId, val.application.submitted);
+  },
+  {
+    deep: true,
+  },
+);
 
 const submitFn = async (data) => {
   await savePatientApplication({

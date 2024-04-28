@@ -2,9 +2,20 @@
   <IContainer>
     <div class="top">
       <h1>Applications</h1>
-      <div v-if="admin" class="admin-section">
-        <ISelect v-model="selectedPrescriber" :options="prescriberOptions" size="sm" placeholder="Choose a prescriber..." clearable />
-        <IButton circle color="primary" @click="toggleAddApplicationModal" :disabled="selectedPrescriber === null">
+      <div v-if="isAdmin" class="admin-section">
+        <ISelect
+          v-model="selectedPrescriber"
+          :options="prescriberOptions"
+          size="sm"
+          placeholder="Choose a prescriber..."
+          clearable
+        />
+        <IButton
+          circle
+          color="primary"
+          @click="toggleAddApplicationModal"
+          :disabled="selectedPrescriber === null"
+        >
           <template #icon>
             <IIcon name="ink-plus" />
           </template>
@@ -43,7 +54,9 @@
                 {{ application.metadata.patient_last_name }}
               </td>
               <td>{{ application.displayApplicationName }}</td>
-              <td v-if="application.signedByPatient"><IIcon name="ink-check" /></td>
+              <td v-if="application.signedByPatient">
+                <IIcon name="ink-check" />
+              </td>
               <td v-else><IIcon name="ink-times" /></td>
               <td v-if="application.signedByPrescriber">
                 <IIcon name="ink-check" />
@@ -73,25 +86,29 @@
 </template>
 <script setup>
 const router = useRouter();
-const admin = ref(false);
 const active = ref("tab-1");
 const addApplicationModal = ref(false);
 const checked = ref();
 const prescriberOptions = ref([]);
 const selectedPrescriber = ref(null);
+const { isAdmin } = useAuth();
 
 const { pending, data } = useFetch("/api/patient-applications/find", {
   lazy: true,
   server: false,
   query: {
-    email: selectedPrescriber
+    email: selectedPrescriber,
   },
 });
 
 onMounted(async () => {
-  admin.value = await isAdmin();
-  prescriberOptions.value = await getPrescribers().then(results => results.map(({ email, firstName, lastName }) => ({ id: email, label: `${lastName}, ${firstName}` })));
-})
+  prescriberOptions.value = await getPrescribers().then((results) =>
+    results.map(({ email, firstName, lastName }) => ({
+      id: email,
+      label: `${lastName}, ${firstName}`,
+    })),
+  );
+});
 
 const options = ref([
   { id: "LILLY_CARES_V1", label: "Lilly Cares" },
@@ -104,8 +121,11 @@ const toggleAddApplicationModal = () => {
 };
 
 const handleNavigation = () => {
-  const encodedPrescriberEmail = selectedPrescriber.value
-  router.push({ name: 'new-application', query: { type: checked.value, prescriberEmail: encodedPrescriberEmail }});
+  const encodedPrescriberEmail = selectedPrescriber.value;
+  router.push({
+    name: "new-application",
+    query: { type: checked.value, prescriberEmail: encodedPrescriberEmail },
+  });
 };
 </script>
 <style>

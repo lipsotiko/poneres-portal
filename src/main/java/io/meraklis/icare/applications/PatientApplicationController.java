@@ -160,6 +160,16 @@ public class PatientApplicationController {
         });
     }
 
+    @UserAuthorized("applicationId")
+    @PostMapping("/{applicationId}/submitted")
+    public void submitted(@PathVariable("applicationId") String applicationId, @RequestParam("clear") Boolean clear) {
+        Optional<PatientApplication> optionalPatientApplication = patientApplicationRepository.findById(applicationId);
+        optionalPatientApplication.ifPresent((application) -> {
+            application.setSubmitted(clear);
+            patientApplicationRepository.save(application);
+        });
+    }
+
     private void setIfExists(String applicationId,
                              SaveSignatureRequest request,
                              SignatureType type,
