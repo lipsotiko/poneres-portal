@@ -153,7 +153,6 @@ let fileInput = ref(null);
 let uploading = ref(false);
 let loadingPreview = ref(false);
 let pdfPreview = ref(null);
-let submitted = ref(null);
 
 const {
   pending,

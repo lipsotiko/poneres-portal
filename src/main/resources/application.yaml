@@ -6,3 +6,8 @@ logging:
     org:
       apache:
         pdfbox: error
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG

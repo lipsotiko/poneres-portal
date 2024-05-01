@@ -31,7 +31,7 @@
       </template>
       <ITab name="tab-1">
         <div v-if="pending">Loading ...</div>
-        <div v-else-if="data.content.length === 0">No pending applications</div>
+        <div v-else-if="data?.content.length === 0">No pending applications</div>
         <ITable v-else>
           <thead>
             <tr>
@@ -43,7 +43,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="application in data.content">
+            <tr v-for="application in data?.content">
               <td>
                 <IButton size="sm" :to="`/applications/${application.id}`">
                   View
@@ -86,20 +86,26 @@
 </template>
 <script setup>
 const router = useRouter();
-const active = ref("tab-1");
 const addApplicationModal = ref(false);
 const checked = ref();
+const active = ref("tab-1");
 const prescriberOptions = ref([]);
 const selectedPrescriber = ref(null);
 const { isAdmin } = useAuth();
 
-const { pending, data } = useFetch("/api/patient-applications/find", {
-  lazy: true,
-  server: false,
-  query: {
-    email: selectedPrescriber,
-  },
-});
+const { pending, data } = await useAsyncData(
+  'patient-applications',
+  () =>
+    $fetch('/api/patient-applications/find', {
+      query: {
+        submitted: active.value === 'tab-3',
+        email: selectedPrescriber.value,
+      }
+    }),
+  {
+    watch: [selectedPrescriber, active],
+  }
+);
 
 onMounted(async () => {
   prescriberOptions.value = await getPrescribers().then((results) =>

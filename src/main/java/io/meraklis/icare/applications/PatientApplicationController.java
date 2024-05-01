@@ -69,17 +69,24 @@ public class PatientApplicationController {
 
     @GetMapping("/find")
     public Page<PatientApplication> findAll(Pageable pageable,
-                                            @RequestParam(value = "email", defaultValue = "all") String email) {
+                                            @RequestParam(value = "email", defaultValue = "all") String email,
+                                            @RequestParam(value = "submitted", defaultValue = "false") Boolean submitted) {
+        PageRequest page = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         if (auth.hasRole(Role.ADMIN)) {
             if (email.equals("all")) {
-                return patientApplicationRepository.findAll(pageable);
+                return (submitted)
+                        ? patientApplicationRepository.findBySubmittedEquals(true, page)
+                        : patientApplicationRepository.findBySubmittedEquals(false, page);
             }
-            return patientApplicationRepository
-                    .findByPrescriberEmail(email, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
+
+            return (submitted)
+                    ? patientApplicationRepository.findByPrescriberEmailAndSubmittedEquals(email, true, page)
+                    : patientApplicationRepository.findByPrescriberEmailAndSubmittedEquals(email, false, page);
         }
 
-        return patientApplicationRepository
-                .findByPrescriberEmail(auth.getEmail(), PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
+        return (submitted)
+                ? patientApplicationRepository.findByPrescriberEmailAndSubmittedEquals(auth.getEmail(), true, page)
+                : patientApplicationRepository.findByPrescriberEmailAndSubmittedEquals(auth.getEmail(), false, page);
     }
 
     @PostMapping("/save")

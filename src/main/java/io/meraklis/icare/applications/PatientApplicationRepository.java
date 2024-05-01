@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PatientApplicationRepository extends MongoRepository<PatientApplication, String> {
-    Page<PatientApplication> findByPrescriberEmail(String email, Pageable pageable);
+    Page<PatientApplication> findBySubmittedEquals(Boolean submitted, Pageable pageable);
+    Page<PatientApplication> findByPrescriberEmailAndSubmittedEquals(String email, Boolean submitted, Pageable pageable);
 }
