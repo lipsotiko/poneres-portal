@@ -11,7 +11,6 @@ import io.meraklis.icare.signatures.SignatureType;
 import io.meraklis.icare.user.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +40,9 @@ public class PatientApplicationController {
     private PatientApplicationRepository patientApplicationRepository;
 
     @Autowired
+    private PatientApplicationService patientApplicationService;
+
+    @Autowired
     private AuthenticationService auth;
 
     @UserAuthorized("applicationId")
@@ -68,25 +70,43 @@ public class PatientApplicationController {
     }
 
     @GetMapping("/find")
-    public Page<PatientApplication> findAll(Pageable pageable,
+    public Page<PatientApplication> findAll(Pageable page,
                                             @RequestParam(value = "email", defaultValue = "all") String email,
+                                            @RequestParam(value = "complete", defaultValue = "false") Boolean complete,
                                             @RequestParam(value = "submitted", defaultValue = "false") Boolean submitted) {
-        PageRequest page = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         if (auth.hasRole(Role.ADMIN)) {
             if (email.equals("all")) {
-                return (submitted)
-                        ? patientApplicationRepository.findBySubmittedEquals(true, page)
-                        : patientApplicationRepository.findBySubmittedEquals(false, page);
+                if (!complete && !submitted) {
+                    return patientApplicationRepository.findByCompleteFalseAndSubmittedFalse(page);
+                }
+
+                if (complete && !submitted) {
+                    return patientApplicationRepository.findByCompleteTrue(page);
+                }
+
+                return patientApplicationRepository.findBySubmittedTrue(page);
             }
 
-            return (submitted)
-                    ? patientApplicationRepository.findByPrescriberEmailAndSubmittedEquals(email, true, page)
-                    : patientApplicationRepository.findByPrescriberEmailAndSubmittedEquals(email, false, page);
+            if (!complete && !submitted) {
+                return patientApplicationRepository.findByPrescriberEmailAndCompleteFalseAndSubmittedFalse(email, page);
+            }
+
+            if (complete && !submitted) {
+                return patientApplicationRepository.findByPrescriberEmailAndCompleteTrue(email, page);
+            }
+
+            return patientApplicationRepository.findByPrescriberEmailAndSubmittedTrue(email, page);
         }
 
-        return (submitted)
-                ? patientApplicationRepository.findByPrescriberEmailAndSubmittedEquals(auth.getEmail(), true, page)
-                : patientApplicationRepository.findByPrescriberEmailAndSubmittedEquals(auth.getEmail(), false, page);
+        if (!complete && !submitted) {
+            return patientApplicationRepository.findByPrescriberEmailAndCompleteFalseAndSubmittedFalse(auth.getEmail(), page);
+        }
+
+        if (complete && !submitted) {
+            return patientApplicationRepository.findByPrescriberEmailAndCompleteTrue(auth.getEmail(), page);
+        }
+
+        return patientApplicationRepository.findByPrescriberEmailAndSubmittedTrue(auth.getEmail(), page);
     }
 
     @PostMapping("/save")
@@ -104,7 +124,7 @@ public class PatientApplicationController {
             });
         }
 
-        patientApplicationRepository.save(patientApplication);
+        patientApplicationService.save(patientApplication);
     }
 
     @UserAuthorized("applicationId")
@@ -136,7 +156,7 @@ public class PatientApplicationController {
     @UserAuthorized("applicationId")
     @PostMapping("/patient-signature/{applicationId}")
     public void savePatientSignature(@PathVariable("applicationId") String applicationId,
-                                      @RequestBody SaveSignatureRequest patientSignatureRequest) {
+                                     @RequestBody SaveSignatureRequest patientSignatureRequest) {
         setIfExists(applicationId, patientSignatureRequest, SignatureType.PATIENT, PatientApplication::setPatientSignatureId);
     }
 
@@ -146,14 +166,14 @@ public class PatientApplicationController {
         Optional<PatientApplication> optionalPatientApplication = patientApplicationRepository.findById(applicationId);
         optionalPatientApplication.ifPresent((application) -> {
             application.setPatientSignatureId(null);
-            patientApplicationRepository.save(application);
+            patientApplicationService.save(application);
         });
     }
 
     @UserAuthorized("applicationId")
     @PostMapping("/prescriber-signature/{applicationId}")
     public void savePrescriberSignature(@PathVariable("applicationId") String applicationId,
-                                         @RequestBody SaveSignatureRequest prescriberSignatureRequest) {
+                                        @RequestBody SaveSignatureRequest prescriberSignatureRequest) {
         setIfExists(applicationId, prescriberSignatureRequest, SignatureType.PRESCRIBER, PatientApplication::setPrescriberSignatureId);
     }
 
@@ -163,7 +183,7 @@ public class PatientApplicationController {
         Optional<PatientApplication> optionalPatientApplication = patientApplicationRepository.findById(applicationId);
         optionalPatientApplication.ifPresent((application) -> {
             application.setPrescriberSignatureId(null);
-            patientApplicationRepository.save(application);
+            patientApplicationService.save(application);
         });
     }
 
@@ -173,7 +193,7 @@ public class PatientApplicationController {
         Optional<PatientApplication> optionalPatientApplication = patientApplicationRepository.findById(applicationId);
         optionalPatientApplication.ifPresent((application) -> {
             application.setSubmitted(clear);
-            patientApplicationRepository.save(application);
+            patientApplicationService.save(application);
         });
     }
 
@@ -191,7 +211,10 @@ public class PatientApplicationController {
             signature.setUploadedAt(LocalDateTime.now());
             Signature savedSignature = signatureRepository.save(signature);
             setSignatureConsumer.accept(application, savedSignature.getId());
-            patientApplicationRepository.save(application);
+
+            patientApplicationService.save(application);
         }
     }
+
+
 }

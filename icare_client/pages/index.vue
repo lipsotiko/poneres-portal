@@ -29,49 +29,41 @@
         <ITabTitle for="tab-2">Complete</ITabTitle>
         <ITabTitle for="tab-3">Submitted</ITabTitle>
       </template>
-      <ITab name="tab-1">
-        <div v-if="pending">Loading ...</div>
-        <div v-else-if="data?.content.length === 0">No pending applications</div>
-        <ITable v-else>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Patient Name</th>
-              <th>Application Type</th>
-              <th>Signed By Patient</th>
-              <th>Signed By Prescriber</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="application in data?.content">
-              <td>
-                <IButton size="sm" :to="`/applications/${application.id}`">
-                  View
-                </IButton>
-              </td>
-              <td>
-                {{ application.metadata.patient_first_name }}
-                {{ application.metadata.patient_last_name }}
-              </td>
-              <td>{{ application.displayApplicationName }}</td>
-              <td v-if="application.signedByPatient">
-                <IIcon name="ink-check" />
-              </td>
-              <td v-else><IIcon name="ink-times" /></td>
-              <td v-if="application.signedByPrescriber">
-                <IIcon name="ink-check" />
-              </td>
-              <td v-else><IIcon name="ink-times" /></td>
-            </tr>
-          </tbody>
-        </ITable>
-      </ITab>
-      <ITab name="tab-2">
-        <div>No complete applications</div>
-      </ITab>
-      <ITab name="tab-3">
-        <div>No submitted applications</div>
-      </ITab>
+      <div v-if="pending">Loading ...</div>
+      <div v-else-if="data?.content.length === 0">{{ emptyResults() }}</div>
+      <ITable v-else>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Patient Name</th>
+            <th>Application Type</th>
+            <th>Signed By Patient</th>
+            <th>Signed By Prescriber</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="application in data?.content">
+            <td>
+              <IButton size="sm" :to="`/applications/${application.id}`">
+                View
+              </IButton>
+            </td>
+            <td>
+              {{ application.metadata.patient_first_name }}
+              {{ application.metadata.patient_last_name }}
+            </td>
+            <td>{{ application.displayApplicationName }}</td>
+            <td v-if="application.signedByPatient">
+              <IIcon name="ink-check" />
+            </td>
+            <td v-else><IIcon name="ink-times" /></td>
+            <td v-if="application.signedByPrescriber">
+              <IIcon name="ink-check" />
+            </td>
+            <td v-else><IIcon name="ink-times" /></td>
+          </tr>
+        </tbody>
+      </ITable>
     </ITabs>
   </IContainer>
   <ClientOnly>
@@ -98,22 +90,26 @@ const { pending, data } = await useAsyncData(
   () =>
     $fetch('/api/patient-applications/find', {
       query: {
+        complete: active.value === 'tab-2',
         submitted: active.value === 'tab-3',
         email: selectedPrescriber.value,
       }
     }),
   {
+    server: false,
     watch: [selectedPrescriber, active],
   }
 );
 
 onMounted(async () => {
-  prescriberOptions.value = await getPrescribers().then((results) =>
-    results.map(({ email, firstName, lastName }) => ({
-      id: email,
-      label: `${lastName}, ${firstName}`,
-    })),
-  );
+  if (isAdmin) {
+    prescriberOptions.value = await getPrescribers().then((results) =>
+      results.map(({ email, firstName, lastName }) => ({
+        id: email,
+        label: `${lastName}, ${firstName}`,
+      })),
+    );
+  }
 });
 
 const options = ref([
@@ -133,6 +129,21 @@ const handleNavigation = () => {
     query: { type: checked.value, prescriberEmail: encodedPrescriberEmail },
   });
 };
+
+const emptyResults = () => {
+  if (active.value === 'tab-1') {
+    return 'No pending applications'
+  }
+
+  if (active.value === 'tab-2') {
+    return 'No complete applications'
+  }
+
+  if (active.value === 'tab-3') {
+    return 'No submitted applications'
+  }
+}
+
 </script>
 <style>
 .admin-section {

@@ -2,11 +2,16 @@ import { ref } from "vue";
 
 const useAuth = () => {
   const isAdmin = ref(false);
-  fetch("/api/user/role")
-    .then((res) => res.json())
-    .then((json) => {
-      isAdmin.value = json.type === "ADMIN";
-    });
+
+  useAsyncData(
+    'user-role',
+    async () => {
+      const response = await $fetch('/api/user/role')
+      isAdmin.value = response.type === 'ADMIN'
+    }, {
+      server: false,
+    }
+  );
 
   return {
     isAdmin,
@@ -14,7 +19,7 @@ const useAuth = () => {
 };
 
 const getPrescribers = async () => {
-  return $fetch("/api/user-profile/prescribers");
+  return $fetch('/api/user-profile/prescribers');
 };
 
 export { useAuth, getPrescribers };

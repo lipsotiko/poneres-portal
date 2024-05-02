@@ -7,6 +7,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PatientApplicationRepository extends MongoRepository<PatientApplication, String> {
-    Page<PatientApplication> findBySubmittedEquals(Boolean submitted, Pageable pageable);
-    Page<PatientApplication> findByPrescriberEmailAndSubmittedEquals(String email, Boolean submitted, Pageable pageable);
+    Page<PatientApplication> findByCompleteTrue(Pageable page);
+
+    Page<PatientApplication> findBySubmittedTrue(Pageable page);
+
+    Page<PatientApplication> findByPrescriberEmailAndCompleteTrue(String email, Pageable page);
+
+    Page<PatientApplication> findByPrescriberEmailAndSubmittedTrue(String email, Pageable page);
+
+    Page<PatientApplication> findByCompleteFalseAndSubmittedFalse(Pageable page);
+
+    Page<PatientApplication> findByPrescriberEmailAndCompleteFalseAndSubmittedFalse(String email, Pageable page);
 }

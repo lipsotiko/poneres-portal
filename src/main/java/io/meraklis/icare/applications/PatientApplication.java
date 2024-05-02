@@ -18,7 +18,8 @@ public class PatientApplication {
     private Map<String, Object> metadata;
     private String patientSignatureId;
     private String prescriberSignatureId;
-    private Boolean submitted;
+    private Boolean complete = false;
+    private Boolean submitted = false;
 
     public boolean isSignedByPatient() {
         return patientSignatureId != null;

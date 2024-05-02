@@ -123,9 +123,12 @@
       </ITab>
       <ITab name="tab-4">
         <div class="download-section">
-          <IToggle v-if="isAdmin" v-model="data.application.submitted"
-            >This application has been submitted</IToggle
-          >
+          <div>
+            <IToggle v-if="isAdmin" v-model="data.application.submitted" :disabled="!data.application.complete">
+              This application has been submitted
+            </IToggle>
+            <small>**Only complete applications may be submitted</small>
+          </div>
         </div>
         <hr />
         <span v-if="loadingPreview">loading...</span>
@@ -158,7 +161,10 @@ const {
   pending,
   data,
   refresh: refreshPatientApplication,
-} = useFetch(`/api/patient-applications/${applicationId}`);
+} = useFetch(`/api/patient-applications/${applicationId}`, {
+  lazy: true,
+  server: false,
+});
 
 const {
   pending: patientDocumentsPending,
