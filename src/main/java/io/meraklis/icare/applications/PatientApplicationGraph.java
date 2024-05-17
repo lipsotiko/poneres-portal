@@ -11,4 +11,5 @@ public class PatientApplicationGraph {
     public PatientApplication application;
     public String patientSignature;
     public String prescriberSignature;
+    public Boolean allDocumentsUploaded;
 }

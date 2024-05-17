@@ -1,7 +1,10 @@
-const savePatientDocument = async ({ applicationId, formData }) => {
+const savePatientDocument = async ({ applicationId, type, formData }) => {
   await $fetch(`/api/patient-documents/application/${applicationId}/save`, {
     method: "POST",
     body: formData,
+    query: {
+      type
+    }
   });
 };
 

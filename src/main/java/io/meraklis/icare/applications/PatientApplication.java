@@ -18,6 +18,7 @@ public class PatientApplication {
     private Map<String, Object> metadata;
     private String patientSignatureId;
     private String prescriberSignatureId;
+    private Boolean allDocumentsUploaded = false;
     private Boolean complete = false;
     private Boolean submitted = false;
 

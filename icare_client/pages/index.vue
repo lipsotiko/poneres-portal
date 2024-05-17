@@ -37,6 +37,7 @@
             <th></th>
             <th>Patient Name</th>
             <th>Application Type</th>
+            <th>All Documents Uploaded</th>
             <th>Signed By Patient</th>
             <th>Signed By Prescriber</th>
           </tr>
@@ -53,14 +54,18 @@
               {{ application.metadata.patient_last_name }}
             </td>
             <td>{{ application.displayApplicationName }}</td>
-            <td v-if="application.signedByPatient">
-              <IIcon name="ink-check" />
+            <td >
+              <IIcon v-if="application.allDocumentsUploaded" name="ink-check" />
+              <IIcon v-else name="ink-times" />
             </td>
-            <td v-else><IIcon name="ink-times" /></td>
-            <td v-if="application.signedByPrescriber">
-              <IIcon name="ink-check" />
+            <td>
+              <IIcon v-if="application.signedByPatient" name="ink-check" />
+              <IIcon v-else name="ink-times" />
             </td>
-            <td v-else><IIcon name="ink-times" /></td>
+            <td>
+              <IIcon v-if="application.signedByPrescriber" name="ink-check" />
+              <IIcon v-else name="ink-times" />
+            </td>
           </tr>
         </tbody>
       </ITable>

@@ -1,5 +1,6 @@
 package io.meraklis.icare.documents;
 
+import io.meraklis.icare.applications.PatientApplicationService;
 import io.meraklis.icare.security.AuthenticationService;
 import io.meraklis.icare.security.UserAuthorized;
 import io.meraklis.icare.storage.StorageResponse;
@@ -25,6 +26,9 @@ public class PatientDocumentController {
     private AuthenticationService auth;
 
     @Autowired
+    private PatientApplicationService patientApplicationService;
+
+    @Autowired
     private PatientDocumentRepository patientDocumentRepository;
 
     @UserAuthorized("applicationId")
@@ -35,7 +39,9 @@ public class PatientDocumentController {
 
     @UserAuthorized("applicationId")
     @PostMapping("/application/{applicationId}/save")
-    public void save(@PathVariable("applicationId") String applicationId, @RequestBody MultipartFile[] files)
+    public void save(@PathVariable("applicationId") String applicationId,
+                     @RequestParam("type") DocumentType type,
+                     @RequestBody MultipartFile[] files)
             throws IOException {
         String email = auth.getEmail();
         for (MultipartFile file : files) {
@@ -44,9 +50,11 @@ public class PatientDocumentController {
                     patientDocumentRepository.save(PatientDocument.builder()
                             .uploadedBy(email)
                             .fileName(fileName)
+                            .type(type)
                             .applicationId(applicationId)
                             .build());
             storage.save(patientDocument.getId(), file.getBytes(), fileName, email, applicationId);
+            patientApplicationService.updateApplicationStatus(applicationId);
         }
     }
 
@@ -54,7 +62,11 @@ public class PatientDocumentController {
     @DeleteMapping("/{documentId}/delete")
     public void deleteDocument(@PathVariable("documentId") String documentId) {
         storage.delete(documentId);
-        patientDocumentRepository.deleteById(documentId);
+        Optional<PatientDocument> byId = patientDocumentRepository.findById(documentId);
+        byId.ifPresent(document -> {
+            patientDocumentRepository.deleteById(document.getId());
+            patientApplicationService.updateApplicationStatus(document.getApplicationId());
+        });
     }
 
     @UserAuthorized("documentId")

@@ -15,5 +15,6 @@ public class PatientDocument {
     private String id;
     private String applicationId;
     private String fileName;
+    private DocumentType type;
     private String uploadedBy;
 }

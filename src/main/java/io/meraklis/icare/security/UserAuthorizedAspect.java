@@ -31,7 +31,6 @@ public class UserAuthorizedAspect {
 
     @Before("@annotation(io.meraklis.icare.security.UserAuthorized)")
     public void check(JoinPoint joinPoint) {
-        System.out.println("==========================================================================================");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         UserAuthorized userAuthorized = method.getAnnotation(UserAuthorized.class);

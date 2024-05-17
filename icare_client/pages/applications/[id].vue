@@ -54,12 +54,20 @@
       </ITab>
       <ITab name="tab-2">
         <div class="upload-section">
-          <input
-            ref="fileInput"
-            type="file"
-            @change="onFilePickedFn"
-            multiple
-          />
+          <div class="upload-type-file">
+            <ISelect
+              v-model="selectedDocumentType"
+              :options="documentTypes"
+              size="sm"
+              placeholder="Select a document type..."
+            />
+            <input
+              ref="fileInput"
+              type="file"
+              @change="onFilePickedFn"
+              multiple
+            />
+          </div>
           <IButton
             size="sm"
             color="primary"
@@ -75,13 +83,17 @@
           <ITable v-else>
             <thead>
               <tr>
-                <th>File Name Type</th>
+                <th>Type</th>
+                <th>File Name</th>
                 <th>Uploaded By</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="doc in patientDocuments">
+                <td>
+                  {{ doc.type }}
+                </td>
                 <td>
                   <a
                     href="#"
@@ -156,6 +168,23 @@ let fileInput = ref(null);
 let uploading = ref(false);
 let loadingPreview = ref(false);
 let pdfPreview = ref(null);
+const selectedDocumentType = ref(null);
+const documentTypes = [{
+  id: 'MEDICARE_PART_A_B',
+  label: 'Medicare Part A/B'
+},{
+  id: 'MEDICARE_PART_D',
+  label: 'Medicare Part D'
+}, {
+  id: 'STATE_ID',
+  label: 'State ID or Drivers License'
+}, {
+  id: 'SSA_1099',
+  label: 'SSA-1099'
+}, {
+  id: 'OTHER',
+  label: 'Other'
+}];
 
 const {
   pending,
@@ -223,7 +252,7 @@ const uploadFn = async () => {
 
   uploading.value = true;
 
-  await savePatientDocument({ applicationId, formData });
+  await savePatientDocument({ applicationId, formData, type: selectedDocumentType.value });
 
   files.value = [];
   fileInput.value.value = "";
@@ -309,5 +338,14 @@ iframe {
 .download-section {
   display: flex;
   justify-content: flex-end;
+}
+
+.upload-type-file {
+  display: inline-block;
+}
+
+.upload-type-file * {
+  float: left;
+  margin-right: 6px;
 }
 </style>
