@@ -1,6 +1,6 @@
 ./build.sh
-sudo docker build --tag=icare.azurecr.io/icare:latest .
-sudo docker push icare.azurecr.io/icare
+docker build --tag=poneres.azurecr.io/poneres-portal:latest .
+docker push poneres.azurecr.io/poneres-portal
 
 az webapp config appsettings set --settings \
 AUTH0_ISSUER=$AUTH0_ISSUER \
@@ -10,6 +10,6 @@ MONGODB_URI=$MONGODB_URI \
 AWS_REGION=$AWS_REGION \
 AWS_ACCESS_KEY=$AWS_ACCESS_KEY \
 AWS_ACCESS_SECRET=$AWS_ACCESS_SECRET \
---name i-care-app --resource-group i-care-app_group
+--name poneres-portal --resource-group poneres
 
-az webapp restart --name i-care-app --resource-group i-care-app_group
+az webapp restart --name poneres-portal --resource-group poneres

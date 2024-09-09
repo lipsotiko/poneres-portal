@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.meraklis</groupId>
-	<artifactId>i-care</artifactId>
+	<artifactId>poneres-portal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>i-care</name>
+	<name>poneres-portal</name>
 	<description>Another project stub...that may go somewhere</description>
 	<properties>
 		<java.version>21</java.version>

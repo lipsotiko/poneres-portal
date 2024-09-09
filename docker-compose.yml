@@ -5,6 +5,6 @@ services:
     ports:
       - 27017:27017
   icare-container:
-    image: icare:latest
+    image: poneres-portal:latest
     ports:
       - 8080:8080

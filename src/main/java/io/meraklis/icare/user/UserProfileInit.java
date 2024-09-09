@@ -16,10 +16,8 @@ public class UserProfileInit {
     @PostConstruct
     public void init() {
         userProfileRepository.deleteAll();
-        userProfileRepository.save(new UserProfile(ADMIN, "evangelos@meraklis.io", "E", "Poneres"));
-        userProfileRepository.save(new UserProfile(ADMIN, "jkotler.rd@gmail.com", "J", "Kotler"));
-        userProfileRepository.save(new UserProfile(ADMIN, "sarahro92@gmail.com", "S", "Ro"));
-        userProfileRepository.save(new UserProfile(ADMIN, "admin@meraklis.io", "Admin", ""));
+        userProfileRepository.save(new UserProfile(ADMIN, "evangelos@poneres.com", "E", "Poneres"));
+        userProfileRepository.save(new UserProfile(ADMIN, "poneres.c@gmail.com", "C", "Poneres"));
         userProfileRepository.save(new UserProfile(PRESCRIBER, "prescriber@meraklis.io", "Saul", "Goodman"));
         userProfileRepository.save(new UserProfile(PRESCRIBER, "prescriber_2@meraklis.io", "Jessy", "Pinkman"));
         userProfileRepository.save(new UserProfile(PRESCRIBER, "prescriber_3@meraklis.io", "Walter", "White"));

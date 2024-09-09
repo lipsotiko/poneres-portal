@@ -1,11 +1,11 @@
 package io.meraklis.timetracker;
 
-import io.meraklis.icare.ICareApplication;
+import io.meraklis.icare.PoneresPortalApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = ICareApplication.class)
-class ICareApplicationTests {
+@SpringBootTest(classes = PoneresPortalApplication.class)
+class PoneresPortalApplicationTests {
 
     @Test
     void contextLoads() {

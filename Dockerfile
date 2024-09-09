@@ -1,4 +1,3 @@
 FROM openjdk:21
-MAINTAINER meraklis.io
-COPY target/i-care-0.0.1-SNAPSHOT.jar i-care-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java","-jar","/i-care-0.0.1-SNAPSHOT.jar","--server.port=80"]
+COPY target/poneres-portal-0.0.1-SNAPSHOT.jar poneres-portal-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java","-jar","/poneres-portal-0.0.1-SNAPSHOT.jar","--server.port=80"]
