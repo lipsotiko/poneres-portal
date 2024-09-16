@@ -17,7 +17,12 @@ public class ProductionSecurityConfiguration {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/_nuxt/**").permitAll()
+                        .requestMatchers("/sign-up/**").permitAll()
+                        .anyRequest().authenticated()
+                )
                 .oauth2Login(withDefaults());
 
         http.csrf(AbstractHttpConfigurer::disable);

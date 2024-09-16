@@ -7,4 +7,4 @@ spring:
     exclude[1]: org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
 mock-user:
 #  as: "prescriber@meraklis.io"
-  as: "admin@meraklis.io"
+  as: "evangelos@poneres.com"

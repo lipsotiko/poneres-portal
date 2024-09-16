@@ -8,11 +8,13 @@
       :maxLength="maxLength"
       :disabled="disabled"
       :type="type ? type : 'text'"
-    />
+      :autocomplete="autocomplete"
+    >
+    </IInput>
   </IFormGroup>
 </template>
 <script>
 export default {
-  props: ["name", "label", "maxLength", "disabled", "type"],
+  props: ["name", "label", "maxLength", "disabled", "type", "autocomplete"],
 };
 </script>
