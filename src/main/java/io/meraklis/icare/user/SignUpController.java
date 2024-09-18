@@ -1,14 +1,14 @@
 package io.meraklis.icare.user;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/public/sign-up")
 public class SignUpController {
-    @GetMapping("/user")
-    public String signUp() {
-        return "Hello";
+    @PostMapping("/landlord")
+    public SignUp signUpLandlord(@RequestBody SignUp signUp) {
+        // TODO: Create user in Auth0
+        // TODO: Create Stripe Connect account
+        return signUp;
     }
 }

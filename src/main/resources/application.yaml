@@ -11,3 +11,7 @@ logging:
 #          mongodb:
 #            core:
 #              MongoTemplate: DEBUG
+springdoc:
+  packages-to-scan: io.meraklis.icare.top_flight
+  swagger-ui:
+    filter: Top Flight Scheduler

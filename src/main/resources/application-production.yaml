@@ -15,3 +15,6 @@ s3:
   region: ${AWS_REGION}
   access-key: ${AWS_ACCESS_KEY}
   access-secret: ${AWS_ACCESS_SECRET}
+auth0-administration:
+  client-id: "bRRx6aDajaSNEmWBBeBC9u05NGdcFvHA"
+  client-secret: "EAGc-ra1DL9yWi7JSSubd3yTy7fdlU1uG4_trI4bVx8xCfAML5pOcl8j9hv9hq8W"

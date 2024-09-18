@@ -21,6 +21,7 @@ public class ProductionSecurityConfiguration {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/_nuxt/**").permitAll()
                         .requestMatchers("/sign-up/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(withDefaults());
