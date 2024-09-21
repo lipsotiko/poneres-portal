@@ -1,6 +1,6 @@
 package io.meraklis.icare.security;
 
-import io.meraklis.icare.user.Role;
+import io.meraklis.icare.user.SignUp;
 import io.meraklis.icare.user.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,6 +64,16 @@ public class DevelopmentAuthenticationService extends AbstractAuthenticationServ
     @Override
     public String getEmail() {
         return getPrincipal().getEmail();
+    }
+
+    @Override
+    public void createUser(SignUp signUp) {
+        System.out.println(signUp);
+    }
+
+    @Override
+    public UserVerificationStatus verificationStatus() {
+        return null;
     }
 
 }

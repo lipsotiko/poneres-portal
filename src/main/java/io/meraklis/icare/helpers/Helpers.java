@@ -7,6 +7,7 @@ import java.io.IOException;
 import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 
 public class Helpers {
+
     public static File tmpFile(String extension) {
         try {
             File tempFile = File.createTempFile("tmp", extension);

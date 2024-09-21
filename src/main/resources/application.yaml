@@ -1,6 +1,17 @@
 spring:
   profiles:
     active: production
+  data:
+    rest:
+      base-path: /api
+    mongodb:
+      database: "poneres-portal"
+      auto-index-creation: true
+s3:
+  bucket: "poneres-portal"
+server:
+  error:
+    include-message: always
 logging:
   level:
     org:
@@ -12,6 +23,6 @@ logging:
 #            core:
 #              MongoTemplate: DEBUG
 springdoc:
-  packages-to-scan: io.meraklis.icare.top_flight
-  swagger-ui:
-    filter: Top Flight Scheduler
+  packages-to-scan: io.meraklis.icare
+#  swagger-ui:
+#    filter: Top Flight Scheduler

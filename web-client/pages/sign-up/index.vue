@@ -1,4 +1,10 @@
 <template>
+    <IToast v-if="successfulUserRegistration" color="success">
+        <p>You successfully signed up!</p>
+    </IToast>
+    <IToast v-if="errorMessage" color="warning">
+        <p>{{ errorMessage }}</p>
+    </IToast>
     <IContainer class="sign-up-container">
         <ClientOnly>
             <IForm v-model="schema">
@@ -9,69 +15,81 @@
                         </div>
                     </IColumn>
                 </IRow>
-                <IRow>
-                    <IColumn xs="12">
-                        <IFormGroup required>
-                            <IFormLabel for="email">Email address</IFormLabel>
-                            <IInput v-model="email" id="email" name="email" autocomplete :error="errorTypes">
-                                <template #append>
-                                    <i class="fa-regular fa-envelope"></i>
-                                </template>
-                            </IInput>
-                            <IFormError for="email" :visible="errorTypes" />
-                        </IFormGroup>
-                    </IColumn>
-                </IRow>
-                <IRow>
-                    <IColumn xs="6">
-                        <IFormGroup required>
-                            <IFormLabel for="firstName">First name</IFormLabel>
-                            <IInput v-model="firstName" id="firstName" name="firstName" autocomplete
-                                :error="errorTypes" />
-                            <IFormError for="firstName" :visible="errorTypes" />
-                        </IFormGroup>
-                    </IColumn xs="6">
-                    <IColumn>
-                        <IFormGroup required>
-                            <IFormLabel for="lastName">Last name</IFormLabel>
-                            <IInput v-model="lastName" id="lastName" name="lastName" autocomplete :error="errorTypes" />
-                            <IFormError for="lastName" :visible="errorTypes" />
-                        </IFormGroup>
-                    </IColumn>
-                </IRow>
-                <IRow>
-                    <IColumn>
-                        <IFormGroup required>
-                            <IFormLabel for="password">Set a password</IFormLabel>
-                            <IInput v-model="password" id="password" name="password" type="password" autocomplete
-                                :error="errorTypes" />
-                            <IFormError for="password" :visible="errorTypes" />
-                        </IFormGroup>
-                    </IColumn>
-                </IRow>
-                <IRow>
-                    <IColumn>
-                        <div class="create-account">
-                            <div>
-                                <IButton block color="primary" :loading="loading" @click="createAccount"
-                                    :disabled="!schema.touched || schema.invalid">
-                                    Create account</IButton>
+                <div v-if="successfulUserRegistration">
+                    <IRow>
+                        <IColumn>
+                            <div class="have-an-account">
+                                <p class="lead">Log in to view your dashboard!</p>
+                                <IButton block color="primary" :href="loginPage">Log in</IButton>
                             </div>
-                        </div>
-                    </IColumn>
-                </IRow>
-                <IRow>
-                    <IColumn>
-                        <div class="have-an-account">
-                            <p class="lead">
-                                Already have an account?
-                                <a :href="loginPage">
-                                    Sign in
-                                </a>
-                            </p>
-                        </div>
-                    </IColumn>
-                </IRow>
+                        </IColumn>
+                    </IRow>
+                </div>
+                <div v-else>
+                    <IRow>
+                        <IColumn xs="12">
+                            <IFormGroup required>
+                                <IFormLabel for="email">Email address</IFormLabel>
+                                <IInput v-model="email" id="email" name="email" autocomplete :error="errorTypes">
+                                    <template #append>
+                                        <i class="fa-regular fa-envelope"></i>
+                                    </template>
+                                </IInput>
+                                <IFormError for="email" :visible="errorTypes" />
+                            </IFormGroup>
+                        </IColumn>
+                    </IRow>
+                    <IRow>
+                        <IColumn xs="6">
+                            <IFormGroup required>
+                                <IFormLabel for="firstName">First name</IFormLabel>
+                                <IInput v-model="firstName" id="firstName" name="firstName" autocomplete
+                                    :error="errorTypes" />
+                                <IFormError for="firstName" :visible="errorTypes" />
+                            </IFormGroup>
+                        </IColumn xs="6">
+                        <IColumn>
+                            <IFormGroup required>
+                                <IFormLabel for="lastName">Last name</IFormLabel>
+                                <IInput v-model="lastName" id="lastName" name="lastName" autocomplete :error="errorTypes" />
+                                <IFormError for="lastName" :visible="errorTypes" />
+                            </IFormGroup>
+                        </IColumn>
+                    </IRow>
+                    <IRow>
+                        <IColumn>
+                            <IFormGroup required>
+                                <IFormLabel for="password">Set a password</IFormLabel>
+                                <IInput v-model="password" id="password" name="password" type="password" autocomplete
+                                    :error="errorTypes" />
+                                <IFormError for="password" :visible="errorTypes" />
+                            </IFormGroup>
+                        </IColumn>
+                    </IRow>
+                    <IRow>
+                        <IColumn>
+                            <div class="create-account">
+                                <div>
+                                    <IButton block color="primary" :loading="loading" @click="createAccount"
+                                        :disabled="!schema.touched || schema.invalid">
+                                        Create account</IButton>
+                                </div>
+                            </div>
+                        </IColumn>
+                    </IRow>
+                    <IRow>
+                        <IColumn>
+                            <div class="have-an-account">
+                                <p class="lead">
+                                    Already have an account?
+                                    <a :href="loginPage">
+                                        Sign in
+                                    </a>
+                                </p>
+                            </div>
+                        </IColumn>
+                    </IRow>
+                </div>
             </IForm>
         </ClientOnly>
     </IContainer>
@@ -140,6 +158,8 @@ const firstName = ref();
 const lastName = ref();
 const password = ref();
 const loading = ref(false);
+const errorMessage = ref();
+const successfulUserRegistration = ref(false);
 
 const createAccount = async () => {
     loading.value = true;
@@ -148,9 +168,12 @@ const createAccount = async () => {
         firstName: firstName.value,
         lastName: lastName.value,
         password: password.value
-    });
-
-    // TODO: Show success dialogue and redirect to login page...
+    }).then(() => {
+        errorMessage.value = undefined;
+        successfulUserRegistration.value = true;
+    }).catch(err => {
+        errorMessage.value = err.data.message;
+    })
 
     loading.value = false;
 }
