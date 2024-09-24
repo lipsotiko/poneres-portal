@@ -12,6 +12,7 @@ MONGODB_URI=$MONGODB_URI \
 AWS_REGION=$AWS_REGION \
 AWS_ACCESS_KEY=$AWS_ACCESS_KEY \
 AWS_ACCESS_SECRET=$AWS_ACCESS_SECRET \
+SENDGRID_API_KEY=$SENDGRID_API_KEY \
 --name poneres-portal --resource-group poneres
 
 az webapp restart --name poneres-portal --resource-group poneres

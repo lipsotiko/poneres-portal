@@ -2,6 +2,8 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
+  sendgrid:
+    api-key: ${SENDGRID_API_KEY}
 okta:
   oauth2:
     issuer: ${AUTH0_ISSUER}

@@ -26,3 +26,7 @@ springdoc:
   packages-to-scan: io.meraklis.icare
 #  swagger-ui:
 #    filter: Top Flight Scheduler
+email:
+  no-reply: "hello@poneres.com"
+webapp:
+  url: "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net"
