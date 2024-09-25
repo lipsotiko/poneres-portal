@@ -1,10 +1,24 @@
 <template>
   <div>
     <ILayout>
+
       <ILayoutHeader>
         <p v-if="!pendingUserData" class="auth">
-          {{ userData.email }} | <a size="sm" href="/logout">Logout</a>
-        </p>
+            {{ userData.email }}&nbsp;|&nbsp;<a size="sm" href="/logout">Logout</a>
+          </p>
+        <INavbar>
+          <INavbarBrand to="/">
+            Property Pal
+          </INavbarBrand>
+          <INavbarCollapsible class="_justify-content:flex-end">
+            <INav>
+              <INavItem to="/properties">Properties</INavItem>
+              <INavItem to="/tenants">Tenants</INavItem>
+            </INav>
+          </INavbarCollapsible>
+
+        </INavbar>
+
       </ILayoutHeader>
       <ILayoutContent>
         <slot />
@@ -33,7 +47,8 @@ export default {
 </script>
 <style>
 .auth {
-  margin: 22px;
-  float: right;
+  display: flex;
+  margin: 10px 12px;
+  justify-content: flex-end;
 }
 </style>

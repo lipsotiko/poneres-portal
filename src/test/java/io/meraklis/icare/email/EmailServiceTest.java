@@ -49,8 +49,9 @@ class EmailServiceTest {
         String body = request.getBody();
         assertEquals("Hello", JsonPath.read(body, "$.subject"));
         assertEquals("hello@world.io", JsonPath.read(body, "$.personalizations[0].to[0].email"));
-        assertEquals("<a href=\"https://hello.com/login\">Log in</a>\n" +
-                "<h1>Hello World</h1>", JsonPath.read(body, "$.content[0].value"));
+        assertEquals(
+                "<a href=\"https://hello.com/login\">Log in</a>\n<h1>Hello World</h1>",
+                JsonPath.read(body, "$.content[0].value"));
     }
 
 }
