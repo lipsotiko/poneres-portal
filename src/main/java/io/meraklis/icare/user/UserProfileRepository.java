@@ -11,7 +11,7 @@ public interface UserProfileRepository extends MongoRepository<UserProfile, Stri
 
     UserProfile findByEmail(String email);
 
-    List<UserProfile> findByType(Role type);
+    List<UserProfile> findByRolesContains(Role role);
 
     void deleteByEmail(String email);
 }

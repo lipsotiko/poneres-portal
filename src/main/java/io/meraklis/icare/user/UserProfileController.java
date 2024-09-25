@@ -18,6 +18,6 @@ public class UserProfileController {
     @UserAuthorized("isAdmin")
     @GetMapping("/prescribers")
     public List<UserProfile> getPrescribers() {
-        return userProfileRepository.findByType(Role.PRESCRIBER);
+        return userProfileRepository.findByRolesContains(Role.PRESCRIBER);
     }
 }

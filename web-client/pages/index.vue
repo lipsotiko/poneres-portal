@@ -1,7 +1,7 @@
 <template>
   <IContainer>
     <div class="top">
-      <h1>Applications</h1>
+      <span></span>
       <div v-if="isAdmin" class="admin-section">
         <ISelect
           v-model="selectedPrescriber"

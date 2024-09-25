@@ -7,7 +7,7 @@ const useAuth = () => {
     'user-role',
     async () => {
       const response = await $fetch('/api/user/role')
-      isAdmin.value = response.type === 'ADMIN'
+      isAdmin.value = response.roles.includes('ADMIN')
     }, {
       server: false,
     }

@@ -17,11 +17,11 @@ logging:
     org:
       apache:
         pdfbox: error
-#      springframework:
-#        data:
-#          mongodb:
-#            core:
-#              MongoTemplate: DEBUG
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
 springdoc:
   packages-to-scan: io.meraklis.icare
 #  swagger-ui:

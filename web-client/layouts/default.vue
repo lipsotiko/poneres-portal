@@ -8,17 +8,16 @@
           </p>
         <INavbar>
           <INavbarBrand to="/">
-            Property Pal
+            <strong>Property Pal</strong>
           </INavbarBrand>
           <INavbarCollapsible class="_justify-content:flex-end">
             <INav>
               <INavItem to="/properties">Properties</INavItem>
+              <INavItem to="/applications">Applications</INavItem>
               <INavItem to="/tenants">Tenants</INavItem>
             </INav>
           </INavbarCollapsible>
-
         </INavbar>
-
       </ILayoutHeader>
       <ILayoutContent>
         <slot />

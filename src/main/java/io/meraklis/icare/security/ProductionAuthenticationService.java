@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 
 import static io.meraklis.icare.helpers.RestApiService.urlEncode;
 
@@ -75,7 +77,7 @@ public class ProductionAuthenticationService extends AbstractAuthenticationServi
                 .firstName(signUp.getFirstName())
                 .lastName(signUp.getLastName())
                 .authProviderId(response.getUserId())
-                .type(Role.LANDLORD)
+                .roles(Collections.singletonList(Role.LANDLORD))
                 .build();
         userProfileRepository.save(userProfile);
     }

@@ -47,7 +47,7 @@ public class UserAuthorizedAspect {
             documentRepository.findById(documentId).ifPresent(document -> authorizedForApplication(document.getApplicationId()));
         }
 
-        if (value.equals("isAdmin") && !authenticationService.hasRole(Role.ADMIN)) {
+        if (value.equals("isAdmin") && !authenticationService.hasRole(Role.LANDLORD)) {
             throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
         }
     }

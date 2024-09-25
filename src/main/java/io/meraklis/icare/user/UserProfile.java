@@ -8,6 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Builder
 @Document
@@ -21,13 +23,13 @@ public class UserProfile {
     private String email;
     private String firstName;
     private String lastName;
-    private Role type;
+    private List<Role> roles;
     private String authProviderId;
 
-    public UserProfile(Role type, String email, String firstName, String lastName) {
-        this.type = type;
+    public UserProfile(String email, String firstName, String lastName, List<Role> roles) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.roles = roles;
     }
 }

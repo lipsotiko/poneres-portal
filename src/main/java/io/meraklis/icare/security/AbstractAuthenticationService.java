@@ -13,7 +13,7 @@ abstract class AbstractAuthenticationService {
     abstract String getEmail();
 
     public Boolean hasRole(Role role) {
-        return userProfileRepository.findByEmail(getEmail()).getType().equals(role);
+        return userProfileRepository.findByEmail(getEmail()).getRoles().contains(role);
     }
 
     public Boolean isAuthorized(PatientApplication application) {
