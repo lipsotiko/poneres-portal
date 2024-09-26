@@ -27,6 +27,8 @@
   </div>
 </template>
 <script setup>
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+
 const { pending: pendingUserData, data: userData } = useFetch(
   "/api/user/info",
   {

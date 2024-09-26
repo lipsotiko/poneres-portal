@@ -4,6 +4,7 @@
   </NuxtLayout>
 </template>
 <script setup>
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 useHead({
   script: [
     {
