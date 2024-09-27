@@ -5,6 +5,7 @@
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+
 useHead({
   script: [
     {
@@ -20,5 +21,10 @@ useHead({
   margin: 22px;
   display: flex;
   justify-content: space-between;
+}
+
+.row {
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 </style>

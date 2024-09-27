@@ -199,11 +199,6 @@ export default {
     text-align: center;
 }
 
-.row {
-    padding-top: 8px;
-    padding-bottom: 8px;
-}
-
 .create-account {
     margin-top: 18px;
     text-align: center;

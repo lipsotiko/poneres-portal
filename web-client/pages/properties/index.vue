@@ -2,8 +2,13 @@
     <IContainer>
         <div class="top">
             <p class="lead">Properties</p>
+            <IButton circle color="primary" to='/properties/new'>
+                <template #icon>
+                    <IIcon name="ink-plus" />
+                </template>
+            </IButton>
         </div>
-        <ag-grid-vue :rowData="rowData" :columnDefs="colDefs" style="height: 500px" class="ag-theme-quartz" />
+        <ag-grid-vue :loading="pending" :rowData="data" :columnDefs="colDefs" style="height: 500px" class="ag-theme-quartz" />
     </IContainer>
 </template>
 <script setup>
@@ -24,4 +29,13 @@ const colDefs = ref([
     { field: "state" },
     { field: "zipCode" }
 ]);
+
+const { pending, data } = await useAsyncData(
+    'properties-created-by',
+    () =>
+        $fetch('/api/properties/created-by')
+    , {
+        server: false
+    }
+);
 </script>
