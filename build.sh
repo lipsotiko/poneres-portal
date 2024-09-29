@@ -1,5 +1,5 @@
 export BUILD_DT=$(date '+%Y-%m-%d')
-export DEPLOYMENT_TYPE=production
+export DEPLOYMENT_TYPE=develop
 cd web-client && npm run generate
 cd ..
 rm -rf src/main/resources/public

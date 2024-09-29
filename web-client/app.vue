@@ -27,4 +27,15 @@ useHead({
     padding-top: 8px;
     padding-bottom: 8px;
 }
+
+.link-no-decoration {
+  text-decoration: none;
+  color: black;
+  margin: 2px 8px;
+}
+
+.link-no-decoration:hover {
+  cursor: pointer;
+  color: lightgrey;
+}
 </style>

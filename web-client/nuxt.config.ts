@@ -23,4 +23,9 @@ export default defineNuxtConfig({
       deploymentType: process.env.DEPLOYMENT_TYPE || "local",
     },
   },
+  nitro: {
+    prerender: {
+      ignore: ['/logout']
+    }
+  }
 });

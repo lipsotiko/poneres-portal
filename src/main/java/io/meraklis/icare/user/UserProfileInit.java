@@ -55,13 +55,13 @@ public class UserProfileInit {
         initPrescriber("prescriber_c@poneres.com", "Leo", "Getz");
     }
 
-    private void initProperty(UserProfile evangelos, String address, String city, String zipCode) {
+    private void initProperty(UserProfile userProfile, String address, String city, String zipCode) {
         propertyRepository.save(Property.builder()
                 .address(address)
                 .city(city)
                 .state("MD")
                 .zipCode(zipCode)
-                .createdBy(evangelos.getEmail())
+                .createdBy(userProfile.getId())
                 .build());
     }
 

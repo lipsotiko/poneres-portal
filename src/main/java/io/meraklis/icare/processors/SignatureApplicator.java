@@ -66,7 +66,7 @@ public class SignatureApplicator {
                 if (signatureOptional.isEmpty()) {
                     continue;
                 }
-                
+
                 File signatureFile = base64ToFile(signatureOptional.get().getBase64());
                 BufferedImage image = ImageIO.read(signatureFile);
 

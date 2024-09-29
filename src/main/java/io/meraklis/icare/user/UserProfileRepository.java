@@ -9,7 +9,9 @@ import java.util.List;
 public interface UserProfileRepository extends MongoRepository<UserProfile, String> {
     Boolean existsByEmail(String email);
 
-    UserProfile findByEmail(String email);
+//    UserProfile findByEmail(String email);
+
+    UserProfile findByAuthProviderId(String authProviderId);
 
     List<UserProfile> findByRolesContains(Role role);
 

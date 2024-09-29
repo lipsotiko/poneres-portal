@@ -41,7 +41,13 @@ public class RestApiService {
             handleSuccess(response, uri);
 
             String responseEntity = EntityUtils.toString(response.getEntity());
-            return jackson.readValue(responseEntity, responseType);
+
+            if (responseType == null) {
+                return null;
+            } else {
+                return jackson.readValue(responseEntity, responseType);
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,6 +55,10 @@ public class RestApiService {
 
     public <T> T post(String uri, Object request, Class<T> responseType) {
         return post(uri, null, request, responseType);
+    }
+
+    public void post(String uri, String token, Object request) {
+        post(uri, token, request, null);
     }
 
     public <T> T get(String uri, String token, Class<T> responseType) {

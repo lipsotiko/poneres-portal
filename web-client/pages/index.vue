@@ -109,8 +109,8 @@ const { pending, data } = await useAsyncData(
 onMounted(async () => {
   if (isAdmin) {
     prescriberOptions.value = await getPrescribers().then((results) =>
-      results.map(({ email, firstName, lastName }) => ({
-        id: email,
+      results.map(({ id, firstName, lastName }) => ({
+        id,
         label: `${lastName}, ${firstName}`,
       })),
     );

@@ -40,6 +40,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
     abstract PatientApplicationType applicationType();
 
     abstract Map<String, FC> pdfFieldsMap();
+
     public List<String> multiCheckBoxFields() {
         return Collections.emptyList();
     }

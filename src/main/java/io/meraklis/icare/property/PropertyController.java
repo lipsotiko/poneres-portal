@@ -1,6 +1,7 @@
 package io.meraklis.icare.property;
 
 import io.meraklis.icare.security.AuthenticationService;
+import io.meraklis.icare.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +19,15 @@ public class PropertyController {
 
     @PostMapping
     public Property save(@RequestBody Property property) {
-        property.setCreatedBy(authenticationService.getEmail());
+        UserProfile userProfile = authenticationService.getUserProfile();
+        property.setCreatedBy(userProfile.getId());
         return propertyRepository.save(property);
     }
 
     @GetMapping("/created-by")
     public List<Property> createdBy() {
-        return propertyRepository.findByCreatedBy(authenticationService.getEmail());
+        UserProfile userProfile = authenticationService.getUserProfile();
+        return propertyRepository.findByCreatedBy(userProfile.getId());
     }
 
 }

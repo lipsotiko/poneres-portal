@@ -1,6 +1,7 @@
 package io.meraklis.icare.user;
 
 import io.meraklis.icare.email.EmailService;
+import io.meraklis.icare.payments.PaymentService;
 import io.meraklis.icare.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,13 @@ public class SignUpController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @PostMapping("/landlord")
     public ResponseEntity<Void> signUpLandlord(@RequestBody SignUp signUp) {
-        // TODO: Create Stripe Connect account
         authenticationService.createUser(signUp);
+        paymentService.createAccount(signUp.getEmail());
         emailService.send(signUp.getEmail(), "Welcome to Property Pal", "email_templates/welcome.html");
         return ResponseEntity.ok().build();
     }

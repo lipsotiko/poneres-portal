@@ -25,6 +25,7 @@ public class UserProfile {
     private String lastName;
     private List<Role> roles;
     private String authProviderId;
+    private String paymentProviderId;
 
     public UserProfile(String email, String firstName, String lastName, List<Role> roles) {
         this.email = email;

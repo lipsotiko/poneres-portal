@@ -9,5 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface UserAuthorized {
     String value() default "";
+
     int position() default 0;
 }

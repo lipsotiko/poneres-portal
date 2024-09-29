@@ -1,5 +1,6 @@
 package io.meraklis.icare.security;
 
+import io.meraklis.icare.applications.PatientApplication;
 import io.meraklis.icare.helpers.FileService;
 import io.meraklis.icare.helpers.RestApiService;
 import io.meraklis.icare.security.auth0.*;
@@ -10,7 +11,6 @@ import io.meraklis.icare.user.UserProfileRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -18,15 +18,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.meraklis.icare.helpers.RestApiService.urlEncode;
 
 @Slf4j
 @Service
-@Profile("production")
-public class ProductionAuthenticationService extends AbstractAuthenticationService implements AuthenticationService {
+public class Auth0AuthenticationService implements AuthenticationService {
 
     @Value("${okta.oauth2.issuer}oauth/token")
     private String tokenUrl;
@@ -50,11 +50,6 @@ public class ProductionAuthenticationService extends AbstractAuthenticationServi
     private UserProfileRepository userProfileRepository;
 
     private static final String cachedTokenFilePath = "/AUTH0_ADMIN_TOKEN.json";
-
-    @Override
-    public OidcUser getPrincipal() {
-        return (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
 
     @Override
     public String getEmail() {
@@ -83,12 +78,34 @@ public class ProductionAuthenticationService extends AbstractAuthenticationServi
     }
 
     @Override
-    public UserVerificationStatus verificationStatus() {
-        UserProfile userProfile = userProfileRepository.findByEmail(getEmail());
+    public boolean isVerified() {
+        UserProfile userProfile = userProfileRepository.findByAuthProviderId(getAuthProviderId());
         String token = getAccessToken();
         String uri = audience + "users/" + urlEncode(userProfile.getAuthProviderId());
         Auth0UserResponse response = restApiService.get(uri, token, Auth0UserResponse.class);
-        return new UserVerificationStatus(response.getEmailVerified());
+        return response.getEmailVerified();
+    }
+
+    @Override
+    public UserProfile getUserProfile() {
+        return userProfileRepository.findByAuthProviderId(getAuthProviderId());
+    }
+
+    @Override
+    public void sendVerificationEmail() {
+        String token = getAccessToken();
+        Map<String, String> request = new HashMap<>();
+        request.put("user_id", getAuthProviderId());
+        restApiService.post(audience + "jobs/verification-email", token, request);
+    }
+
+    @Override
+    public void deleteAccount(String accountId) {
+
+    }
+
+    private String getAuthProviderId() {
+        return (String) getPrincipal().getUserInfo().getClaims().get("sub");
     }
 
     private String getAccessToken() {
@@ -106,5 +123,17 @@ public class ProductionAuthenticationService extends AbstractAuthenticationServi
         fileService.writeToFile(cachedTokenFilePath, token);
 
         return token.authorization();
+    }
+
+    public OidcUser getPrincipal() {
+        return (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public Boolean hasRole(Role role) {
+        return getUserProfile().getRoles().contains(role);
+    }
+
+    public Boolean isAuthorized(PatientApplication application) {
+        return hasRole(Role.ADMIN) || (!hasRole(Role.ADMIN) && getEmail().equals(application.getPrescriberEmail()));
     }
 }

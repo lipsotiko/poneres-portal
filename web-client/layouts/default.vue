@@ -1,11 +1,24 @@
 <template>
   <div>
     <ILayout>
-
       <ILayoutHeader>
-        <p v-if="!pendingUserData" class="auth">
-            {{ userData.email }}&nbsp;|&nbsp;<a size="sm" href="/logout">Logout</a>
-          </p>
+        <IDropdown class="_display:flex _justify-content:flex-end">
+          <IButton circle size="md" class="profile">
+            <template #icon>
+              <i class="fa-regular fa-user"></i>
+            </template>
+          </IButton>
+          <template #body>
+            <IDropdownItem to="/profile">Profile</IDropdownItem>
+            <IDropdownItem to="/earnings">Earnings</IDropdownItem>
+            <IDropdownDivider v-if="isAdmin"/>
+            <IDropdownItem v-if="isAdmin" to="/admin">Admin</IDropdownItem>
+            <IDropdownDivider />
+            <IDropdownItem href="/logout">
+              <span class="_color:danger!">Sign out</span>
+            </IDropdownItem>
+          </template>
+        </IDropdown>
         <INavbar>
           <INavbarBrand to="/">
             <strong>Property Pal</strong>
@@ -28,28 +41,11 @@
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+const { isAdmin } = useAuth();
 
-const { pending: pendingUserData, data: userData } = useFetch(
-  "/api/user/info",
-  {
-    lazy: true,
-    server: false,
-  },
-);
-</script>
-<script>
-export default {
-  methods: {
-    logout() {
-      console.log("logout");
-    },
-  },
-};
 </script>
 <style>
-.auth {
-  display: flex;
+.profile {
   margin: 10px 12px;
-  justify-content: flex-end;
 }
 </style>

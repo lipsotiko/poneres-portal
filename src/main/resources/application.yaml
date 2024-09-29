@@ -1,14 +1,39 @@
 spring:
   profiles:
-    active: production
+    active: development
   data:
     rest:
       base-path: /api
     mongodb:
+      uri: ${MONGODB_URI}
       database: "poneres-portal"
       auto-index-creation: true
+  sendgrid:
+    api-key: ${SENDGRID_API_KEY}
+springdoc:
+  packages-to-scan: io.meraklis.icare
+#  swagger-ui:
+#    filter: Top Flight Scheduler
+okta:
+  oauth2:
+    issuer: ${AUTH0_ISSUER}
+    client-id: ${AUTH0_CLIENT_ID}
+    client-secret: ${AUTH0_CLIENT_SECRET}
 s3:
   bucket: "poneres-portal"
+  region: ${AWS_REGION}
+  access-key: ${AWS_ACCESS_KEY}
+  access-secret: ${AWS_ACCESS_SECRET}
+email:
+  no-reply: "hello@poneres.com"
+auth0:
+  administration:
+    client-id: ${AUTH0_ADMIN_CLIENT_ID}
+    client-secret: ${AUTH0_ADMIN_CLIENT_SECRET}
+stripe:
+  private-key: ${STRIPE_PRIVATE_KEY}
+webapp:
+  url: "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net"
 server:
   error:
     include-message: always
@@ -22,11 +47,3 @@ logging:
 #          mongodb:
 #            core:
 #              MongoTemplate: DEBUG
-springdoc:
-  packages-to-scan: io.meraklis.icare
-#  swagger-ui:
-#    filter: Top Flight Scheduler
-email:
-  no-reply: "hello@poneres.com"
-webapp:
-  url: "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net"

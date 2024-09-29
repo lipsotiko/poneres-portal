@@ -47,8 +47,8 @@
                                     :error="errorTypes" />
                                 <IFormError for="firstName" :visible="errorTypes" />
                             </IFormGroup>
-                        </IColumn xs="6">
-                        <IColumn>
+                        </IColumn>
+                        <IColumn xs="6">
                             <IFormGroup required>
                                 <IFormLabel for="lastName">Last name</IFormLabel>
                                 <IInput v-model="lastName" id="lastName" name="lastName" autocomplete :error="errorTypes" />
@@ -143,20 +143,17 @@ const { schema } = useForm({
             {
                 name: 'custom',
                 message: 'Password must contain at least one lower case, one upper case, and one special character.',
-                validator: (password) => {
-                    var isValidPassword = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-                    return isValidPassword.test(password);
-                }
+                validator: emailValidator
             }
         ]
     },
 });
 
 const errorTypes = ['touched', 'invalid'];
-const email = ref();
-const firstName = ref();
-const lastName = ref();
-const password = ref();
+// const email = ref();
+// const firstName = ref();
+// const lastName = ref();
+// const password = ref();
 const loading = ref(false);
 const errorMessage = ref();
 const successfulUserRegistration = ref(false);
@@ -164,10 +161,10 @@ const successfulUserRegistration = ref(false);
 const createAccount = async () => {
     loading.value = true;
     await signUpLandlord({
-        email: email.value,
-        firstName: firstName.value,
-        lastName: lastName.value,
-        password: password.value
+        email: schema.value.email.value,
+        firstName: schema.value.firstName.value,
+        lastName: schema.value.lastName.value,
+        password: schema.value.password.value
     }).then(() => {
         errorMessage.value = undefined;
         successfulUserRegistration.value = true;

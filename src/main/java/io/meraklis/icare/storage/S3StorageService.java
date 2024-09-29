@@ -7,7 +7,6 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -16,8 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@Profile("production")
-public class ProductionStorageService implements StorageService {
+public class S3StorageService implements StorageService {
 
     @Value("${s3.bucket}")
     private String bucket;
