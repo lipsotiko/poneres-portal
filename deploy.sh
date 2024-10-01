@@ -1,4 +1,6 @@
 ./build.sh
+
+az acr login --name poneres
 docker build --tag=poneres.azurecr.io/poneres-portal:latest .
 docker push poneres.azurecr.io/poneres-portal
 

@@ -3,9 +3,9 @@ package io.meraklis.icare.property;
 import io.meraklis.icare.security.AuthenticationService;
 import io.meraklis.icare.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/properties")
@@ -25,9 +25,9 @@ public class PropertyController {
     }
 
     @GetMapping("/created-by")
-    public List<Property> createdBy() {
+    public Page<Property> createdBy(Pageable pageable) {
         UserProfile userProfile = authenticationService.getUserProfile();
-        return propertyRepository.findByCreatedBy(userProfile.getId());
+        return propertyRepository.findByCreatedBy(userProfile.getId(), pageable);
     }
 
 }

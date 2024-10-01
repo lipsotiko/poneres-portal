@@ -31,6 +31,7 @@ public class UserProfileInit {
                 .firstName("Evangelos")
                 .lastName("Poneres")
                 .authProviderId("auth0|66de56fc073c3dfd30f0cbad")
+                .paymentProviderId("acct_1Q5VYVRduvdA3mDt")
                 .build();
         userProfileRepository.save(evangelos);
 
@@ -44,6 +45,7 @@ public class UserProfileInit {
                 .firstName("Christos")
                 .lastName("Poneres")
                 .authProviderId("auth0|66de56e37571c397a84dc9e3")
+                .paymentProviderId("acct_1Q5VZYRebMKd18Dx")
                 .build();
         userProfileRepository.save(christos);
 
@@ -53,16 +55,20 @@ public class UserProfileInit {
         initPrescriber("prescriber_a@poneres.com", "Saul", "Goodman");
         initPrescriber("prescriber_b@poneres.com", "Johnny", "Walker");
         initPrescriber("prescriber_c@poneres.com", "Leo", "Getz");
+
+        initTenants();
     }
 
     private void initProperty(UserProfile userProfile, String address, String city, String zipCode) {
-        propertyRepository.save(Property.builder()
-                .address(address)
-                .city(city)
-                .state("MD")
-                .zipCode(zipCode)
-                .createdBy(userProfile.getId())
-                .build());
+        for(int i = 0; i < 50; i++) {
+            propertyRepository.save(Property.builder()
+                    .address(address +" " + i + 1)
+                    .city(city)
+                    .state("MD")
+                    .zipCode(zipCode)
+                    .createdBy(userProfile.getId())
+                    .build());
+        }
     }
 
     private void initPrescriber(String email, String firstNane, String lastName) {
@@ -74,5 +80,18 @@ public class UserProfileInit {
                 .lastName(lastName)
                 .build();
         userProfileRepository.save(prescriberB);
+    }
+
+    private void initTenants() {
+        userProfileRepository.deleteByRolesContains(Role.TENANT);
+        for(int i = 0; i < 50; i++) {
+            String tenant = String.format("tenant_%s", i + 1);
+            userProfileRepository.save(UserProfile.builder()
+                            .email(tenant + "@example.com")
+                            .firstName(tenant)
+                            .lastName("Wick")
+                            .roles(List.of(TENANT))
+                    .build());
+        }
     }
 }

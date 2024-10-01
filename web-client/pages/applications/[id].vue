@@ -136,7 +136,11 @@
       <ITab name="tab-4">
         <div class="download-section">
           <div>
-            <IToggle v-if="isAdmin" v-model="data.application.submitted" :disabled="!data.application.complete">
+            <IToggle
+              v-if="isAdmin"
+              v-model="data.application.submitted"
+              :disabled="!data.application.complete"
+            >
               This application has been submitted
             </IToggle>
             <small>**Only complete applications may be submitted</small>
@@ -169,22 +173,28 @@ let uploading = ref(false);
 let loadingPreview = ref(false);
 let pdfPreview = ref(null);
 const selectedDocumentType = ref(null);
-const documentTypes = [{
-  id: 'MEDICARE_PART_A_B',
-  label: 'Medicare Part A/B'
-},{
-  id: 'MEDICARE_PART_D',
-  label: 'Medicare Part D'
-}, {
-  id: 'STATE_ID',
-  label: 'State ID or Drivers License'
-}, {
-  id: 'SSA_1099',
-  label: 'SSA-1099'
-}, {
-  id: 'OTHER',
-  label: 'Other'
-}];
+const documentTypes = [
+  {
+    id: "MEDICARE_PART_A_B",
+    label: "Medicare Part A/B",
+  },
+  {
+    id: "MEDICARE_PART_D",
+    label: "Medicare Part D",
+  },
+  {
+    id: "STATE_ID",
+    label: "State ID or Drivers License",
+  },
+  {
+    id: "SSA_1099",
+    label: "SSA-1099",
+  },
+  {
+    id: "OTHER",
+    label: "Other",
+  },
+];
 
 const {
   pending,
@@ -252,7 +262,11 @@ const uploadFn = async () => {
 
   uploading.value = true;
 
-  await savePatientDocument({ applicationId, formData, type: selectedDocumentType.value });
+  await savePatientDocument({
+    applicationId,
+    formData,
+    type: selectedDocumentType.value,
+  });
 
   files.value = [];
   fileInput.value.value = "";

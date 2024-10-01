@@ -11,7 +11,7 @@
           <template #body>
             <IDropdownItem to="/profile">Profile</IDropdownItem>
             <IDropdownItem to="/earnings">Earnings</IDropdownItem>
-            <IDropdownDivider v-if="isAdmin"/>
+            <IDropdownDivider v-if="isAdmin" />
             <IDropdownItem v-if="isAdmin" to="/admin">Admin</IDropdownItem>
             <IDropdownDivider />
             <IDropdownItem href="/logout">
@@ -42,7 +42,6 @@
 <script setup>
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 const { isAdmin } = useAuth();
-
 </script>
 <style>
 .profile {

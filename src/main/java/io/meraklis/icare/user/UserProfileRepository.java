@@ -8,12 +8,12 @@ import java.util.List;
 @Repository
 public interface UserProfileRepository extends MongoRepository<UserProfile, String> {
     Boolean existsByEmail(String email);
-
-//    UserProfile findByEmail(String email);
-
+    
     UserProfile findByAuthProviderId(String authProviderId);
 
     List<UserProfile> findByRolesContains(Role role);
 
     void deleteByEmail(String email);
+
+    void deleteByRolesContains(Role role);
 }

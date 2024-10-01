@@ -5,8 +5,6 @@ spring:
     rest:
       base-path: /api
     mongodb:
-      uri: ${MONGODB_URI}
-      database: "poneres-portal"
       auto-index-creation: true
   sendgrid:
     api-key: ${SENDGRID_API_KEY}

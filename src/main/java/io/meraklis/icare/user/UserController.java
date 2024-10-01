@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -40,9 +41,13 @@ public class UserController {
         return userInfo;
     }
 
-    @PostMapping
-    public void updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
-        System.out.println(updateUserRequest);
+    @PostMapping("/{id}")
+    public void updateUser(@PathVariable("id") String id, @RequestBody UpdateUserRequest updateUserRequest) {
+        Optional<UserProfile> byId = userProfileRepository.findById(id);
+        byId.ifPresent(userProfile -> {
+            userProfile.setFirstName(updateUserRequest.getFirstName());
+            userProfile.setFirstName(updateUserRequest.getLastName());
+        });
     }
 
     @PostMapping("/send-verification-email")

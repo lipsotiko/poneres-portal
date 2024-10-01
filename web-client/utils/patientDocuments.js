@@ -3,8 +3,8 @@ const savePatientDocument = async ({ applicationId, type, formData }) => {
     method: "POST",
     body: formData,
     query: {
-      type
-    }
+      type,
+    },
   });
 };
 

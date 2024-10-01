@@ -54,7 +54,7 @@
               {{ application.metadata.patient_last_name }}
             </td>
             <td>{{ application.displayApplicationName }}</td>
-            <td >
+            <td>
               <IIcon v-if="application.allDocumentsUploaded" name="ink-check" />
               <IIcon v-else name="ink-times" />
             </td>
@@ -91,19 +91,19 @@ const selectedPrescriber = ref(null);
 const { isAdmin } = useAuth();
 
 const { pending, data } = await useAsyncData(
-  'patient-applications',
+  "patient-applications",
   () =>
-    $fetch('/api/patient-applications/find', {
+    $fetch("/api/patient-applications/find", {
       query: {
-        complete: active.value === 'tab-2',
-        submitted: active.value === 'tab-3',
+        complete: active.value === "tab-2",
+        submitted: active.value === "tab-3",
         email: selectedPrescriber.value,
-      }
+      },
     }),
   {
     server: false,
     watch: [selectedPrescriber, active],
-  }
+  },
 );
 
 onMounted(async () => {
@@ -136,19 +136,18 @@ const handleNavigation = () => {
 };
 
 const emptyResults = () => {
-  if (active.value === 'tab-1') {
-    return 'No pending applications'
+  if (active.value === "tab-1") {
+    return "No pending applications";
   }
 
-  if (active.value === 'tab-2') {
-    return 'No complete applications'
+  if (active.value === "tab-2") {
+    return "No complete applications";
   }
 
-  if (active.value === 'tab-3') {
-    return 'No submitted applications'
+  if (active.value === "tab-3") {
+    return "No submitted applications";
   }
-}
-
+};
 </script>
 <style>
 .admin-section {
