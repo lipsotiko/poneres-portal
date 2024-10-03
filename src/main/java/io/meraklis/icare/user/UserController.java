@@ -71,13 +71,11 @@ public class UserController {
 
     @GetMapping("/payment-account")
     public PaymentAccount getPaymentAccount() {
-        String email = authenticationService.getEmail();
         return paymentService.getAccount();
     }
 
     @GetMapping("/payment-account-link")
     public PaymentAccountLink getPaymentAccountOnboardingLink() {
-        String email = authenticationService.getEmail();
         return paymentService.getAccountLink();
     }
 

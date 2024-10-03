@@ -143,4 +143,14 @@ public class Auth0AuthenticationService implements AuthenticationService {
     public Boolean isAuthorized(PatientApplication application) {
         return hasRole(Role.ADMIN) || (!hasRole(Role.ADMIN) && getEmail().equals(application.getPrescriberEmail()));
     }
+
+    @Override
+    public void deleteAccount(UserProfile userProfile) {
+        if (userProfile.getAuthProviderId() == null) {
+            return;
+        }
+        String token = getAccessToken();
+        String uri = audience + "users/" + urlEncode(userProfile.getAuthProviderId());
+        restApiService.delete(uri, token);
+    }
 }

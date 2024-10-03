@@ -30,7 +30,7 @@ public class UserProfileInit {
                 .roles(Arrays.asList(ADMIN, LANDLORD))
                 .email("evangelos@poneres.com")
                 .firstName("Evangelos")
-                .lastName("Poneres")
+                .lastName("DON'T DELETE")
                 .authProviderId("auth0|66fec30d5c7496d1c5f4a2da")
                 .paymentProviderId("acct_1Q5rgHDCtswgh7ou")
                 .build();
@@ -45,7 +45,7 @@ public class UserProfileInit {
                 .roles(Arrays.asList(ADMIN, LANDLORD))
                 .email("poneres.c@gmail.com")
                 .firstName("Christos")
-                .lastName("Poneres")
+                .lastName("DON'T DELETE")
                 .authProviderId("auth0|66de56e37571c397a84dc9e3")
                 .paymentProviderId("acct_1Q5VZYRebMKd18Dx")
                 .build();

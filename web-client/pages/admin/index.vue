@@ -1,28 +1,20 @@
 <template>
   <IContainer>
     <PageTitle title="Admin panel" backTo="/" />
-    <ag-grid-vue
-      :loading="pending"
-      :rowData="data?.content"
-      :columnDefs="colDefs"
-      :gridOptions="gridOptions"
-      :columnOptions="{
-        sortChanged: (e) => console.log(e),
-      }"
-      style="height: 888px"
-      class="ag-theme-quartz"
-    />
-    <IPagination
-      v-model="page"
-      :items-total="data?.totalElements"
-      :items-per-page="data?.size"
-    />
+    <div class="_display:flex _justify-content:end admin-actions">
+      <IButton outline size="sm" color="danger" :disabled="selectedUserIds.length === 0" :loading="deleteing" @click="handleDelete()">Delete
+      </IButton>
+    </div>
+    <ag-grid-vue :loading="pending" :rowData="data?.content" :columnDefs="colDefs" :gridOptions="gridOptions"
+      :rowSelection="rowSelection" :getRowId="(params) => String(params.data.id)" style="height: 888px"
+      class="ag-theme-quartz" />
+    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
   </IContainer>
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridVue } from "ag-grid-vue3";
-
+const deleteing = ref(false);
 const page = ref(1);
 const sort = ref("firstName,asc");
 const colDefs = ref([
@@ -36,7 +28,18 @@ const colDefs = ref([
   { field: "roles" },
   { field: "authProviderId" },
   { field: "paymentProviderId" },
+  // {
+  //   field: "actions",
+  //   headerName: "Actions",
+  //   cellRenderer: "AdminUserActions"
+  // }
 ]);
+
+const rowSelection = {
+  mode: 'multiRow'
+}
+
+const selectedUserIds = ref([]);
 
 const gridOptions = {
   enableCellTextSelection: true,
@@ -48,9 +51,12 @@ const gridOptions = {
       sort.value = `${colId},${sortDirection}`;
     }
   },
+  onSelectionChanged: (e) => {
+    selectedUserIds.value = e.api.getSelectedNodes().map(({ data: { id } }) => id);
+  },
 };
 
-const { pending, data } = await useAsyncData(
+const { pending, data, refresh } = await useAsyncData(
   "properties-created-by",
   () =>
     $fetch("/api/user", {
@@ -64,4 +70,30 @@ const { pending, data } = await useAsyncData(
     watch: [page, sort],
   },
 );
+
+const handleDelete = async () => {
+  deleteing.value = true;
+  await $fetch('/api/admin/users', {
+    method: 'DELETE',
+    body: {
+      userIds: selectedUserIds.value
+    }
+  })
+  deleteing.value = false;
+  refresh()
+}
 </script>
+<!-- <script>
+import { AdminUserActions } from '#components';
+
+export default {
+  components: {
+    AdminUserActions
+  }
+}
+</script> -->
+<style scoped>
+.admin-actions {
+  margin: 12px;
+}
+</style>

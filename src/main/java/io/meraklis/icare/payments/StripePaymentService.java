@@ -109,6 +109,18 @@ public class StripePaymentService implements PaymentService {
         }
     }
 
+    @Override
+    public void deleteAccount(UserProfile userProfile) {
+        if (userProfile.getPaymentProviderId() == null) {
+            return;
+        }
+        try {
+            Account.retrieve(userProfile.getPaymentProviderId()).delete();
+        } catch (StripeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Account getStripeAccount() {
         UserProfile userProfile = authenticationService.getUserProfile();
         try {

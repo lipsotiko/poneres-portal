@@ -24,19 +24,19 @@ public class RestApiService {
 
     public <T> T post(String uri, String token, Object payload, Class<T> responseType) {
         try {
-            CloseableHttpResponse response = request(new HttpPost(uri), token, payload);
+            CloseableHttpResponse response = post2(uri, token, payload);
             handleSuccess(response, uri);
             String responseEntity = EntityUtils.toString(response.getEntity());
-
-            if (responseType == null) {
-                return null;
-            } else {
-                return jackson.readValue(responseEntity, responseType);
-            }
-
+            return jackson.readValue(responseEntity, responseType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private CloseableHttpResponse post2(String uri, String token, Object payload) {
+        CloseableHttpResponse response = request(new HttpPost(uri), token, payload);
+        handleSuccess(response, uri);
+        return response;
     }
 
     public void patch(String uri, String token, Object payload) {
@@ -66,7 +66,7 @@ public class RestApiService {
     }
 
     public void post(String uri, String token, Object payload) {
-        post(uri, token, payload, null);
+        post2(uri, token, payload);
     }
 
     public <T> T get(String uri, String token, Class<T> responseType) {
@@ -97,4 +97,15 @@ public class RestApiService {
         return URLEncoder.encode(url, StandardCharsets.UTF_8);
     }
 
+    public void delete(String uri, String token) {
+        HttpDelete httpRequest = new HttpDelete(uri);
+        httpRequest.setHeader("Authorization", token);
+
+        try {
+            CloseableHttpResponse response = HttpClients.createDefault().execute(httpRequest);
+            handleSuccess(response, uri);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

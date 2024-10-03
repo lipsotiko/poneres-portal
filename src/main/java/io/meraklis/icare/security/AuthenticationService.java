@@ -24,4 +24,6 @@ public interface AuthenticationService {
     void update(UserProfile userProfile);
 
     Boolean isAuthorized(PatientApplication application);
+
+    void deleteAccount(UserProfile userProfile);
 }
