@@ -9,6 +9,7 @@ import com.stripe.param.AccountCreateParams.BusinessProfile;
 import com.stripe.param.AccountCreateParams.Type;
 import com.stripe.param.AccountLinkCreateParams;
 import io.meraklis.icare.security.AuthenticationService;
+import io.meraklis.icare.user.SignUp;
 import io.meraklis.icare.user.UserProfile;
 import io.meraklis.icare.user.UserProfileRepository;
 import jakarta.annotation.PostConstruct;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.stripe.param.AccountCreateParams.Capabilities.*;
@@ -43,14 +43,18 @@ public class StripePaymentService implements PaymentService {
         Stripe.apiKey = apiKey;
     }
 
-    // https://github.com/lipsotiko/HappyTenant/blob/master/server/src/main/java/io/meraklis/happy_tenant/payment/StripePaymentService.java
     @Override
-    public String createAccount(String email) {
+    public String createAccount(SignUp signUp) {
         AccountCreateParams params = AccountCreateParams
                 .builder()
                 .setCountry("US")
                 .setType(Type.EXPRESS)
-                .setEmail(email)
+                .setBusinessType("individual") // company, government_entity, individual, non_profit
+                .setIndividual(AccountCreateParams.Individual.builder()
+                        .setFirstName(signUp.getFirstName())
+                        .setLastName(signUp.getLastName())
+                        .build())
+                .setEmail(signUp.getEmail())
                 .setCapabilities(builder()
                         .setCardPayments(CardPayments.builder().setRequested(true).build())
                         .setTransfers(Transfers.builder().setRequested(true).build())
@@ -59,9 +63,8 @@ public class StripePaymentService implements PaymentService {
                 .setBusinessProfile(
                         BusinessProfile.builder().setMcc("6513").setProductDescription("Property management").build()
                 ).build();
-
         try {
-            UserProfile userProfile = authenticationService.getUserProfile();
+            UserProfile userProfile = userProfileRepository.findByEmail(signUp.getEmail());
             Account account = Account.create(params);
             userProfile.setPaymentProviderId(account.getId());
             userProfileRepository.save(userProfile);
@@ -72,29 +75,21 @@ public class StripePaymentService implements PaymentService {
     }
 
     @Override
-    public PaymentAccount getAccount(String email) {
-        try {
-            UserProfile userProfile = authenticationService.getUserProfile();
-            Account retrieve = Account.retrieve(userProfile.getPaymentProviderId());
-
-            Set<String> requirementsDue = new HashSet<>();
-            requirementsDue.addAll(retrieve.getRequirements().getEventuallyDue());
-            requirementsDue.addAll(retrieve.getRequirements().getCurrentlyDue());
-            requirementsDue.addAll(retrieve.getRequirements().getPastDue());
-
-            List<String> pendingVerification = retrieve.getRequirements().getPendingVerification();
-
-            return PaymentAccount.builder()
-                    .pendingVerification(!pendingVerification.isEmpty())
-                    .requirementsDue(requirementsDue)
-                    .build();
-        } catch (StripeException e) {
-            throw new RuntimeException(e);
-        }
+    public PaymentAccount getAccount() {
+        Account account = getStripeAccount();
+        Set<String> requirementsDue = new HashSet<>();
+        requirementsDue.addAll(account.getRequirements().getEventuallyDue());
+        requirementsDue.addAll(account.getRequirements().getCurrentlyDue());
+        requirementsDue.addAll(account.getRequirements().getPastDue());
+        List<String> pendingVerification = account.getRequirements().getPendingVerification();
+        return PaymentAccount.builder()
+                .pendingVerification(!pendingVerification.isEmpty())
+                .requirementsDue(requirementsDue)
+                .build();
     }
 
     @Override
-    public PaymentAccountLink getAccountLink(String email) {
+    public PaymentAccountLink getAccountLink() {
         try {
             UserProfile userProfile = authenticationService.getUserProfile();
             AccountLinkCreateParams params = AccountLinkCreateParams.builder()
@@ -109,6 +104,15 @@ public class StripePaymentService implements PaymentService {
                     .url(paymentAccountLink.getUrl())
                     .expiresAt(paymentAccountLink.getExpiresAt())
                     .build();
+        } catch (StripeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Account getStripeAccount() {
+        UserProfile userProfile = authenticationService.getUserProfile();
+        try {
+            return Account.retrieve(userProfile.getPaymentProviderId());
         } catch (StripeException e) {
             throw new RuntimeException(e);
         }

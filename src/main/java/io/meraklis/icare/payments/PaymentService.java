@@ -1,11 +1,11 @@
 package io.meraklis.icare.payments;
 
+import io.meraklis.icare.user.SignUp;
+
 public interface PaymentService {
-    String createAccount(String email);
+    String createAccount(SignUp signUp);
 
-    PaymentAccount getAccount(String email);
+    PaymentAccount getAccount();
 
-    PaymentAccountLink getAccountLink(String email);
-//    void deleteAccount(String accountId);
-//    String createProduct(String description, String accountId);
+    PaymentAccountLink getAccountLink();
 }

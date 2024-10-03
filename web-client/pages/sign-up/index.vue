@@ -142,17 +142,7 @@ const { schema } = useForm({
       {
         name: "custom",
         message: "Please enter a valid email address.",
-        validator: (email) => {
-          if (email === undefined) {
-            return false;
-          }
-          const isEmail = email
-            .toLowerCase()
-            .match(
-              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            );
-          return isEmail != null;
-        },
+        validator: emailValidator,
       },
     ],
   },
@@ -175,17 +165,18 @@ const { schema } = useForm({
         name: "custom",
         message:
           "Password must contain at least one lower case, one upper case, and one special character.",
-        validator: emailValidator,
+        validator: (password) => {
+          var isValidPassword = new RegExp(
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})",
+          );
+          return isValidPassword.test(password);
+        },
       },
     ],
   },
 });
 
 const errorTypes = ["touched", "invalid"];
-// const email = ref();
-// const firstName = ref();
-// const lastName = ref();
-// const password = ref();
 const loading = ref(false);
 const errorMessage = ref();
 const successfulUserRegistration = ref(false);

@@ -13,15 +13,15 @@ public interface AuthenticationService {
 
     Boolean hasRole(Role role);
 
-    Boolean isAuthorized(PatientApplication application);
-
     void createUser(SignUp signUp);
 
     boolean isVerified();
 
-    void deleteAccount(String accountId);
-
     UserProfile getUserProfile();
 
     void sendVerificationEmail();
+
+    void update(UserProfile userProfile);
+
+    Boolean isAuthorized(PatientApplication application);
 }

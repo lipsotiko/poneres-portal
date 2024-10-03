@@ -133,7 +133,7 @@ watch(pendingUserInfo, () => {
 
 const saveProfile = async () => {
   loading.value = true;
-  await saveUserProfile({
+  await saveUserProfile(userInfo.value.userProfile.id, {
     firstName: schema.value.firstName.value,
     lastName: schema.value.lastName.value,
     email: schema.value.email.value,

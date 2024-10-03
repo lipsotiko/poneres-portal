@@ -41,12 +41,15 @@ public class UserController {
         return userInfo;
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public void updateUser(@PathVariable("id") String id, @RequestBody UpdateUserRequest updateUserRequest) {
         Optional<UserProfile> byId = userProfileRepository.findById(id);
         byId.ifPresent(userProfile -> {
             userProfile.setFirstName(updateUserRequest.getFirstName());
-            userProfile.setFirstName(updateUserRequest.getLastName());
+            userProfile.setLastName(updateUserRequest.getLastName());
+            userProfile.setEmail(updateUserRequest.getEmail());
+            userProfileRepository.save(userProfile);
+            authenticationService.update(userProfile);
         });
     }
 
@@ -69,13 +72,13 @@ public class UserController {
     @GetMapping("/payment-account")
     public PaymentAccount getPaymentAccount() {
         String email = authenticationService.getEmail();
-        return paymentService.getAccount(email);
+        return paymentService.getAccount();
     }
 
     @GetMapping("/payment-account-link")
     public PaymentAccountLink getPaymentAccountOnboardingLink() {
         String email = authenticationService.getEmail();
-        return paymentService.getAccountLink(email);
+        return paymentService.getAccountLink();
     }
 
 }

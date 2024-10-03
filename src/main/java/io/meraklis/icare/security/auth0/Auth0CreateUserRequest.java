@@ -12,6 +12,7 @@ public class Auth0CreateUserRequest {
     private String givenName;
     private String familyName;
     private String password;
+    private String name;
     private String connection = "Username-Password-Authentication";
 
     public Auth0CreateUserRequest(SignUp signUp) {
@@ -19,5 +20,6 @@ public class Auth0CreateUserRequest {
         givenName = signUp.getFirstName();
         familyName = signUp.getLastName();
         password = signUp.getPassword();
+        name = String.format("%s, %s", signUp.getLastName(), signUp.getFirstName());
     }
 }

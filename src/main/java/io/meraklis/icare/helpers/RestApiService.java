@@ -2,9 +2,7 @@ package io.meraklis.icare.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -24,22 +22,10 @@ public class RestApiService {
     @Autowired
     private ObjectMapper jackson;
 
-    public <T> T post(String uri, String token, Object request, Class<T> responseType) {
+    public <T> T post(String uri, String token, Object payload, Class<T> responseType) {
         try {
-            final HttpPost post = new HttpPost(uri);
-
-            if (token != null) {
-                post.setHeader("Authorization", token);
-            }
-
-            StringEntity params = new StringEntity(jackson.writeValueAsString(request));
-            post.setEntity(params);
-            post.addHeader("content-type", "application/json");
-
-            CloseableHttpClient client = HttpClients.createDefault();
-            CloseableHttpResponse response = client.execute(post);
+            CloseableHttpResponse response = request(new HttpPost(uri), token, payload);
             handleSuccess(response, uri);
-
             String responseEntity = EntityUtils.toString(response.getEntity());
 
             if (responseType == null) {
@@ -53,12 +39,34 @@ public class RestApiService {
         }
     }
 
+    public void patch(String uri, String token, Object payload) {
+        CloseableHttpResponse response = request(new HttpPatch(uri), token, payload);
+        handleSuccess(response, uri);
+    }
+
+    private CloseableHttpResponse request(HttpEntityEnclosingRequestBase httpRequest, String token, Object payload) {
+        if (token != null) {
+            httpRequest.setHeader("Authorization", token);
+        }
+
+        try {
+            StringEntity params = new StringEntity(jackson.writeValueAsString(payload));
+            httpRequest.setEntity(params);
+            httpRequest.addHeader("content-type", "application/json");
+
+            CloseableHttpClient client = HttpClients.createDefault();
+            return client.execute(httpRequest);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public <T> T post(String uri, Object request, Class<T> responseType) {
         return post(uri, null, request, responseType);
     }
 
-    public void post(String uri, String token, Object request) {
-        post(uri, token, request, null);
+    public void post(String uri, String token, Object payload) {
+        post(uri, token, payload, null);
     }
 
     public <T> T get(String uri, String token, Class<T> responseType) {
@@ -88,4 +96,5 @@ public class RestApiService {
     public static String urlEncode(String url) {
         return URLEncoder.encode(url, StandardCharsets.UTF_8);
     }
+
 }

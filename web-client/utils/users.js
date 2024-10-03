@@ -33,14 +33,14 @@ const getUsers = async (query) => {
   });
 };
 
-const saveUserProfile = (data) => {
-  return $fetch("/api/user", {
-    method: "POST",
+const saveUserProfile = (id, data) => {
+  return $fetch(`/api/user/${id}`, {
+    method: "PATCH",
     body: data,
   });
 };
 
-const sendVerificationEmail = (data) => {
+const sendVerificationEmail = () => {
   return $fetch("/api/user/send-verification-email", {
     method: "POST",
   });

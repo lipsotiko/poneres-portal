@@ -8,9 +8,18 @@
         </template>
       </IButton>
     </div>
-    <ag-grid-vue :loading="pending" :rowData="data?.content" :columnDefs="colDefs" style="height: 888px"
-      class="ag-theme-quartz" />
-    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+    <ag-grid-vue
+      :loading="pending"
+      :rowData="data?.content"
+      :columnDefs="colDefs"
+      style="height: 888px"
+      class="ag-theme-quartz"
+    />
+    <IPagination
+      v-model="page"
+      :items-total="data?.totalElements"
+      :items-per-page="data?.size"
+    />
   </IContainer>
 </template>
 <script setup>
@@ -29,15 +38,15 @@ const colDefs = ref([
 
 const { pending, data } = await useAsyncData(
   "properties-created-by",
-  () => $fetch("/api/properties/created-by", {
-
-    query: {
-      page: page.value - 1
-    }
-  }),
+  () =>
+    $fetch("/api/properties/created-by", {
+      query: {
+        page: page.value - 1,
+      },
+    }),
   {
     server: false,
-    watch: [page]
+    watch: [page],
   },
 );
 </script>

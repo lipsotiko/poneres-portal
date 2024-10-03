@@ -100,8 +100,15 @@ public class Auth0AuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public void deleteAccount(String accountId) {
-
+    public void update(UserProfile userProfile) {
+        String token = getAccessToken();
+        String uri = audience + "users/" + urlEncode(userProfile.getAuthProviderId());
+        Map<String, String> request = new HashMap<>();
+        request.put("given_name", userProfile.getFirstName());
+        request.put("family_name", userProfile.getLastName());
+        request.put("name", String.format("%s, %s", userProfile.getLastName(), userProfile.getFirstName()));
+        request.put("email", userProfile.getEmail());
+        restApiService.patch(uri, token, request);
     }
 
     private String getAuthProviderId() {
