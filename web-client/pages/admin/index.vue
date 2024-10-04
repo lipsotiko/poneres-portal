@@ -2,13 +2,31 @@
   <IContainer>
     <PageTitle title="Admin panel" backTo="/" />
     <div class="_display:flex _justify-content:end admin-actions">
-      <IButton outline size="sm" color="danger" :disabled="selectedUserIds.length === 0" :loading="deleteing" @click="handleDelete()">Delete
+      <IButton
+        outline
+        size="sm"
+        color="danger"
+        :disabled="selectedUserIds.length === 0"
+        :loading="deleteing"
+        @click="handleDelete()"
+        >Delete
       </IButton>
     </div>
-    <ag-grid-vue :loading="pending" :rowData="data?.content" :columnDefs="colDefs" :gridOptions="gridOptions"
-      :rowSelection="rowSelection" :getRowId="(params) => String(params.data.id)" style="height: 888px"
-      class="ag-theme-quartz" />
-    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+    <ag-grid-vue
+      :loading="pending"
+      :rowData="data?.content"
+      :columnDefs="colDefs"
+      :gridOptions="gridOptions"
+      :rowSelection="rowSelection"
+      :getRowId="(params) => String(params.data.id)"
+      style="height: 888px"
+      class="ag-theme-quartz"
+    />
+    <IPagination
+      v-model="page"
+      :items-total="data?.totalElements"
+      :items-per-page="data?.size"
+    />
   </IContainer>
 </template>
 <script setup>
@@ -18,26 +36,22 @@ const deleteing = ref(false);
 const page = ref(1);
 const sort = ref("firstName,asc");
 const colDefs = ref([
-  { field: "id" },
   {
     colId: "firstName",
     headerName: "Name",
     valueGetter: (p) => `${p.data.firstName} ${p.data.lastName}`,
+    context: "UserLink",
+    cellRenderer: "LinkField",
   },
   { field: "email" },
   { field: "roles" },
   { field: "authProviderId" },
   { field: "paymentProviderId" },
-  // {
-  //   field: "actions",
-  //   headerName: "Actions",
-  //   cellRenderer: "AdminUserActions"
-  // }
 ]);
 
 const rowSelection = {
-  mode: 'multiRow'
-}
+  mode: "multiRow",
+};
 
 const selectedUserIds = ref([]);
 
@@ -52,7 +66,9 @@ const gridOptions = {
     }
   },
   onSelectionChanged: (e) => {
-    selectedUserIds.value = e.api.getSelectedNodes().map(({ data: { id } }) => id);
+    selectedUserIds.value = e.api
+      .getSelectedNodes()
+      .map(({ data: { id } }) => id);
   },
 };
 
@@ -73,25 +89,25 @@ const { pending, data, refresh } = await useAsyncData(
 
 const handleDelete = async () => {
   deleteing.value = true;
-  await $fetch('/api/admin/users', {
-    method: 'DELETE',
+  await $fetch("/api/admin/users", {
+    method: "DELETE",
     body: {
-      userIds: selectedUserIds.value
-    }
-  })
+      userIds: selectedUserIds.value,
+    },
+  });
   deleteing.value = false;
-  refresh()
-}
+  refresh();
+};
 </script>
-<!-- <script>
-import { AdminUserActions } from '#components';
+<script>
+import { LinkField } from "#components";
 
 export default {
   components: {
-    AdminUserActions
-  }
-}
-</script> -->
+    LinkField,
+  },
+};
+</script>
 <style scoped>
 .admin-actions {
   margin: 12px;

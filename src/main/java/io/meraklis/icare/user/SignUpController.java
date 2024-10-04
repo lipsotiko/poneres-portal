@@ -27,7 +27,7 @@ public class SignUpController {
     public ResponseEntity<Void> signUpLandlord(@RequestBody SignUp signUp) {
         authenticationService.createUser(signUp);
         paymentService.createAccount(signUp);
-        emailService.send(signUp.getEmail(), "Welcome to Property Pal", "email_templates/welcome.html");
+        emailService.send(signUp.getEmail(), "Welcome to Property Pal", "welcome.html");
         return ResponseEntity.ok().build();
     }
 }

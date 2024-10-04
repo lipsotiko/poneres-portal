@@ -38,4 +38,12 @@ useHead({
   cursor: pointer;
   color: lightgrey;
 }
+
+.ag-theme-quartz {
+  --ag-borders: none;
+}
+
+.ag-body-vertical-scroll-viewport {
+  overflow-y: hidden;
+}
 </style>

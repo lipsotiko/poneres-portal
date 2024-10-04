@@ -29,12 +29,26 @@ import { AgGridVue } from "ag-grid-vue3";
 import { ref } from "vue";
 
 const page = ref(1);
-const sort = ref("firstName,asc");
+const sort = ref("address,asc");
 const colDefs = ref([
-  { field: "address" },
-  { field: "city" },
-  { field: "state" },
-  { field: "zipCode" },
+  {
+    field: "address",
+    width: 288,
+    context: "PropertyLink",
+    cellRenderer: "LinkField",
+  },
+  {
+    field: "city",
+    width: 120,
+  },
+  {
+    field: "state",
+    width: 80,
+  },
+  {
+    field: "zipCode",
+    width: 100,
+  },
 ]);
 
 const gridOptions = {
@@ -62,4 +76,22 @@ const { pending, data } = await useAsyncData(
     watch: [page, sort],
   },
 );
+</script>
+<style scoped>
+.ag-theme-quartz {
+  --ag-borders: none;
+}
+
+.ag-body-vertical-scroll-viewport {
+  overflow-y: hidden;
+}
+</style>
+<script>
+import { LinkField } from "#components";
+
+export default {
+  components: {
+    LinkField,
+  },
+};
 </script>
