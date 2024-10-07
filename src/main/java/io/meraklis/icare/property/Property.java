@@ -17,6 +17,7 @@ public class Property {
     private String city;
     private String state;
     private String zipCode;
+    private String entityId;
     private String createdBy;
 
     public String getFullAddress() {

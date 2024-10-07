@@ -2,7 +2,6 @@ package io.meraklis.icare.security;
 
 import io.meraklis.icare.applications.PatientApplicationRepository;
 import io.meraklis.icare.documents.PatientDocumentRepository;
-import io.meraklis.icare.user.Role;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -45,10 +44,6 @@ public class UserAuthorizedAspect {
         if (value.equals("documentId")) {
             String documentId = (String) joinPoint.getArgs()[userAuthorized.position()];
             documentRepository.findById(documentId).ifPresent(document -> authorizedForApplication(document.getApplicationId()));
-        }
-
-        if (value.equals("isAdmin") && !authenticationService.hasRole(Role.LANDLORD)) {
-            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
         }
     }
 

@@ -4,12 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Service
-@Profile("local")
+@Profile({"local", "local-no-auth"})
 public class LocalEmailService extends AbstractEmailService implements EmailService {
     @Override
     public void send(String to, String subject, String template) {
@@ -33,12 +32,4 @@ public class LocalEmailService extends AbstractEmailService implements EmailServ
         log.info("--------------------------------------------------------");
     }
 
-    @Override
-    public Map<String, String> getDefaultTokens() {
-        return new HashMap<>() {
-            {
-                put("LOGIN_URL", getWebappUrl() + "/oauth2/authorization/okta");
-            }
-        };
-    }
 }

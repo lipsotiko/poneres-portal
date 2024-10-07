@@ -1,6 +1,6 @@
 package io.meraklis.icare.processors;
 
-import io.meraklis.icare.applications.PatientApplicationType;
+import io.meraklis.icare.pdfs.PdfType;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Service;
 
@@ -8,15 +8,15 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
-import static io.meraklis.icare.applications.PatientApplicationType.BOEHRINGER_CARES_V1;
-import static io.meraklis.icare.processors.DocumentHelper.setField;
+import static io.meraklis.icare.pdfs.PdfType.BOEHRINGER_CARES_V1;
+import static io.meraklis.icare.pdfs.DocumentHelper.setField;
 import static io.meraklis.icare.processors.FieldType.*;
 
 @Service
-public class BoehringerCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
+public class BoehringerCaresProcessorV1 extends AbstractProcessor {
 
     @Override
-    public PatientApplicationType applicationType() {
+    public PdfType applicationType() {
         return BOEHRINGER_CARES_V1;
     }
 

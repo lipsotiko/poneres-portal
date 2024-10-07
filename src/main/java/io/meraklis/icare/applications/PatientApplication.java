@@ -1,5 +1,6 @@
 package io.meraklis.icare.applications;
 
+import io.meraklis.icare.pdfs.PdfType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class PatientApplication {
     @Id
     private String id;
     private String prescriberEmail;
-    private PatientApplicationType type;
+    private PdfType type;
     private Map<String, Object> metadata;
     private String patientSignatureId;
     private String prescriberSignatureId;

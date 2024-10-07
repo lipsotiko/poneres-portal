@@ -1,6 +1,6 @@
 package io.meraklis.icare.processors;
 
-import io.meraklis.icare.applications.PatientApplicationType;
+import io.meraklis.icare.pdfs.PdfType;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -15,17 +15,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.meraklis.icare.applications.PatientApplicationType.LILLY_CARES_V1;
 import static io.meraklis.icare.helpers.Helpers.tmpFile;
-import static io.meraklis.icare.processors.DocumentHelper.docToBytes;
-import static io.meraklis.icare.processors.DocumentHelper.setField;
+import static io.meraklis.icare.pdfs.PdfType.LILLY_CARES_V1;
+import static io.meraklis.icare.pdfs.DocumentHelper.docToBytes;
+import static io.meraklis.icare.pdfs.DocumentHelper.setField;
 import static io.meraklis.icare.processors.FieldType.*;
 
 @Service
-public class LillyCaresApplicationProcessorV1 extends AbstractApplicationProcessor {
+public class LillyCaresProcessorV1 extends AbstractProcessor {
 
     @Override
-    public PatientApplicationType applicationType() {
+    public PdfType applicationType() {
         return LILLY_CARES_V1;
     }
 

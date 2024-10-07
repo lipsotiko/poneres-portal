@@ -1,7 +1,6 @@
 package io.meraklis.icare.processors;
 
-import io.meraklis.icare.applications.PatientApplication;
-import io.meraklis.icare.applications.PatientApplicationType;
+import io.meraklis.icare.pdfs.PdfType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -18,11 +17,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.meraklis.icare.helpers.Helpers.tmpFile;
-import static io.meraklis.icare.processors.DocumentHelper.*;
+import static io.meraklis.icare.pdfs.DocumentHelper.*;
 import static io.meraklis.icare.processors.FieldType.*;
 
 @Slf4j
-abstract class AbstractApplicationProcessor implements ApplicationProcessor {
+abstract class AbstractProcessor implements PdfProcessor {
 
     @Autowired
     protected SignatureApplicator signatureApplicator;
@@ -37,7 +36,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
         }
     };
 
-    abstract PatientApplicationType applicationType();
+    abstract PdfType applicationType();
 
     abstract Map<String, FC> pdfFieldsMap();
 
@@ -122,10 +121,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
         }
     }
 
-    public byte[] process(PatientApplication application) {
-        Map<String, Object> metadata = application.getMetadata();
-        String patientSignatureId = application.getPatientSignatureId();
-        String prescriberSignatureId = application.getPrescriberSignatureId();
+    public byte[] process(Map<String, Object> metadata, String patientSignatureId, String prescriberSignatureId) {
         try (PDDocument doc = loadPdfDoc()) {
             removePages(doc, pagesToRemove());
             assignValues(doc, metadata);
@@ -228,6 +224,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
                 if (field instanceof PDTextField) {
                     setField(doc, field.getPartialName(), field.getPartialName());
                 } else if (field instanceof PDCheckBox) {
+//                    field.setValue(((PDCheckBox) field).getOnValue());
                     setField(doc, field.getPartialName(), "X");
                 } else {
                     processField(field, "|--", field.getPartialName());

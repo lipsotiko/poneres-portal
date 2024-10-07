@@ -25,9 +25,9 @@ public class SignUpController {
 
     @PostMapping("/landlord")
     public ResponseEntity<Void> signUpLandlord(@RequestBody SignUp signUp) {
-        authenticationService.createUser(signUp);
+        authenticationService.createUser(signUp, Role.PROPERTY_MANAGER);
         paymentService.createAccount(signUp);
-        emailService.send(signUp.getEmail(), "Welcome to Property Pal", "welcome.html");
+        emailService.send(signUp.getEmail(), "Welcome to Poneres.com", "welcome-property-manager.html");
         return ResponseEntity.ok().build();
     }
 }

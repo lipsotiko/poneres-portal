@@ -39,10 +39,9 @@ public class PropertyController {
         return propertyRepository.save(property);
     }
 
-    @GetMapping("/created-by")
-    public Page<Property> createdBy(Pageable pageable) {
-        UserProfile userProfile = authenticationService.getUserProfile();
-        return propertyRepository.findByCreatedBy(userProfile.getId(), pageable);
+    @GetMapping
+    public Page<Property> get(Pageable pageable) {
+        return propertyRepository.findAll(pageable);
     }
 
     @PostMapping("{propertyId}/invite-to-apply")

@@ -1,10 +1,66 @@
 <template>
   <IContainer>
     <div class="top">
-      <p class="lead">New Property</p>
+      <p class="lead">New Entity</p>
     </div>
     <ClientOnly>
       <IForm v-model="schema">
+        <IRow>
+          <IColumn xs="8">
+            <IFormGroup required>
+              <IFormLabel for="name">Name</IFormLabel>
+              <IInput
+                v-model="name"
+                id="name"
+                name="name"
+                autocomplete
+                :error="errorTypes"
+              />
+              <IFormError for="address" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+          <IColumn xs="4">
+            <IFormGroup required>
+              <IFormLabel for="email">Email</IFormLabel>
+              <IInput
+                v-model="email"
+                id="email"
+                name="email"
+                autocomplete
+                :error="errorTypes"
+              />
+              <IFormError for="email" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+        </IRow>
+        <IRow>
+          <IColumn xs="6">
+            <IFormGroup required>
+              <IFormLabel for="firstName">First name</IFormLabel>
+              <IInput
+                v-model="firstName"
+                id="firstName"
+                name="firstName"
+                autocomplete
+                :error="errorTypes"
+              />
+              <IFormError for="firstName" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+          <IColumn xs="6">
+            <IFormGroup required>
+              <IFormLabel for="lastName">Last name</IFormLabel>
+              <IInput
+                v-model="lastName"
+                id="lastName"
+                name="lastName"
+                autocomplete
+                :error="errorTypes"
+              />
+              <IFormError for="lastName" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+        </IRow>
         <IRow>
           <IColumn>
             <IFormGroup required>
@@ -64,9 +120,9 @@
         </IRow>
         <IRow>
           <IColumn>
-            <div class="create-property">
+            <div class="create-entity">
               <div class="_display:flex _justify-content:space-between">
-                <IButton to="/properties">Cancel</IButton>
+                <IButton to="/entities">Cancel</IButton>
                 <IButton
                   color="primary"
                   :loading="loading"
@@ -86,6 +142,39 @@
 <script setup>
 import { useForm } from "@inkline/inkline/composables";
 const { schema } = useForm({
+  name: {
+    validators: [
+      {
+        name: "required",
+      },
+    ],
+  },
+  email: {
+    validators: [
+      {
+        name: "required",
+      },
+      {
+        name: "custom",
+        message: "Please enter a valid email address.",
+        validator: emailValidator,
+      },
+    ],
+  },
+  firstName: {
+    validators: [
+      {
+        name: "required",
+      },
+    ],
+  },
+  lastName: {
+    validators: [
+      {
+        name: "required",
+      },
+    ],
+  },
   address: {
     validators: [
       {
@@ -118,6 +207,10 @@ const { schema } = useForm({
 const errorTypes = ["touched", "invalid"];
 const loading = ref(false);
 
+const name = ref();
+const email = ref();
+const firstName = ref();
+const lastName = ref();
 const address = ref();
 const city = ref();
 const state = ref();
@@ -125,18 +218,22 @@ const zipCode = ref();
 
 const save = async () => {
   loading.value = true;
-  await saveProperty({
-    address: address.value,
-    city: city.value,
-    state: state.value,
-    zipCode: zipCode.value,
+  await saveEntity({
+    name: name.value,
+    contactEmail: email.value,
+    contactFirstName: firstName.value,
+    contactLastName: lastName.value,
+    contactAddress: address.value,
+    contactCity: city.value,
+    contactState: state.value,
+    contactZipCode: zipCode.value,
   }).then(() => {
-    navigateTo("/properties");
+    navigateTo("/entities");
   });
 };
 </script>
 <style>
-.create-property {
+.create-entity {
   margin-top: 18px;
   text-align: center;
 }

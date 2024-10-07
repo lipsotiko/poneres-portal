@@ -25,6 +25,7 @@
           </INavbarBrand>
           <INavbarCollapsible class="_justify-content:flex-end">
             <INav>
+              <INavItem to="/entities">Entities</INavItem>
               <INavItem to="/properties">Properties</INavItem>
               <INavItem to="/applications">Applications</INavItem>
               <INavItem to="/tenants">Tenants</INavItem>

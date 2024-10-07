@@ -1,8 +1,8 @@
 <template>
   <IContainer>
     <div class="top">
-      <p class="lead">Properties</p>
-      <IButton circle color="primary" to="/properties/new">
+      <p class="lead">Entities</p>
+      <IButton circle color="primary" to="/entities/new">
         <template #icon>
           <IIcon name="ink-plus" />
         </template>
@@ -32,21 +32,34 @@ const page = ref(1);
 const sort = ref("address,asc");
 const colDefs = ref([
   {
-    field: "address",
-    width: 288,
-    context: "/properties",
+    field: "name",
+    context: "/entities",
     cellRenderer: "LinkField",
+    width: 288,
   },
   {
-    field: "city",
+    colId: "contactFirstName",
+    headerName: "Name",
+    valueGetter: (p) => `${p.data.contactFirstName} ${p.data.contactLastName}`,
+  },
+  {
+    field: "contactAddress",
+    headerName: "Address",
+    width: 288,
+  },
+  {
+    field: "contactCity",
+    headerName: "City",
     width: 120,
   },
   {
-    field: "state",
+    field: "contactState",
+    headerName: "State",
     width: 80,
   },
   {
-    field: "zipCode",
+    field: "contactZipCode",
+    headerName: "Zip Code",
     width: 100,
   },
 ]);
@@ -64,9 +77,9 @@ const gridOptions = {
 };
 
 const { pending, data } = await useAsyncData(
-  "properties",
+  "entities",
   () =>
-    $fetch("/api/properties", {
+    $fetch("/api/entities", {
       query: {
         page: page.value - 1,
       },

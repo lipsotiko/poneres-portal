@@ -6,7 +6,7 @@ const useAuth = () => {
   useAsyncData(
     "user-role",
     async () => {
-      const response = await $fetch("/api/user/role");
+      const response = await $fetch("/api/user/profile");
       isAdmin.value = response.roles.includes("ADMIN");
     },
     {
