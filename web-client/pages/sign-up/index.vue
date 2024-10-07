@@ -183,7 +183,7 @@ const successfulUserRegistration = ref(false);
 
 const createAccount = async () => {
   loading.value = true;
-  await signUpLandlord({
+  await signUpTenant({
     email: schema.value.email.value,
     firstName: schema.value.firstName.value,
     lastName: schema.value.lastName.value,

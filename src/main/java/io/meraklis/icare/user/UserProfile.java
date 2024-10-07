@@ -1,5 +1,6 @@
 package io.meraklis.icare.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,5 +33,20 @@ public class UserProfile {
         this.firstName = firstName;
         this.lastName = lastName;
         this.roles = roles;
+    }
+
+    @JsonProperty
+    private boolean isAdmin() {
+        return roles.contains(Role.ADMIN);
+    }
+
+    @JsonProperty
+    private boolean isEntity() {
+        return roles.contains(Role.ENTITY);
+    }
+
+    @JsonProperty
+    private boolean isPropertyManager() {
+        return roles.contains(Role.PROPERTY_MANAGER);
     }
 }

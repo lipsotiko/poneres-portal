@@ -10,7 +10,7 @@
           </IButton>
           <template #body>
             <IDropdownItem to="/profile">Profile</IDropdownItem>
-            <IDropdownItem to="/earnings">Earnings</IDropdownItem>
+            <!-- <IDropdownItem to="/earnings">Earnings</IDropdownItem> -->
             <IDropdownDivider v-if="isAdmin" />
             <IDropdownItem v-if="isAdmin" to="/admin">Admin</IDropdownItem>
             <IDropdownDivider />
@@ -21,13 +21,11 @@
         </IDropdown>
         <INavbar>
           <INavbarBrand to="/">
-            <strong>Property Pal</strong>
+            <strong>Poneres.com</strong>
           </INavbarBrand>
           <INavbarCollapsible class="_justify-content:flex-end">
             <INav>
-              <INavItem to="/properties">Properties</INavItem>
-              <INavItem to="/applications">Applications</INavItem>
-              <INavItem to="/tenants">Tenants</INavItem>
+              <INavItem to="/agreements">Agreements</INavItem>
             </INav>
           </INavbarCollapsible>
         </INavbar>

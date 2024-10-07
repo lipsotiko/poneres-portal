@@ -13,6 +13,7 @@
   "devDependencies": {
     "@inkline/config": "^1.9.1",
     "@inkline/plugin": "^1.5.2",
+    "dayjs-nuxt": "^2.1.11",
     "nuxt": "^3.9.0",
     "prettier": "^3.1.1",
     "sass": "^1.64.0",

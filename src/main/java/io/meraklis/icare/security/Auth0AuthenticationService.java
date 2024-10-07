@@ -11,6 +11,7 @@ import io.meraklis.icare.user.UserProfileRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -26,6 +27,7 @@ import static io.meraklis.icare.helpers.RestApiService.urlEncode;
 
 @Slf4j
 @Service
+@Profile({"development", "local"})
 public class Auth0AuthenticationService implements AuthenticationService {
 
     @Value("${okta.oauth2.issuer}oauth/token")
@@ -57,7 +59,7 @@ public class Auth0AuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public void createUser(SignUp signUp) {
+    public UserProfile createUser(SignUp signUp, Role role) {
         if (userProfileRepository.existsByEmail(signUp.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "You already have an account. Try signing in!");
         }
@@ -72,9 +74,9 @@ public class Auth0AuthenticationService implements AuthenticationService {
                 .firstName(signUp.getFirstName())
                 .lastName(signUp.getLastName())
                 .authProviderId(response.getUserId())
-                .roles(Collections.singletonList(Role.LANDLORD))
+                .roles(Collections.singletonList(role))
                 .build();
-        userProfileRepository.save(userProfile);
+        return userProfileRepository.save(userProfile);
     }
 
     @Override

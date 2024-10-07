@@ -1,8 +1,6 @@
 package io.meraklis.icare.property;
 
 import io.meraklis.icare.email.EmailService;
-import io.meraklis.icare.security.AuthenticationService;
-import io.meraklis.icare.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -27,22 +25,16 @@ public class PropertyController {
     private PropertyInvitationRepository propertyInvitationRepository;
 
     @Autowired
-    private AuthenticationService authenticationService;
-
-    @Autowired
     private EmailService emailService;
 
     @PostMapping
     public Property save(@RequestBody Property property) {
-        UserProfile userProfile = authenticationService.getUserProfile();
-        property.setCreatedBy(userProfile.getId());
         return propertyRepository.save(property);
     }
 
-    @GetMapping("/created-by")
-    public Page<Property> createdBy(Pageable pageable) {
-        UserProfile userProfile = authenticationService.getUserProfile();
-        return propertyRepository.findByCreatedBy(userProfile.getId(), pageable);
+    @GetMapping
+    public Page<Property> get(Pageable pageable) {
+        return propertyRepository.findAll(pageable);
     }
 
     @PostMapping("{propertyId}/invite-to-apply")

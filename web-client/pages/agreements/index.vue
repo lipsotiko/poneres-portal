@@ -1,13 +1,12 @@
 <template>
   <IContainer>
-    <div class="top">
-      <p class="lead">Properties</p>
-      <IButton circle color="primary" to="/properties/new">
+    <PageTitle title="Agreements" backTo="/">
+      <IButton circle color="primary" to="/agreements/new">
         <template #icon>
           <IIcon name="ink-plus" />
         </template>
       </IButton>
-    </div>
+    </PageTitle>
     <ag-grid-vue
       :loading="pending"
       :rowData="data?.content"
@@ -29,24 +28,39 @@ import { AgGridVue } from "ag-grid-vue3";
 import { ref } from "vue";
 
 const page = ref(1);
+
+// TODO: Updated these when we know what fields will make sense.
 const sort = ref("address,asc");
 const colDefs = ref([
   {
-    field: "address",
-    width: 288,
-    context: "PropertyLink",
+    field: "client",
+    context: "/agreements",
     cellRenderer: "LinkField",
+    width: 288,
   },
   {
-    field: "city",
+    colId: "contactFirstName",
+    headerName: "Name",
+    valueGetter: (p) => `${p.data.contactFirstName} ${p.data.contactLastName}`,
+  },
+  {
+    field: "contactAddress",
+    headerName: "Address",
+    width: 288,
+  },
+  {
+    field: "contactCity",
+    headerName: "City",
     width: 120,
   },
   {
-    field: "state",
+    field: "contactState",
+    headerName: "State",
     width: 80,
   },
   {
-    field: "zipCode",
+    field: "contactZipCode",
+    headerName: "Zip Code",
     width: 100,
   },
 ]);
@@ -64,9 +78,9 @@ const gridOptions = {
 };
 
 const { pending, data } = await useAsyncData(
-  "properties-created-by",
+  "agreements",
   () =>
-    $fetch("/api/properties/created-by", {
+    $fetch("/api/agreements", {
       query: {
         page: page.value - 1,
       },

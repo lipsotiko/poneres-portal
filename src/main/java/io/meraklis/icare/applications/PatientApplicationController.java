@@ -1,8 +1,8 @@
 package io.meraklis.icare.applications;
 
 import io.meraklis.icare.documents.PatientDocumentService;
-import io.meraklis.icare.images.TextToImageBuilder;
-import io.meraklis.icare.processors.ProcessorFactory;
+import io.meraklis.icare.helpers.TextToImageBuilder;
+import io.meraklis.icare.pdfs.processors.ProcessorFactory;
 import io.meraklis.icare.security.AuthenticationService;
 import io.meraklis.icare.security.UserAuthorized;
 import io.meraklis.icare.signatures.Signature;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -148,7 +149,10 @@ public class PatientApplicationController {
         Optional<PatientApplication> optionalApp = patientApplicationRepository.findById(applicationId);
         if (optionalApp.isPresent()) {
             PatientApplication app = optionalApp.get();
-            return processorFactory.get(app.getType()).process(app);
+            Map<String, Object> metadata = app.getMetadata();
+            String patientSignatureId = app.getPatientSignatureId();
+            String prescriberSignatureId = app.getPrescriberSignatureId();
+            return processorFactory.get(app.getType()).process(metadata, patientSignatureId, prescriberSignatureId);
         }
         return null;
     }

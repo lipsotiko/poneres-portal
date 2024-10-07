@@ -58,8 +58,8 @@ public class UserController {
         authenticationService.sendVerificationEmail();
     }
 
-    @GetMapping("/role")
-    public UserProfile role() {
+    @GetMapping("/profile")
+    public UserProfile getProfile() {
         return authenticationService.getUserProfile();
     }
 

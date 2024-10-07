@@ -1,7 +1,7 @@
 package io.meraklis.icare.user;
 
 import io.meraklis.icare.email.EmailService;
-import io.meraklis.icare.payments.PaymentService;
+//import io.meraklis.icare.payments.PaymentService;
 import io.meraklis.icare.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,14 @@ public class SignUpController {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private PaymentService paymentService;
+//    @Autowired
+//    private PaymentService paymentService;
 
-    @PostMapping("/landlord")
+    @PostMapping("/tenant")
     public ResponseEntity<Void> signUpLandlord(@RequestBody SignUp signUp) {
-        authenticationService.createUser(signUp);
-        paymentService.createAccount(signUp);
-        emailService.send(signUp.getEmail(), "Welcome to Property Pal", "welcome.html");
+        authenticationService.createUser(signUp, Role.TENANT);
+//        paymentService.createAccount(signUp);
+        emailService.send(signUp.getEmail(), "Welcome to Poneres.com", "welcome-tenant.html");
         return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,4 @@
-package io.meraklis.icare.images;
+package io.meraklis.icare.helpers;
 
 import io.meraklis.icare.signatures.SignatureFont;
 import org.springframework.stereotype.Service;

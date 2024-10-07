@@ -1,4 +1,4 @@
-package io.meraklis.icare.processors;
+package io.meraklis.icare.pdfs.processors;
 
 import lombok.Builder;
 import lombok.Data;

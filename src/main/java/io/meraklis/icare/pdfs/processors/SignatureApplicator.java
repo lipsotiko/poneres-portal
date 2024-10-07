@@ -1,4 +1,4 @@
-package io.meraklis.icare.processors;
+package io.meraklis.icare.pdfs.processors;
 
 import io.meraklis.icare.signatures.Signature;
 import io.meraklis.icare.signatures.SignatureRepository;

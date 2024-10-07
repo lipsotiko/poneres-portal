@@ -52,6 +52,13 @@ abstract class AbstractEmailService {
         }
     }
 
-    abstract Map<String, String> getDefaultTokens();
+    public Map<String, String> getDefaultTokens() {
+        return new HashMap<>() {
+            {
+                put("WEBAPP_URL", getWebappUrl());
+                put("LOGIN_URL", getWebappUrl() + "/oauth2/authorization/okta");
+            }
+        };
+    }
 
 }

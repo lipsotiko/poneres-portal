@@ -1,0 +1,1659 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GENERAL RESIDENTIAL DWELLING LEASE</title>
+    <style>
+      html {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      body {
+        width: 868px;
+        text-align: justify;
+        margin: 0 auto;
+      }
+      b {
+        font-size: 15px;
+      }
+      input {
+        border: none;
+        border-bottom: 1px solid black;
+      }
+      table {
+        font-size: 14px;
+      }
+      td {
+        vertical-align: top;
+      }
+      textarea {
+        width: 100%;
+        height: 100px;
+      }
+      .header {
+        display: flex;
+        justify-content: center;
+      }
+      .top {
+        border: 2px solid black;
+        padding: 8px;
+        font-weight: bold;
+      }
+
+      input[type="checkbox"] {
+        transform: scale(1.5) !important;
+        accent-color: green;
+      }
+
+      @media print {
+        .new-page {
+          page-break-before: always;
+        }
+      }
+
+      input[name="landlord"],
+      input[name="tenant"],
+      input[name="leasedAddress"],
+      input[name="noticeName"],
+      input[name="noticeAddress"],
+      input[name="noticePhone"],
+      input[name="additionalInclusions"],
+      input[name="additionalExclusions"],
+      input[name="poolCompany"] {
+        width: 100%;
+      }
+      input[name="monthToMonthTerminationDaysDuringLeaseTerm"],
+      input[name="monthToMonthTerminationDaysAfterLeaseTerm"] {
+        width: 22px;
+      }
+      input[name="petsAllowedNumber"],
+      input[name="serviceAnimalsAllowedNumber"] {
+        width: 26px;
+      }
+      input[name="termLength"] {
+        width: 56px;
+      }
+      input[name="startDay"],
+      input[name="endDay"] {
+        width: 42px;
+      }
+      input[name="startMonthYear"],
+      input[name="endMonthYear"] {
+        width: 182px;
+      }
+
+      input[name="monthlyRent"] {
+        width: 472px;
+      }
+
+      input[name="monthlyRentNumber"] {
+        width: 100px;
+      }
+
+      input[name="totalRent"],
+      input[name="proRatedRent"] {
+        width: 388px;
+      }
+
+      input[name="proRatedRentNumber"] {
+        width: 172px;
+      }
+
+      input[name="totalRentNumber"] {
+        width: 188px;
+      }
+      input[name="proRatedPaymentDate"],
+      input[name="proRatedLeaseStartDate"],
+      input[name="proRatedLeaseEndDate"] {
+        width: 168px;
+      }
+
+      input[name="rentRecipient"],
+      input[name="rentRecipientAddress"] {
+        width: 392px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>GENERAL RESIDENTIAL DWELLING LEASE</h1>
+    </div>
+    <p class="top">
+      This lease is designed to comply with laws of general application in the
+      State of Maryland. Maryland REALTORS® makes no representation about
+      compliance with local law, which may require the use of additional or
+      different terms and/or forms or require the use of a jurisdictional
+      addendum. Users are strongly advised to consult with their local board of
+      REALTORS® and their attorney to ensure conformity with local law and
+      practice. THIS TEMPLATE IS NOT TO BE USED FOR RESIDENTIAL PROPERTIES
+      OFFERED FOR LEASE IN PRINCE GEORGE’S COUNTY. PLEASE CONTACT THE PRINCE
+      GEORGE’S COUNTY ASSOCIATION OF REALTORS® TO OBTAIN A COPY OF THE CURRENT
+      SINGLE FAMILY DWELLING LEASE.
+    </p>
+    <ol>
+      <li>
+        <p>
+          <b>DATE OF LEASE OFFER:</b>
+          <input name="leaseOfferDate" type="text" />
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>
+            LANDLORD OR AUTHORIZED REPRESENTATIVE OF LANDLORD (Collectively
+            referenced herein as “Landlord”):
+          </b>
+          <br />
+          <input name="landlord" type="text" />
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT:</b>
+          <br />
+          <input name="tenant" type="text" />
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>LEASED PROPERTY ADDRESS (“THE PROPERTY”):</b>
+          <br />
+          <input name="leasedAddress" type="text" />
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>INITIAL LEASE TERM:</b>
+          Landlord leases to Tenant and Tenant leases from Landlord the Property
+          for the term of <input name="termLength" type="text" /> year(s) or
+          month(s) commencing on the <input name="startDay" type="text" /> day
+          of <input name="startMonthYear" type="text" /> (mo./yr.) and ending on
+          the <input name="endDay" type="text" /> day of
+          <input name="endMonthYear" type="text" />(mo./yr.) (the “Initial
+          Term”), at a total rental of
+          <input name="totalRent" type="text" /> Dollars ($<input
+            name="totalRentNumber"
+            type="text"
+          />) for said Term, due and payable in equal monthly installments of
+          <input name="monthlyRent" type="text" /> Dollars ($<input
+            name="monthlyRentNumber"
+            type="text"
+          />), in advance, on the first day of each and every month ("Rent Due
+          Date") of said Term, plus if applicable the sum of
+          <input name="proRatedRent" type="text" /> Dollars ($<input
+            name="proRatedRentNumber"
+            type="text"
+          />) on <input name="proRatedPaymentDate" type="text" /> as “pro rata”
+          rent for the period
+          <input name="proRatedLeaseStartDate" type="text" /> through
+          <input name="proRatedLeaseEndDate" type="text" />.
+        </p>
+        <p>
+          If this Lease commences on a day other than the first day of the
+          month, the amount of Rent to be paid for the balance of said first
+          month will be apportioned pro rata; thereafter rent will be paid on
+          the first day of the month as aforesaid. Tenant covenants and agrees
+          to pay said Rent as set forth herein. Tenant agrees to pay rent to
+          <input name="rentRecipient" type="text" /> at
+          <input name="rentRecipientAddress" type="text" />
+          (or at such other place as Landlord may from time to time designate)
+          without deduction, demand or offset and said obligation to pay Rent is
+          independent of any other clause herein. Failure to pay said rent at
+          the time specified will constitute default and Landlord may pursue any
+          remedy, whether at law or in equity, afforded under the terms of this
+          Lease and/or applicable law. All sums of money or other charges,
+          including payments and/or repairs, required to be paid by Tenant to
+          Landlord or to any other person under the terms of this Lease, whether
+          or not the same be designated "rent" or "additional rent", will be
+          deemed rent and will be collectible as such. Landlord shall furnish to
+          Tenant a receipt for all cash paid by Tenant to Landlord for rent,
+          security deposit or otherwise.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>PERSONS WHO WILL OCCUPY THE PROPERTY:</b>
+          Tenant covenants and agrees that the Property shall be occupied only
+          by the following person(s), and by no other persons: <br />
+          <textarea name="occupyingPersons"></textarea><br />
+          Tenant represents and warrants to Landlord that neither Tenant nor any
+          person(s) identified in this Paragraph has been convicted of a felony
+          crime in any federal or state court except as otherwise disclosed by
+          Tenant to Landlord on the application for tenancy form, as signed by
+          Tenant.
+        </p>
+      </li>
+      <li>
+        <p class="new-page">
+          <b
+            >RENEWAL OF LEASE TERMS (Landlord and Tenant to initial one
+            selection):</b
+          >
+        </p>
+        <ol style="list-style-type: upper-alpha">
+          <li>
+            <p>
+              <b>NONE</b> Tenant agrees to vacate the Property by the last day
+              of the Initial Term. Notice shall not be required by either party.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>MONTH-TO-MONTH</b>
+              This Lease shall continue in force from month to month after the
+              expiration of the Initial Term. However, either party may
+              terminate this Lease at the end of the Initial Term by giving
+              written notice to the other party
+              <input
+                name="monthToMonthTerminationDaysAfterLeaseTerm"
+                type="text"
+              />
+              days prior to the end of the Initial Term. Either party may
+              terminate the month-to-month lease at the end of any rental month,
+              provided that written notice of not less than thirty (30) days is
+              given to the other party
+              <input
+                name="monthToMonthTerminationDaysDuringLeaseTerm"
+                type="text"
+              />
+              days prior to the last day of the desired final rental month of
+              the tenancy.<br />
+              <b
+                >NOTICE: notice requirements vary depending on the jurisdiction.
+                The State requires that Landlord give 90 days' notice to Tenant
+                of termination of a lease with a term of a year or longer</b
+              >
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>YEAR-TO-YEAR</b>
+              This Lease shall continue in force from year to year after the
+              expiration of the Initial Term. Either party may terminate this
+              Lease at the end of the Initial Term, or any renewal term, by
+              giving written notice to the other party as follows:<br />
+              <textarea name="yearToYearNotice"></textarea><br />
+              <b
+                >NOTICE: any written notice given pursuant to renewal term
+                becomes effective upon the first day of the month following
+                delivery of the notice.
+              </b>
+            </p>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <p>
+          <b>PAYMENT OF RENT:</b>
+          Tenant agrees to pay the rent when due without any deduction or
+          setoff. If a monthly installment of rent is paid more than
+          <input name="dueWithinDays" type="text" />(<input
+            name="dueWithinDaysNumber"
+            type="text"
+          />) days after the date when due, Tenant shall pay, as additional
+          rent, a sum equal to 5% of the amount of delinquent rent due. If a
+          check is accepted by Landlord from Tenant for rent, it is purely as an
+          accommodation to Tenant. If the check is dishonored, Tenant agrees to
+          pay a $<input name="lastFeeNumber" type="text" /> charge to Landlord
+          as additional rent. The amount of late fees and bad check fees shall
+          be added to and deemed part of the rent due and shall be payable by
+          Tenant to Landlord on demand. Landlord shall have the same remedies
+          for the collection of such charges and fees as Landlord has for the
+          non-payment of rent. Tenant is hereby notified that all payments will
+          be applied first toward late charges, then toward returned check
+          service charges, then toward attorney's fees and finally toward rent.
+          If the remaining amount is not sufficient to cover the full current
+          month’s rent, a late fee will be assessed on the current month’s rent.
+          Should the Landlord accept any partial payment of rent, this
+          acceptance shall not be interpreted as changing the terms of the Lease
+          which require the payment of rent as specified herein.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT RESPONSIBLE FOR ADDITIONAL RENT:</b>
+          Tenant agrees to pay as additional rent (a) any and all sums which may
+          become due by reason of the failure of Tenant to comply with any of
+          the terms and conditions of this Lease; (b) any and all damages, costs
+          and/or expenses which the Landlord may suffer or incur by reason of
+          any default under this Lease by Tenant; and (c) any and all damages to
+          the Property caused by any act or negligence of Tenant, other
+          residents of the Property, or Tenant’s agents, employees, invitees, or
+          family members. In the event Tenant fails to make any such payments,
+          then the amount thereof shall be added to and deemed part of the rent
+          due, and Landlord shall have the same remedies for the collection of
+          such payments as Landlord has for non-payment of rent under this
+          Lease.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>ACTIVE MILITARY DUTY:</b>
+          In the event Tenant is a member of the Armed Services and on active
+          duty at the time Tenant enters into this Lease, and Tenant
+          subsequently receives permanent change of station orders or temporary
+          change of station orders for a period in excess of 3 months, and more
+          than 50 miles from the property, Tenant's liability to pay rent may
+          not exceed: (1) 30 days' rent after written notice and proof of the
+          assignment is given to Landlord; and (2) the cost of repairing damage
+          to the premises caused by Tenant. This clause also applies to those
+          persons who receive orders releasing them from military service.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>LEGAL RIGHTS OF LANDLORD:</b>
+          If Tenant shall fail to pay the rent or any additional rent as herein
+          provided, or if Tenant shall breach any other term, covenant, or
+          condition of this Lease, including, but not limited to, any
+          misrepresentation in Tenant’s application, Landlord may (a) re-enter
+          the Property and terminate this Lease in accordance with the
+          applicable provisions of law; (b) bring summary ejectment proceedings
+          to evict Tenant; or (c) pursue any and all other remedies available to
+          Landlord at law or in equity. No such termination of the Lease, nor
+          recovery of possession of the Property, however, shall constitute a
+          waiver by Landlord of any available action by Landlord against Tenant
+          for unpaid rent or for damages which may be due or sustained prior to
+          or subsequent to the termination of this Lease, nor shall such
+          termination extinguish Tenant’s obligation to pay all rent and other
+          sums due and owing to Landlord prior to or subsequent to such
+          termination and/or recovery of possession.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>DELIVERY OF NOTICES:</b>
+          All notices required to be given by Landlord to Tenant shall be
+          sufficiently given by leaving the same at the Property, except that
+          notice of the withholding by Landlord of any portion of the Security
+          Deposit shall be mailed by Landlord to Tenant at Tenant’s last known
+          address, within forty-five (45) days after the termination or
+          expiration of this Lease.
+        </p>
+        <p>
+          All notices required to be given by Tenant to Landlord, and all rent,
+          shall be delivered to the following address: (Notices shall be given
+          by certified mail.)
+        </p>
+        <table>
+          <tr>
+            <td style="width: 68px; text-align: right">
+              <label>Name</label>
+            </td>
+            <td style="width: 500px">
+              <input name="noticeName" type="text" />
+            </td>
+            <td style="width: 300px">
+              <input name="isLandlord" type="checkbox" />
+              <label>Landlord</label>
+              <input name="isPropertyManager" type="checkbox" />
+              <label>Property Manager</label>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 68px; text-align: right">
+              <label>Address</label>
+            </td>
+            <td style="width: 500px">
+              <input name="noticeAddress" type="text" />
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td style="width: 68px; text-align: right">
+              <label>Phone</label>
+            </td>
+            <td style="width: 500px">
+              <input name="noticePhone" type="text" />
+            </td>
+            <td></td>
+          </tr>
+        </table>
+      </li>
+      <li>
+        <p>
+          <b>SECURITY DEPOSIT:</b>
+          In accordance with the Annotated Code of Maryland, Real Property
+          Article, Tenant has deposited with Landlord the sum of
+          <input name="securityDeposit" type="text" /> Dollars ($<input
+            name="securityDepositNumber"
+            type="text"
+          />), (“Security Deposit”) receipt of which is hereby acknowledged,
+          which sum does not exceed two (2) months' Rent.
+          <b
+            >NOTICE: Total security deposit, including pet deposit, may not
+            exceed two month’s rent.</b
+          >
+          The Security Deposit is to be held as collateral security and applied
+          to any rent or unpaid utility bill that may remain due and owing at
+          the expiration of this Lease, any extension thereof or holding over
+          period, or applied to any damages to the Property in excess of
+          ordinary wear and tear caused by the Tenant, Tenant's family, guests,
+          agents, employees, trades people, or pets, or other damages and
+          expenses suffered by Landlord as a result of a breach of any covenant
+          or provision of this Lease.
+        </p>
+        <p>
+          <b
+            >Tenant may not utilize the Security Deposit as rent and must not
+            apply the same as the last month's Rent.</b
+          >
+          The Security Deposit will be deposited within thirty (30) days after
+          it has been received and maintained in an escrow account, devoted
+          exclusively to security deposits, in a federally insured financial
+          institution which does business in the State of Maryland. The Security
+          Deposit may be held in insured certificates of deposit at branches of
+          a federally insured financial institution within the State of Maryland
+          or in securities issued by the federal government or the State of
+          Maryland. The Landlord must provide the Tenant, within forty-five (45)
+          days after the termination of the tenancy by first class mail directed
+          to the last known address of the Tenant, a written list of any damages
+          to the Property together with a statement of costs actually incurred.
+          Within forty-five (45) days after the termination of the tenancy,
+          Landlord must return the Security Deposit to Tenant together with
+          simple interest which will accrue at the legal rate less any damages
+          rightfully withheld. Interest will accrue at six (6) month intervals
+          from the day Tenant deposits said collateral security with Landlord,
+          provided the said Security Deposit is Fifty Dollars ($50.00) or more.
+          Interest on the Security Deposit shall not be compounded. Landlord
+          need not notify Tenant of his/her intention to withhold all or any
+          part of the Security Deposit if Tenant has been evicted, or ejected
+          for breach of a condition or covenant of the Lease prior to the
+          termination of the tenancy, or if Tenant has abandoned the Property
+          prior to the termination of the tenancy. In such event Tenant may make
+          demand for return of the Security Deposit by giving written notice by
+          first class mail to Landlord within forty-five (45) days of being
+          evicted or ejected or of abandoning the Property. The notice shall
+          specify the Tenant’s new address. Landlord, within forty-five (45)
+          days of receipt of said notice, shall supply Tenant with a list of
+          damages and costs by first class mail.
+        </p>
+        <p>
+          Tenant's obligations under this Lease may not end when Tenant ceases
+          to occupy the Property. Repairs required may be so substantial or of
+          such a nature that work will not be completed within the forty-five
+          (45) day period following the termination of the tenancy. In such
+          event, Landlord reserves the right to pursue Tenant for reimbursement
+          for costs incurred for damages.
+        </p>
+        <p>
+          Tenant has the right to have the Property inspected by Landlord, in
+          the presence of Tenant, for the purpose of making a written list of
+          damages to the Property that exist at the commencement of the Tenancy
+          if Tenant so requests, in writing, by certified mail, to Landlord
+          within fifteen (15) days of the Tenant’s occupancy of the Property.
+          Tenant has the right to be present at the time of inspection to
+          determine if any damage has been done to the Property if Tenant
+          notifies Landlord by certified mail of Tenant's intention to move,
+          date of moving and Tenant’s new address. Such notice, from Tenant to
+          Landlord, must be mailed at least 15 days prior to date of moving.
+          Upon receipt of notice, Landlord shall notify Tenant by certified mail
+          of the time and date when the Property is to be inspected. The
+          inspection date shall occur within five (5) days before or five (5)
+          days after the Tenant's stated date of intended moving as designated
+          in Tenant's notice.
+        </p>
+        <p>
+          In the event of a sale of the Property or the transfer or assignment
+          by Landlord of this Lease, Landlord has the obligation to transfer the
+          Security Deposit to the transferee. After the transfer is made and
+          after written notice of same is given to Tenant with the name and
+          address of the transferee, Landlord is released from all liability for
+          the return of the Security Deposit and Tenant must look solely to the
+          new Landlord for the return of his Security Deposit. It is agreed that
+          the foregoing will apply to every transfer or assignment made of the
+          Security Deposit to a new Landlord.
+        </p>
+        <p>
+          In the event of any rightful or permitted assignment of this Lease by
+          Tenant to any assignee or sublessee, the Security Deposit is deemed to
+          be held by Landlord as a deposit made by the assignee or sublessee and
+          Landlord will have no further liability with respect to return of such
+          Security Deposit to the assignor.
+        </p>
+        <p>
+          The failure of Landlord to comply with the Security Deposit Law may
+          result in Landlord being liable to Tenant for a penalty of up to three
+          (3) times the Security Deposit withheld, plus reasonable attorney's
+          fees. Landlord, by Maryland law, shall retain a copy of this receipt
+          for a period of two (2) years following the termination of the
+          tenancy, abandonment of the Property, or eviction of the Tenant.
+        </p>
+        <p>
+          Landlord or Landlord's estate but not the managing agent or court
+          appointed receiver shall remain liable to Tenant for the maintenance
+          of the Security Deposit as required by law.
+        </p>
+        <p>
+          Tenant acknowledges that this paragraph (SECURITY DEPOSIT) shall serve
+          as receipt of Security Deposit.
+        </p>
+        <p>________/_______ TENANT’S INITIALS</p>
+      </li>
+      <li>
+        <p>
+          <b>PETS/SERVICE ANIMALS:</b>
+        </p>
+        <ol style="list-style-type: upper-alpha">
+          <li>
+            <p>
+              <b>PETS</b>
+              Tenant is not allowed to keep pets on the Property except with the
+              written permission of Landlord. Landlord may revoke permission to
+              allow pets for reasonable cause. Tenants who are authorized to
+              have pets agree to pay the cost of having the Property de-fleaed
+              and de-ticked by a professional exterminator, and if carpeted, the
+              carpeting shampooed and deodorized by a professional cleaner, at
+              the termination of occupancy. Tenant further agrees to assume all
+              liability for pet’s behavior and actions, and will be responsible
+              for compliance with all laws, regulations and ordinances regarding
+              pets and for any damage caused by said pet including, but not
+              limited to, odor and property damage. Additionally, Tenant agrees
+              to pay for any and all damages caused by pets to the Property.
+            </p>
+            <p>
+              Tenant is authorized to have pets:<br />
+              <label>Yes</label><input type="checkbox" name="petsAllowedYes" />
+              <label>No</label><input type="checkbox" name="petsAllowedNo" />
+              <label># ALLOWED</label
+              ><input type="text" name="petsAllowedNumber" />
+              <label>TYPE OF PET(S)</label
+              ><input type="text" name="petsAllowedType" /> <label>WEIGHT</label
+              ><input type="text" name="petsAllowedWeight" />
+            </p>
+            <p>
+              Pet Deposit: $<input name="petDeposit" type="text" /> has been
+              added to the security deposit in consideration of Landlord
+              allowing Tenant to keep pet on the Property.
+              <b
+                >NOTICE: Total security deposit, including pet deposit, may not
+                exceed two months' rent.</b
+              >
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>SERVICE ANIMALS</b>
+              If Tenant or Tenant’s minor child has a disability, Tenant may
+              keep and maintain a service animal trained to do work or perform
+              tasks for the benefit of the individual with a disability. Such
+              service animal may be kept within the Property, and shall have
+              access to the rental facility and all other related structures in
+              accordance with applicable laws. If Tenant has a service dog,
+              Tenant agrees to pay the cost of having the Property de-fleaed and
+              de-ticked by a professional exterminator, and if carpeted, having
+              the carpeting shampooed and deodorized by a professional cleaner,
+              at the termination of occupancy. Tenant agrees to assume all
+              liability for the service animal’s behavior and actions, and
+              agrees to comply with all laws, regulations and ordinances
+              regarding such service animal. Tenant shall be liable for any
+              damages to the Property or facilities caused by the service
+              animal, including, but not limited to, odor and property damage.
+              <b
+                >NOTICE: A Landlord may not require a Tenant with a disability
+                accompanied by a service animal to pay a security deposit for
+                the service animal.</b
+              >
+            </p>
+            <p>
+              Tenant is authorized to have service animals:<br />
+              <label>Yes</label
+              ><input type="checkbox" name="serviceAnimalsAllowedYes" />
+              <label>No</label
+              ><input type="checkbox" name="serviceAnimalsAllowedNo" />
+              <label># ALLOWED</label
+              ><input type="text" name="serviceAnimalsAllowedNumber" />
+              <label>TYPE OF SERVICE ANIMAL(S)</label
+              ><input type="text" name="serviceAnimalsAllowedType" />
+            </p>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <p>
+          <b>TENANT’S RIGHT TO OCCUPY THE PROPERTY:</b>
+          Landlord agrees that Tenant may, peaceably and quietly, enter the
+          Property at the beginning of the Term and that the Property will be
+          made available in a condition permitting reasonably safe habitation.
+          If permission is given to Tenant to enter into possession of the
+          Property prior to the date specified for the commencement of the Term,
+          such occupancy shall be deemed to be in accordance with all the terms,
+          covenants, conditions, and provisions of this Lease, and the rent
+          shall be apportioned for such period of occupancy.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>
+            SMOKE ALARM INSTALLATION AND MAINTENANCE: Tenant acknowledges that
+            Landlord has installed one or more smoke alarms in accordance with
+            §§ 9-101 through 9-109 of the Public Safety Article of the Annotated
+            Code of Maryland. NOTICE: Local jurisdictions may have additional
+            requirements.
+          </b>
+          Tenant further acknowledges that with respect to any smoke alarm
+          installed in accordance with state or local law, said smoke alarm is
+          in good condition and proper working order as of the date of this
+          Lease. Tenant agrees not to obstruct or tamper with any smoke alarm,
+          or otherwise permit any smoke alarm to be obstructed or tampered with
+          for any reason whatsoever. Tenant further agrees to test the smoke
+          alarm periodically and to report in writing to Landlord any
+          malfunction. Written notification of any malfunction shall be
+          delivered by certified mail, return receipt requested to Landlord, or
+          by hand delivery to Landlord, at the address used for the payment of
+          rent. If the delivery of the notification is made by hand, Landlord
+          shall provide to Tenant a written receipt for the delivery. Landlord
+          shall provide written acknowledgment of the notification and shall
+          repair or replace the smoke alarm within 5 calendar days after the
+          notification. Tenant assumes sole responsibility to test the smoke
+          alarm and shall indemnify and hold Landlord harmless from any and all
+          liability for injury, death, property damage, or other loss resulting
+          from any defect or malfunction of such smoke alarm which Tenant shall
+          not have specifically reported in writing to Landlord as required. If
+          any smoke alarm within the Property becomes damaged by tampering or
+          through the negligence or deliberate misuse or abuse by Tenant, any
+          resident of the Property, or any agent, employee, invitee or family
+          member of Tenant, Tenant shall promptly notify Landlord and Landlord
+          shall promptly cause the smoke alarm to be repaired or replaced. Upon
+          demand, Tenant shall pay to Landlord the costs of repair or
+          replacement incurred by Landlord, or such costs as may be added to and
+          deemed part of the rent. Landlord shall have the same remedies for the
+          collection of such costs as Landlord has for nonpayment of rent.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>
+            CARBON MONOXIDE DETECTOR INSTALLATION AND MAINTENANCE: Tenant
+            acknowledges that Landlord has installed one or more carbon monoxide
+            detectors in accordance with state or local law.
+          </b>
+          Tenant further acknowledges that with respect to any carbon monoxide
+          detector installed in accordance with state or local law, said
+          detector(s) is in good condition and proper working order as of the
+          date of this Lease. Tenant agrees not to obstruct or tamper with any
+          detector, or otherwise permit any detector to be obstructed or
+          tampered with for any reason whatsoever. Tenant further agrees to test
+          the detector periodically and to report in writing to Landlord any
+          malfunction. Tenant assumes sole responsibility to test the detector
+          and shall indemnify and hold Landlord harmless from any and all
+          liability for injury, death, property damage, or other loss resulting
+          from any defect or malfunction of such detector which Tenant shall not
+          have specifically reported in writing to Landlord as required. If any
+          detector within the Property becomes damaged by tampering or through
+          the negligence or deliberate misuse or abuse by Tenant, any resident
+          of the Property, or any agent, employee, invitee or family member of
+          Tenant, Tenant shall promptly notify Landlord and Landlord shall
+          promptly cause the detector to be repaired or replaced. Upon demand,
+          Tenant shall pay to Landlord the costs of repair or replacement
+          incurred by Landlord, or such costs as may be added to and deemed part
+          of the rent. Landlord shall have the same remedies for the collection
+          of such costs as Landlord has for nonpayment of rent.
+        </p>
+        <p>
+          <b>
+            NOTICE: Some local jurisdictions require Landlord to provide written
+            information on carbon monoxide detector testing and maintenance to
+            at least 1 adult occupant of that unit. If the Property is located
+            in a jurisdiction that requires Landlord to provide written
+            information on carbon monoxide detector testing and maintenance to
+            at least 1 adult occupant of that unit, Tenant should initial the
+            Tenant Certification.
+          </b>
+        </p>
+        <p>
+          <b>
+            TENANT CERTIFICATION: I hereby certify that I am an adult and that I
+            have received from Landlord written information concerning the
+            manufacturer’s recommendation for maintenance and testing of the
+            carbon monoxide detector(s).
+          </b>
+        </p>
+        <p>________/_______ TENANT’S INITIALS</p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT’S USE OF KEYS AND LOCKS:</b>
+          No additional lock(s) shall be installed by Tenant and no existing
+          lock(s) shall be changed by Tenant without the Landlord’s prior
+          written consent. <input name="numKeys" type="text" /> keys will be
+          furnished to Tenant and any additional keys required will be obtained
+          from Landlord and paid for by Tenant. Duplicate key(s) will not be
+          made without Landlord’s prior written consent. All keys will be
+          returned by Tenant to Landlord upon termination of the Lease or
+          vacating of the Property, whichever first occurs. Tenant shall
+          reimburse Landlord, as additional rent, for the cost of changing any
+          locks or replacing any key(s) lost or damaged by Tenant.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>INCLUSIONS/EXCLUSIONS:</b>
+          Included in the Property are all permanently attached fixtures,
+          including all smoke detectors. Certain other now existing items which
+          may be considered personal property, whether installed or stored upon
+          the property, are included, if box below is checked.
+        </p>
+        <table>
+          <tr>
+            <th>Included</th>
+            <th>Included</th>
+            <th>Included</th>
+            <th>Included</th>
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" name="incl_1" /><label>Alarm System</label
+              ><br />
+              <input type="checkbox" name="incl_2" /><label
+                >Carbon Monoxide Detector(s) #___</label
+              ><br />
+              <input type="checkbox" name="incl_3" /><label
+                >Ceiling Fan(s) # ___</label
+              ><br />
+              <input type="checkbox" name="incl_4" /><label
+                >Central Vacuum</label
+              ><br />
+              <input type="checkbox" name="incl_5" /><label>Clothes Dryer</label
+              ><br />
+              <input type="checkbox" name="incl_6" /><label
+                >Clothes Washer</label
+              ><br />
+              <input type="checkbox" name="incl_7" /><label>Cooktop</label
+              ><br />
+              <input type="checkbox" name="incl_8" /><label>Dishwasher</label
+              ><br />
+              <input type="checkbox" name="incl_9" /><label
+                >Drapery/Curtain Rods</label
+              ><br />
+              <input type="checkbox" name="incl_10" /><label
+                >Draperies/Curtains</label
+              ><br />
+              <input type="checkbox" name="incl_11" /><label
+                >Electronic Air Filter</label
+              ><br />
+              <input type="checkbox" name="incl_12" /><label
+                >Exhaust Fan(s) # ___</label
+              ><br />
+              <input type="checkbox" name="incl_13" /><label
+                >Exist. w/w Carpet</label
+              >
+            </td>
+            <td>
+              <input type="checkbox" name="incl_14" /><label
+                >Fireplace Screen Doors</label
+              ><br />
+              <input type="checkbox" name="incl_15" /><label>Freezer</label
+              ><br />
+              <input type="checkbox" name="incl_16" /><label
+                >Furnace Humidifier</label
+              ><br />
+              <input type="checkbox" name="incl_17" /><label
+                >Garage Opener(s) #_____</label
+              ><br />
+              <input type="checkbox" name="incl_18" /><label
+                >w/remote(s) #_____</label
+              ><br />
+              <input type="checkbox" name="incl_19" /><label
+                >Garbage Disposer</label
+              ><br />
+              <input type="checkbox" name="incl_20" /><label
+                >Hot Tub, Equip. & Cover</label
+              ><br />
+              <input type="checkbox" name="incl_21" /><label>Intercom</label
+              ><br />
+              <input type="checkbox" name="incl_22" /><label
+                >Lawn Mowers(s) ____</label
+              ><br />
+              <input type="checkbox" name="incl_23" /><label>Microwave</label
+              ><br />
+              <input type="checkbox" name="incl_24" /><label
+                >Playground Equipment</label
+              ><br />
+              <input type="checkbox" name="incl_25" /><label
+                >Pool, Equip. & Cover</label
+              ><br />
+              <input type="checkbox" name="incl_26" /><label
+                >Refrigerator(s) # _____</label
+              ><br />
+              <input type="checkbox" name="incl_27" /><label>w/ice maker</label
+              ><br />
+            </td>
+            <td>
+              <input type="checkbox" name="incl_28" /><label
+                >Satellite Dish</label
+              ><br />
+              <input type="checkbox" name="incl_29" /><label>Screens</label
+              ><br />
+              <input type="checkbox" name="incl_30" /><label
+                >Shades/Blinds</label
+              ><br />
+              <input type="checkbox" name="incl_31" /><label
+                >Storage Shed(s) # ____</label
+              ><br />
+              <input type="checkbox" name="incl_32" /><label>Storm Doors</label
+              ><br />
+              <input type="checkbox" name="incl_33" /><label
+                >Storm Windows</label
+              ><br />
+              <input type="checkbox" name="incl_34" /><label
+                >Stove or Range</label
+              ><br />
+              <input type="checkbox" name="incl_35" /><label>T.V. Antenna</label
+              ><br />
+              <input type="checkbox" name="incl_36" /><label
+                >Trash Compactor</label
+              ><br />
+              <input type="checkbox" name="incl_37" /><label
+                >Wall Oven(s) #_____</label
+              ><br />
+              <input type="checkbox" name="incl_38" /><label>Water Filter</label
+              ><br />
+              <input type="checkbox" name="incl_39" /><label
+                >Water Softener</label
+              ><br />
+              <input type="checkbox" name="incl_40" /><label
+                >Window A/C Unit(s) #____</label
+              ><br />
+            </td>
+            <td>
+              <input type="checkbox" name="incl_41" /><label
+                >Window Fan(s) #____</label
+              ><br />
+              <input type="checkbox" name="incl_42" /><label>Wood Stove</label
+              ><br />
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td style="width: 158px; text-align: right">
+              <label>Additional Inclusions</label>
+            </td>
+            <td style="width: 500px">
+              <input name="additionalInclusions" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 158px; text-align: right">
+              <label>Exclusions</label>
+            </td>
+            <td style="width: 500px">
+              <input name="additionalExclusions" type="text" />
+            </td>
+          </tr>
+        </table>
+      </li>
+      <li>
+        <p>
+          <b>TENANT’S OBLIGATIONS REGARDING USE AND OCCUPANCY:</b>
+          Tenant agrees to use the Property in a careful manner and not to use
+          or permit the use of any portion of the Property for any purpose other
+          than as a private single-family residence; to keep all lawns neatly
+          mowed and all hedges, flower beds, and shrubbery in good order; to
+          promptly remove snow, ice, and leaves from all walkways and driveways;
+          to keep the Property in a clean and sanitary condition; and to comply
+          with all laws, codes, ordinances, rules and regulations, including
+          health and housing codes and criminal laws applicable to the Property
+          and all covenants and restrictions applicable to Tenant’s use of the
+          Property. Tenant and all other occupants and/or invitees on the
+          Property, whether known by the Tenant or not, shall conduct themselves
+          in a manner that will not disturb the peaceful enjoyment of neighbors,
+          and Tenant further covenants and agrees that Tenant will not use or
+          permit the Property to be used for any improper, illegal, or immoral
+          purposes, nor use, permit, or suffer the same to be used by any person
+          or persons in any noisy, dangerous, offensive, illegal, or improper
+          manner. Tenant further agrees that no drugs or other illegal
+          substances will be used, manufactured, sold, or distributed within,
+          on, or from the Property. Tenant shall indemnify and save Landlord
+          harmless from (a) any and all liability, loss, cost, damage or expense
+          arising out of any violation by Tenant of such laws, codes,
+          ordinances, rules or regulations; (b) any violation or non-performance
+          by Tenant of any of the covenants contained herein; or (c) any other
+          act or omission of Tenant, other residents of the Property, or
+          Tenant’s agents, employees, invitees, or family members. All
+          electrical, heating, air-conditioning, mechanical, and plumbing
+          equipment and facilities shall be used for their intended purposes
+          only.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>COMMUNITY ASSOCIATION:</b>
+          In the event the Property is part of a condominium or homeowner
+          association, Tenant agrees to obey and abide by the declaration,
+          covenants, by-laws, restrictions, rules and regulations promulgated
+          from time to time by the council of unit owners of the condominium or
+          the homeowner association, copies of which shall be provided to Tenant
+          by Landlord prior to occupancy. Landlord shall not be liable to Tenant
+          for the violation of any of the declarations, covenants, restrictions,
+          rules and regulations or the provisions in any other lease by any
+          other tenant or occupant in the development. Unless otherwise provided
+          in the Lease, Landlord is responsible for payment of Condo/HOA fee.
+          Tenant acknowledges receipt of applicable documents.
+        </p>
+        <p>________/_______ TENANT’S INITIALS</p>
+      </li>
+      <li>
+        <p>
+          <b>UTILITIES AGREEMENT:</b>
+          The obligations of Landlord and Tenant with respect to the provision
+          of utilities shall be as follows:
+        </p>
+        <p>
+          In the event the Property uses oil/propane for heat, the arrangement
+          is as follows:
+        </p>
+        <textarea name="utilitiesAgreement"></textarea>
+        <p>
+          Costs for utilities which are to be furnished at the expense of
+          Tenant, as listed above, shall be considered additional rent and
+          Tenant agrees to pay such costs when due. If Tenant fails to pay any
+          utility costs within fifteen (15) days of receipt of the bill, such
+          failure shall constitute a default under this Lease and Landlord may,
+          in Landlord’s discretion, pay such costs, in which event, the amount
+          thereof shall be added to and deemed part of the rent due and shall be
+          payable by Tenant to Landlord on demand. Landlord shall have the same
+          remedies for the collection of such utility costs as Landlord has for
+          the non-payment of rent under this Lease.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>AGREEMENT FOR REPAIR OF UTILITY OR SERVICE:</b>
+          If, under the terms of this Lease, Landlord has agreed to furnish any
+          service or utility at Landlord’s cost and expense, Landlord may
+          temporarily stop or curtail the furnishing of any such service or
+          utility for the purpose of repairing or replacing the equipment or
+          utility lines furnishing such service or utility without direct or
+          indirect liability to Tenant if an accident or malfunction occurs.
+          Should Landlord temporarily stop or curtail the furnishing of any such
+          service or utility, Landlord shall use due diligence in restoring such
+          service or utility.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>AGREEMENT IF UTILITIES ARE INTERRUPTED:</b>
+          In the event Landlord or Tenant is prevented or is unable, for reasons
+          beyond Landlord’s or Tenant’s control, to obtain fuel, electricity,
+          water or sewer or the services they respectively have agreed to
+          furnish, or in the event of the rationing or non-delivery of same,
+          Landlord is hereby released and discharged from any liability, loss,
+          cost, damage or expense, direct or indirect, which might be suffered
+          by Tenant, and this Lease shall continue in full force and effect for
+          the full rent without abatement.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>MAINTENANCE AND REPAIRS:</b>
+          Landlord shall maintain, and/or repair/replace (if necessary in
+          Landlord’s sole discretion) the plumbing, heating, cooling, electrical
+          systems, and also the exterior walls and roof of the Property.
+          However, Tenant shall be obligated for the costs of such repairs,
+          replacements, and related services if the need for such repairs,
+          replacements, and related services results from the negligence or
+          misuse by Tenant, other residents of the Property, or Tenant’s agents,
+          servants, employees, invitees, or family members. Tenant agrees to
+          promptly notify Landlord of any condition which is the obligation of
+          Landlord to repair or replace.
+        </p>
+        <p>
+          Except as provided above, Tenant shall be responsible for all other
+          repairs and replacements to the Property. Any damage to the wallpaper,
+          paint, walls, floors, carpeting, doors, windows, window treatments,
+          light fixtures, appliances, or other improvements to the Property, in
+          excess of ordinary wear and tear, shall be promptly repaired or
+          replaced by Tenant, at Tenant’s sole expense, so as to restore the
+          Property to the same condition as existed prior to the commencement of
+          the Term. If Tenant shall fail to make any such repair or replacement,
+          Landlord, in Landlord’s sole discretion, may make such repair or
+          replacement, in which event, the cost of such repair or replacement
+          shall be added to and deemed a part of the rent and shall be payable
+          by Tenant to Landlord on demand. Landlord shall have the same remedies
+          for the collection of such costs as Landlord has for the non-payment
+          of rent under this Lease. Tenant shall furnish the HVAC system
+          filters, electric light bulbs, and fuses at Tenant’s expense.
+        </p>
+        <p>
+          In the event the Property is part of a multi-unit building, Tenant
+          shall also be liable to Landlord for the cost of any repairs or
+          replacements to the building if the need for such repairs or
+          replacements results from the negligence or misuse of the building by
+          Tenant, other residents of the Property, or Tenant’s agents, servants,
+          employees, invitees, or family members. The cost of such repairs or
+          replacements shall be added to and deemed a part of the rent due and
+          shall be payable by Tenant to Landlord on demand. Landlord shall have
+          the same remedies for collection of such costs as Landlord has for the
+          non-payment of rent under this Lease.
+        </p>
+        <p>
+          Additional agreements, if any, regarding maintenance, repairs and/or
+          replacement are as follows:
+        </p>
+        <textarea name="additionalMaintenance"></textarea>
+      </li>
+      <li>
+        <p>
+          <b>LANDLORD’S RIGHT TO ENTER THE PROPERTY DURING THE TERM:</b>
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>SHOWING OF PROPERTY FOR RENT OR SALE:</b>
+          During the last <input name="showingDays" type="text" /> days of this
+          Lease, or any renewal thereof, Tenant shall permit the posting of a
+          "For Rent" or “For Sale” sign and shall allow the Property to be shown
+          to prospective Tenants and Purchasers during the hours of
+          <input name="showingStartTime" type="text" /> to
+          <input name="showingEndTime" type="text" /> daily. Landlord shall give
+          Tenant reasonable notice of such showings. If Tenant is not home, the
+          Property may be shown utilizing the key retained by Landlord or by use
+          of a key lockbox, as authorized by Landlord. Tenant agrees to keep
+          Property reasonably clean and orderly and that any pets permitted on
+          the Property shall not be allowed to obstruct nor interfere with any
+          showing of the Property for rent or sale. Tenant agrees to make
+          reasonable accommodations to comply.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>INSPECTIONS:</b>
+          Tenant acknowledges that Landlord has the right to be present at any
+          and all inspections in and about the Property, and agrees to notify
+          Landlord prior to any inspection.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT’S COMPLIANCE WITH SAFETY AND INSURANCE REGULATIONS:</b>
+          Tenant agrees not to do or permit to be done anything on the Property
+          in contravention of any hazard insurance policy in force thereon or
+          which will increase the premium payable on such policy. Tenant shall
+          not in any way obstruct any public sidewalk nor permit anything to be
+          done on the Property contrary to the rules and regulations of the Fire
+          Department or Health Department or any other governmental authority.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT’S RESTRICTIONS REGARDING PROPERTY:</b>
+        </p>
+        <ol style="list-style-type: upper-alpha">
+          <li>
+            <p>
+              <b>CHANGES TO THE PROPERTY:</b>
+              Tenant shall not install, attach, remove or exchange appliances or
+              equipment, such as air conditioning, heating, refrigerator or
+              cooking units, nor make any alterations, additions, or
+              improvements, including painting or electrical work, to the
+              Property without first obtaining Landlord’s written consent.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>VEHICLE PARKING:</b>
+              Only properly licensed vehicles in operating condition may be
+              parked in the driveways, if provided, or in the street or other
+              paved parking areas, in accordance with the law and any community
+              rules, regulations and restrictions.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>TRASH:</b>
+              All garbage and trash must be placed in dumpsters (if provided) or
+              in suitable covered containers to be left in designated pickup
+              locations no earlier than the evening before scheduled pickup.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>WATERBEDS:</b>
+              Tenant acknowledges that waterbeds are <u>not</u> permitted on or
+              about the Property.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>SMOKING:</b>
+              Tenant acknowledges that smoking is <u>not</u> permitted on or
+              about the Property.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>SPACE HEATERS:</b>
+              Tenant acknowledges that space heaters are <u>not</u> permitted on
+              or about the Property.
+            </p>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <p>
+          <b>WATER CONDITIONING SYSTEM, SWIMMING POOL, HOT TUB/SPA:</b>
+          In the event the Property has a water conditioning system, swimming
+          pool, and/or hot tub/spa, Tenant understands and agrees to exercise
+          due caution in the care of these systems. Tenant agrees to properly
+          maintain said systems at Tenant’s expense according to the
+          instructions provided. The cost of all chemicals and filters shall be
+          at the expense of the Tenant. Until further notice, the designated
+          service company is
+          <input name="poolCompany" type="text" />
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>WATER/MOISTURE/MOLD:</b>
+          Tenant shall promptly notify Landlord in the event of the presence of
+          water moisture, water leaks, water spillage (including in or around
+          roof, windows, doors, ceilings, floors, toilets, bathtubs, sinks,
+          dishwasher, washing machine, refrigerator, freezer, air conditioning
+          unit(s), faucets), flooding and/or water damage to the Property. In
+          the event of water moisture, water leaks, water spillage, flooding
+          and/or water damage, Tenant shall take immediate measures to contain
+          the water and to prevent further water damage including turning off
+          any faucets and to cease the use of any toilet, sink, bathtub or
+          appliance causing such water leaks or spillage. Tenant shall notify
+          Landlord promptly in the event mold of any type is observed within the
+          leased Property. Upon notification from Tenant, Landlord, at
+          Landlord’s sole expense, shall promptly remediate and repair any water
+          damage to the Property caused by water moisture, water leaks, water
+          spillage or flooding and remove in accordance with industry standards
+          any mold within the Property which occur through no fault of Tenant.
+          In the event water damage or mold occurs within the Property through
+          the negligence of Tenant, Tenant shall pay, as additional rent, all
+          costs and expenses incurred by Landlord, to remediate and repair such
+          water damage and removal of mold.
+        </p>
+        <p>________/_______ TENANT’S INITIALS</p>
+      </li>
+      <li>
+        <p>
+          <b>LEAD-BASED PAINT:</b>
+        </p>
+        <ol style="list-style-type: upper-alpha">
+          <li>
+            <p>
+              <b>FEDERAL LEAD-BASED PAINT LAW:</b>
+              Title X, Section 10108, The Residential Lead-Based Paint Hazard
+              Reduction Act of 1992 (the “Federal Program”) requires the
+              disclosure of certain information regarding lead-based paint and
+              lead-based paint hazards in connection with the rental of
+              residential real property. An owner of pre-1978 housing is
+              required to disclose to Tenant, based upon owner’s actual
+              knowledge, all known lead-based paint hazards in the Property and
+              provide Tenant with any available reports in owner’s possession
+              relating to lead-based paint or lead-based paint hazards
+              applicable to the Property. In the event the Federal Program is
+              applicable, the Disclosure of Information on Lead-Based Paint
+              and/or Lead-Based Paint Hazards is attached and hereby made a part
+              of this Lease.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>MARYLAND LEAD POISONING PREVENTION PROGRAM:</b>
+              If the Property was built prior to 1978, the Property is also
+              subject to the Maryland Lead Poisoning Prevention Program Act
+              contained in the Maryland Code, Environmental Article Section
+              6-801 et seq. (the “Maryland Program”). Detailed information
+              regarding compliance requirements may be obtained at:
+              <a
+                href="http://www.mde.state.md.us/programs/Land/LeadPoisoningPrevention/Pages/index.aspx"
+              >
+                http://www.mde.state.md.us/programs/Land/LeadPoisoningPrevention/Pages/index.aspx </a
+              >.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>AGE CLASSIFICATION OF PROPERTY:</b>
+              Landlord represents and warrants to Tenant(s), broker(s),
+              broker(s)’ agents and subagents, intending that they rely upon
+              such warranty and representation, that:
+            </p>
+            <p>
+              The Federal Program <b>(check one)</b><br />
+              <input type="checkbox" name="federalBuiltDuringAfter1978" /> the
+              Property was built during or after 1978; the Federal Program does
+              not apply.<br />
+              <input type="checkbox" name="federalBuiltBefore1978" /> the
+              Property was built before 1978; the Federal Program applies.
+            </p>
+            <p>
+              The Maryland Program <b>(check one)</b><br />
+              <input type="checkbox" name="stateBuiltBefore1978" /> the Property
+              was built prior to 1978; the Maryland Program applies.<br />
+              <input type="checkbox" name="stateBuiltDuringAfter1978" /> the
+              Property was built during or after 1978; the Maryland Program does
+              not apply.
+            </p>
+            <p>
+              Age Classification Unknown <b>(check if applicable)</b><br />
+              <input type="checkbox" name="ageUnknown" /> Landlord is uncertain
+              as to age classification, therefore, Landlord acknowledges that,
+              for the purposes of the rental contemplated by this Lease, the
+              Property will be treated as though it had been constructed prior
+              to 1978, and agrees that the Property is fully subject to both the
+              Federal Program and the Maryland Program as to the presence of
+              lead-based paint and/or lead-based paint hazards.
+            </p>
+          </li>
+          <li>
+            <p>
+              <b>ACKNOWLEDGMENT:</b>
+              Tenant understands that the Property may be subject to the Federal
+              Program and the Maryland Program as to the presence of lead-based
+              paint and/or lead-based paint hazards. If the Property is subject
+              to Federal Program and the Maryland Program as to the presence of
+              lead-based paint and/or lead-based paint hazards, Tenant
+              acknowledges receipt of the following required brochures:
+            </p>
+            <ol>
+              <li>
+                <b>Under Federal Law</b> (The Residential Lead-Based Paint
+                Hazard Reduction Act of 1992)<br />
+                a. The EPA “Protect Your Family From Lead In Your Home”
+                brochure.
+              </li>
+              <li>
+                <b>Under Maryland Law</b> (The Maryland Lead Poisoning
+                Prevention Program)<br />
+                a. The Notice of Tenants’ Rights, Lead Poisoning Prevention, as
+                published by the Maryland Department of the Environment<br />
+                b. The EPA “Protect Your Family From Lead In Your Home” brochure
+                (the same brochure as in 1.a.)
+              </li>
+            </ol>
+          </li>
+          <li>
+            <p>
+              <b>RENOVATION, REPAIR AND PAINTING OF PROPERTY:</b>
+              In accordance with the Lead Renovation, Repair and Painting Rule
+              (“RRP”) as adopted by the Environmental Protection Agency (“the
+              EPA”), effective April 22, 2010, if the improvement(s) on the
+              Property was built before 1978, the contractor(s) engaged by the
+              Tenant to renovate, repair or paint the Property must be certified
+              by the EPA to perform such renovation, repair or painting projects
+              that may disturb paint. Before and during any renovation, repair
+              or painting projects on any pre-1978 housing, contractor(s) must
+              comply with all requirements of the RRP.
+            </p>
+            <p>
+              Tenant shall not personally perform any renovation, repair or
+              painting project which might disturb paint in pre-1978 rental
+              housing. Tenant shall not hire any contractor(s) to renovate,
+              repair or paint pre-1978 rental housing unless Tenant provides to
+              Landlord written evidence, satisfactory to Landlord, that all such
+              contractor(s) to perform such work are certified by the EPA, or
+              state equivalent, and shall perform such work in strict accordance
+              with the RRP. For detailed information regarding the RRP, Tenant
+              should visit
+              <a
+                href="http://www2.epa.gov/lead/renovation-repair-and-painting-program"
+              >
+                http://www2.epa.gov/lead/renovation-repair-and-painting-program </a
+              >.
+            </p>
+            <p>
+              Tenant understands and acknowledges that compliance under Federal
+              and Maryland law is the sole responsibility of Landlord and that
+              Tenant agrees to read and become familiar with the requirements of
+              Federal and Maryland law as contained in the above brochures and
+              notice.
+            </p>
+            <p>________/_______ TENANT’S INITIALS</p>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <p>
+          <b>TENANT ACCEPTS PROPERTY:</b>
+          Tenant has been provided with an opportunity to inspect the Property
+          and accepts the Property in its present condition, unless otherwise
+          agreed in writing.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>CRIMINAL ACTIVITY AND SEXUAL OFFENDERS:</b>
+          Tenant may contact the state, county or municipal police departments
+          in which the Property is located or check the “Sex Offender Registry”
+          at the Maryland Department of Public Safety and Correctional Services
+          website in order to ascertain criminal activity in the vicinity of the
+          Property or the presence of registered sexual offenders who live or
+          work within the vicinity of the Property. Tenant acknowledges that
+          Tenant is solely responsible to inquire of such matters before signing
+          this Lease. Tenant shall have no right to cancel this Lease based upon
+          criminal activity or the presence of registered sexual offenders in
+          the vicinity of the Property. Tenant further acknowledges that no real
+          estate licensee involved in the leasing of the Property, whether
+          acting as the agent for Landlord or Tenant, has any duty nor assumes
+          any duty or responsibility to ascertain criminal activity or the
+          presence of registered sexual offenders in the vicinity of the
+          Property.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>FLOOD-PLAIN NOTICE:</b>
+          In the event any part of the Property is located within a designated
+          flood hazard area, Tenant is advised of the following:
+        </p>
+        <p>
+          The rental unit you are to occupy or the motor vehicle parking area or
+          separate storage facility you are to use (as the case may be) is
+          situated in an area prone to flooding during unusually heavy or
+          prolonged steady periods of rain. Such flooding may damage personal
+          belongings and motor vehicles. Because of this possible loss, you may
+          be eligible for U.S. Government subsidized flood insurance which may
+          be purchased from some insurance agents. Damage to motor vehicles may
+          not be covered by such insurance; therefore, you may also wish to
+          determine whether or not you have sufficient motor vehicle insurance
+          to cover loss due to damage to your motor vehicle resulting from
+          flooding in this area. The local zoning authority can provide
+          information pertaining to the susceptibility of this area to flooding.
+          You may wish to contact the appropriate department before signing
+          either this acknowledgement or Lease for this rental unit. Detailed
+          information regarding flood insurance coverage, the premiums that are
+          likely to be required to purchase such insurance and any available
+          information about how those premiums may increase in the future may be
+          obtained at: https://www.fema.gov/national-flood-insurance-program.
+          Detailed information regarding updated flood insurance rate maps may
+          be obtained at:
+          <a href="http://www.mdfloodmaps.net/home.html">
+            http://www.mdfloodmaps.net/home.html</a
+          >.
+        </p>
+        <p>
+          I acknowledge reading and understanding the foregoing warning
+          concerning flooding. I have been provided time, prior to signing
+          either this acknowledgement or Lease, to contact the appropriate
+          governmental agency concerning the susceptibility of the area around
+          my rental unit to flooding.
+        </p>
+        <p>________/_______ TENANT’S INITIALS</p>
+        <p>
+          <b
+            >NOTICE: Some jurisdictions require acknowledgment of this
+            notice.</b
+          >
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT’S LIABILITY AND RESPONSIBILITY TO OBTAIN INSURANCE:</b>
+          Tenant agrees that with respect to those portions of the Property
+          within the exclusive control of Tenant, Landlord shall not be
+          responsible or liable for any loss or damage to any goods or chattels
+          placed on, in, or about the Property, nor for any personal injury to
+          Tenant or any agent, employee, invitee, or family member of Tenant.
+          Landlord shall not be deemed a bailee as to any goods or chattels
+          placed on, in, or about the Property. It is the responsibility of
+          Tenant to obtain and pay the costs of any insurance to protect Tenant
+          from loss or damage to Tenant’s personal property placed on, in, or
+          about the Property, and to maintain adequate personal liability
+          insurance. Notwithstanding any provision of this Lease to the
+          contrary, no provision of this Lease shall be construed to indemnify
+          Landlord, or to hold Landlord harmless, or to exonerate Landlord from
+          any liability to Tenant, or to any other person, for any injury, loss,
+          damage, or liability arising from any omission, fault, negligence, or
+          other misconduct of Landlord on or about those areas which are not
+          within Tenant’s exclusive control.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>JOINT AND SEVERAL LIABILITY:</b>
+          Each Tenant is jointly and severally liable to Landlord for full
+          performance under each and every covenant and condition of this Lease
+          and for compliance with applicable law.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT INDEMNIFIES LANDLORD:</b>
+          Tenant shall indemnify and hold Landlord harmless against and from any
+          and all liability arising from any injury or death, property damage,
+          or other loss during the Term to person or property arising within
+          those portions of the Property within the exclusive control of Tenant,
+          or occasioned by any act or omission of Tenant, any resident of the
+          Property, or of any agent, employee, invitee, or family member of
+          Tenant.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT’S RESPONSIBILITY AT END OF TERM:</b>
+          Tenant agrees to surrender the Property to Landlord at the end of the
+          Initial Term, or any renewal thereof, in the same condition as when
+          received, ordinary wear and tear excepted. Tenant further agrees to
+          surrender the Property free and clear of all furniture and debris and
+          in a broom clean condition.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>FAILURE TO VACATE AT TERMINATION:</b>
+          If Tenant does not vacate the Property on or before the last day of
+          the applicable Term, Landlord may in accordance with Maryland law (a)
+          eject Tenant and take possession of the Property; (b) hold Tenant
+          liable as a tenant holding over for another one or more terms at the
+          same rent; and/or (c) exercise any other remedy granted to a landlord
+          under Maryland law.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT RESTRICTED FROM SUBLEASING OR ASSIGNING LEASE:</b>
+          Tenant shall not assign this Lease or sublet all or part of the
+          Property without the prior written consent of Landlord, which consent
+          may be withheld in the Landlord’s sole and absolute discretion. Any
+          assignment or subletting without Landlord’s prior written consent
+          shall be null and void and of no effect. Landlord may elect to accept
+          rent directly from any assignee or subtenant, but the acceptance of
+          rent from an assignee or subtenant shall not constitute a release of
+          Tenant from Tenant’s liability hereunder. Any consent to a subletting
+          or assignment shall not constitute a waiver of the obligation of
+          Tenant to obtain consent for any subsequent assignment or subletting,
+          and such consent shall not constitute a release of Tenant from
+          Tenant’s liability hereunder.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT’S AND LANDLORD’S RIGHTS IF PROPERTY IS DAMAGED:</b>
+          If the Property is (a) rendered totally uninhabitable by fire, act of
+          God, or by the acts of rioters or public enemies; or (b) if the
+          Property is only partially damaged or destroyed and Landlord, upon
+          notice to Tenant, elects not to repair such damage or destruction, the
+          tenancy hereby created shall immediately cease and all rent payable
+          under this Lease shall be apportioned to the date of such occurrence.
+          If, however, the Property is only partially destroyed or damaged and
+          Landlord elects to repair the damage to the Property, then Landlord
+          shall restore the Property to substantially the same condition as
+          existed immediately before such occurrence without unreasonable delay.
+          In such event, the rent payable under this Lease shall not be abated
+          and this Lease shall remain in full force and effect.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b
+            >TENANT’S AND LANDLORD’S RIGHTS IF PROPERTY IS TAKEN BY THE
+            GOVERNMENT:</b
+          >
+          If the Property or any part thereof is taken or condemned for a public
+          or quasi-public use, this Lease shall, as to the part so taken,
+          terminate as of the date title shall vest in the condemnor. Tenant
+          waives all claims against Landlord and condemnor by reason of the
+          complete or partial taking of the Property, and all damages awarded as
+          a result of any condemnation, whether for the whole or a part of the
+          Property, shall belong to and shall be the sole property of Landlord,
+          whether such damages shall be awarded as compensation for diminution
+          in value to the leasehold or to the fee of the Property.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>LANDLORD’S RIGHT TO RE-RENT THE PROPERTY:</b>
+          If the Property becomes vacant because of the exercise by Landlord of
+          Landlord’s remedies under this Lease, or should Tenant abandon the
+          Property, Landlord may take possession of and re-let the Property, as
+          agent of Tenant, upon such terms and conditions as Landlord shall
+          reasonably determine. Abandonment of leased Property means there is an
+          absolute relinquishment of Property by Tenant consisting of act and
+          intention. Tenant, upon demand by Landlord, shall pay to Landlord all
+          costs and expenses incurred by Landlord in such re-letting and may be
+          liable to Landlord for the difference between the rent payable under
+          this Lease and the amount of the rent received upon any such
+          re-letting. Nothing contained in this Lease shall be deemed to impose
+          upon Landlord any obligation to show or lease the Property in
+          preference to any other rental property(ies) owned by Landlord.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TENANT AND LANDLORD MAY MEDIATE DISPUTES:</b>
+          In the event a dispute between Landlord and Tenant arises out of or
+          from this Lease, Landlord and Tenant acknowledge that such dispute may
+          be voluntarily submitted to mediation through the local
+          board/association of REALTORS®, the Maryland Association of
+          REALTORS®, or through such other mediator or mediation service as may
+          be mutually agreed upon by Tenant and Landlord in writing. Mediation
+          is a process by which the parties attempt to resolve a dispute with
+          the assistance of a neutral mediator who is trained to facilitate the
+          resolution of disputes. The mediation process requires the voluntary
+          participation by both Tenant and Landlord. The mediator has no
+          authority to make an award, to impose a resolution of the dispute upon
+          the parties, or to require the parties to continue mediation if either
+          party does not desire to do so. A resolution of a dispute through
+          mediation is not binding upon the parties, unless the parties
+          voluntarily enter into a binding written agreement resolving the
+          dispute.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>ATTORNEY’S FEES AND COURT COSTS:</b>
+          Should any action be brought by either party hereto to enforce any
+          provision of this Lease, the prevailing party in such action shall be
+          reimbursed by the other party for all reasonable attorney’s fees,
+          necessary expenses, and court costs incurred by the prevailing party
+          in the action.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>LANDLORD DOES NOT WAIVE LEGAL RIGHTS:</b>
+          The failure of Landlord to insist upon the strict performance of any
+          of the terms and conditions of this Lease, in any one or more
+          instances, or to exercise any election as herein provided, shall not
+          constitute or be construed as a waiver by Landlord of such term or
+          condition or an election for future instances.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>HEIRS AND ASSIGNS ARE BOUND BY LEASE:</b>
+          The terms and conditions of this Lease shall be binding upon and inure
+          to the benefit of the heirs, personal representatives, successors, and
+          assigns (if permitted) of Landlord and Tenant.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>CONTROLLING LAW:</b>
+          This Lease shall be construed and interpreted in accordance with the
+          laws of the State of Maryland. As used in this Lease, the singular
+          shall include the plural and the plural shall include the singular and
+          the use of any genders shall be applicable to all genders. It is
+          understood and agreed by the parties hereto that if any part, term, or
+          provision of this Lease is by the Courts held to be illegal or in
+          conflict with any law of the state or county where made, the validity
+          of the remaining portions or provisions are not affected, and the
+          rights and obligations of the parties will be construed and enforced
+          as if the contract did not contain the particular part, term, or
+          provision held to be invalid.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>REAL ESTATE BROKER LEGAL LIMITATIONS:</b>
+          As used in this Lease, the term “Broker(s)” shall mean: (a) the two
+          (2) Brokers as identified on Page 11 of this Lease; (b) the two (2)
+          named Sales Associates identified on Page 11 of the Lease; and (c) any
+          agent, subagent, salesperson, independent contractor and/or employees
+          of Broker(s). The term “Broker(s)” shall also mean, in the singular,
+          any or either of the named Broker(s) and/or Sales Associate(s) as
+          identified or, in the plural, both of the named Brokers and/or Sales
+          Associates as identified. Landlord and Tenant understand and
+          acknowledge that any broker and broker’s agents, subagents, and
+          employees are not and were not at any time authorized to make any
+          representations regarding this Lease or the Property other than those
+          expressly set forth herein. Broker and broker’s agents, subagents, and
+          employees do not assume any responsibility for the condition of the
+          Property or for the performance of this Lease by any or all parties
+          hereto. By signing this Lease, Tenant acknowledges that Tenant has not
+          relied upon any representations made by broker or any agent, subagent,
+          or employee of broker, except those representations expressly set
+          forth herein. In the event a dispute arises under this Lease between
+          Landlord and Tenant resulting in broker or broker’s agents, subagents,
+          or employees being made a party to any litigation, whether as a
+          defendant or third party defendant, Landlord and Tenant, jointly and
+          severally, agree to indemnify broker and broker’s agents, subagents,
+          or employees for all costs and expenses, including reasonable
+          attorney’s fees incurred by broker or broker’s agents, subagents, or
+          employees as a result of such litigation, provided that such
+          litigation does not result in a judgment against broker or broker’s
+          agents, subagents, or employees for any wrongdoing.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>REAL ESTATE LICENSEE DISCLOSURE:</b>
+          If applicable, Landlord and/or Tenant acknowledges receipt of the
+          Disclosure of Licensee Status Addendum.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>AGENCY DISCLOSURE:</b>
+          If applicable, Landlord and/or Tenant acknowledges receipt of
+          “Understanding Whom Real Estate Agents Represent.”
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>TIME IS OF THE ESSENCE:</b>
+          Time is of the essence of this Lease.
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>ADDITIONAL PROVISIONS:</b><br />
+          <textarea name="additionalProvisions"></textarea>
+        </p>
+        <p>
+          ADDENDUM(S) ATTACHED CONCERNING<br />
+          <textarea name="addendumAttachedConcerning"></textarea>
+        </p>
+      </li>
+      <li>
+        <p>
+          <b>ADDENDUM:</b>
+          (See attached Local City/County Notices/Disclosure attached hereto and
+          made part of this Lease).
+        </p>
+      </li>
+    </ol>
+    <p>
+      TENANT HAS READ OR HAS LISTENED TO A READING OF THIS LEASE, UNDERSTANDS
+      SAME, AND HAS RECEIVED A COPY OF THIS LEASE. LANDLORD AND TENANT BY THEIR
+      SIGNATURES BELOW, HEREBY ACCEPT AND AGREE TO BE BOUND BY ALL THE TERMS AND
+      CONDITIONS CONTAINED IN THIS LEASE.
+    </p>
+  </body>
+</html>

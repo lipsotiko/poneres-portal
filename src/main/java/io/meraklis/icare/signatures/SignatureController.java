@@ -1,6 +1,6 @@
 package io.meraklis.icare.signatures;
 
-import io.meraklis.icare.images.TextToImageBuilder;
+import io.meraklis.icare.helpers.TextToImageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

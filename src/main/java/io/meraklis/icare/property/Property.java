@@ -17,7 +17,6 @@ public class Property {
     private String city;
     private String state;
     private String zipCode;
-    private String createdBy;
 
     public String getFullAddress() {
         return String.format("%s, %s, %s %s", address, city, state, zipCode);

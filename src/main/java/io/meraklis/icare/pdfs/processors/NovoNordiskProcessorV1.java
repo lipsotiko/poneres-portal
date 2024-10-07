@@ -1,6 +1,6 @@
-package io.meraklis.icare.processors;
+package io.meraklis.icare.pdfs.processors;
 
-import io.meraklis.icare.applications.PatientApplicationType;
+import io.meraklis.icare.pdfs.PdfType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -8,14 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.meraklis.icare.applications.PatientApplicationType.NOVO_NORDISK_V1;
-import static io.meraklis.icare.processors.FieldType.*;
+import static io.meraklis.icare.pdfs.PdfType.NOVO_NORDISK_V1;
+import static io.meraklis.icare.pdfs.processors.FieldType.*;
 
 @Service
-public class NovoNordiskApplicationProcessorV1 extends AbstractApplicationProcessor {
+public class NovoNordiskProcessorV1 extends AbstractProcessor {
 
     @Override
-    public PatientApplicationType applicationType() {
+    public PdfType applicationType() {
         return NOVO_NORDISK_V1;
     }
 

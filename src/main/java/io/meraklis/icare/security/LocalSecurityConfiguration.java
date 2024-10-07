@@ -11,22 +11,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity
-@Profile({"development", "local"})
-public class ProductionSecurityConfiguration {
+@Profile("local-no-auth")
+public class LocalSecurityConfiguration {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/_nuxt/**").permitAll()
-                        .requestMatchers("/sign-up/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/error").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .oauth2Login(withDefaults());
-
+                        .requestMatchers("/**").permitAll()
+                );
         http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();

@@ -1,13 +1,11 @@
-package io.meraklis.icare.processors;
+package io.meraklis.icare.pdfs.processors;
 
-import io.meraklis.icare.applications.PatientApplication;
-import io.meraklis.icare.applications.PatientApplicationType;
+import io.meraklis.icare.pdfs.PdfType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
-import org.apache.pdfbox.pdmodel.interactive.form.PDField;
-import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
+import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
+import org.apache.pdfbox.pdmodel.interactive.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
@@ -18,11 +16,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.meraklis.icare.helpers.Helpers.tmpFile;
-import static io.meraklis.icare.processors.DocumentHelper.*;
-import static io.meraklis.icare.processors.FieldType.*;
+import static io.meraklis.icare.pdfs.DocumentHelper.*;
 
 @Slf4j
-abstract class AbstractApplicationProcessor implements ApplicationProcessor {
+abstract class AbstractProcessor implements PdfProcessor {
 
     @Autowired
     protected SignatureApplicator signatureApplicator;
@@ -37,7 +34,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
         }
     };
 
-    abstract PatientApplicationType applicationType();
+    abstract PdfType applicationType();
 
     abstract Map<String, FC> pdfFieldsMap();
 
@@ -55,6 +52,10 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
 
     public List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature) {
         return Collections.emptyList();
+    }
+
+    public boolean runCheckBoxConfiguration() {
+        return false;
     }
 
     protected PDDocument loadPdfDoc() throws IOException {
@@ -122,10 +123,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
         }
     }
 
-    public byte[] process(PatientApplication application) {
-        Map<String, Object> metadata = application.getMetadata();
-        String patientSignatureId = application.getPatientSignatureId();
-        String prescriberSignatureId = application.getPrescriberSignatureId();
+    public byte[] process(Map<String, Object> metadata, String patientSignatureId, String prescriberSignatureId) {
         try (PDDocument doc = loadPdfDoc()) {
             removePages(doc, pagesToRemove());
             assignValues(doc, metadata);
@@ -207,15 +205,15 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
     }
 
     protected boolean isDateField(String field) {
-        return pdfFieldsMap().get(field).getType().equals(DATE);
+        return pdfFieldsMap().get(field).getType().equals(FieldType.DATE);
     }
 
     protected boolean isRadioField(String field) {
-        return pdfFieldsMap().get(field).getType().equals(RADIO);
+        return pdfFieldsMap().get(field).getType().equals(FieldType.RADIO);
     }
 
     private boolean isSingleCheckBoxField(String field) {
-        return pdfFieldsMap().get(field).getType().equals(SINGLE_CHECKBOX);
+        return pdfFieldsMap().get(field).getType().equals(FieldType.SINGLE_CHECKBOX);
     }
 
     public byte[] previewWithFieldsPopulated(Boolean skipAddedFields) {
@@ -228,6 +226,7 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
                 if (field instanceof PDTextField) {
                     setField(doc, field.getPartialName(), field.getPartialName());
                 } else if (field instanceof PDCheckBox) {
+                    configureCheckbox(doc, (PDCheckBox) field);
                     setField(doc, field.getPartialName(), "X");
                 } else {
                     processField(field, "|--", field.getPartialName());
@@ -240,6 +239,38 @@ abstract class AbstractApplicationProcessor implements ApplicationProcessor {
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    protected void setField(PDDocument document, String name, String value) throws IOException {
+        PDDocumentCatalog docCatalog = document.getDocumentCatalog();
+        PDAcroForm acroForm = docCatalog.getAcroForm();
+        PDField field = acroForm.getField(name);
+        if (field != null) {
+            if (field instanceof PDCheckBox checkbox) {
+                if (value.isEmpty()) {
+                    checkbox.unCheck();
+                } else {
+                    configureCheckbox(document, (PDCheckBox) field);
+                    checkbox.check();
+                }
+            } else if (field instanceof PDComboBox) {
+                field.setValue(value);
+            } else if (field instanceof PDListBox) {
+                field.setValue(value);
+            } else if (field instanceof PDRadioButton) {
+                field.setValue(value);
+            } else if (field instanceof PDTextField) {
+                field.setValue(value);
+            }
+        } else {
+            System.err.println("No field found with name:" + name);
+        }
+    }
+
+    private void configureCheckbox(PDDocument document, PDCheckBox field) throws IOException {
+        if (runCheckBoxConfiguration()) {
+            applyCheckboxAppearance(document, field);
         }
     }
 }

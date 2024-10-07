@@ -6,6 +6,7 @@
       </a>
       <p class="lead">{{ title }}</p>
     </div>
+    <slot></slot>
   </div>
 </template>
 <script setup>

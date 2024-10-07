@@ -40,7 +40,7 @@ const colDefs = ref([
     colId: "firstName",
     headerName: "Name",
     valueGetter: (p) => `${p.data.firstName} ${p.data.lastName}`,
-    context: "UserLink",
+    context: "/admin/users",
     cellRenderer: "LinkField",
   },
   { field: "email" },
