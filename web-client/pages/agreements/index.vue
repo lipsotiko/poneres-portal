@@ -28,40 +28,22 @@ import { AgGridVue } from "ag-grid-vue3";
 import { ref } from "vue";
 
 const page = ref(1);
-
-// TODO: Updated these when we know what fields will make sense.
 const sort = ref("address,asc");
 const colDefs = ref([
   {
     field: "client",
     context: "/agreements",
     cellRenderer: "LinkField",
-    width: 288,
+    width: 408,
   },
   {
-    colId: "contactFirstName",
-    headerName: "Name",
-    valueGetter: (p) => `${p.data.contactFirstName} ${p.data.contactLastName}`,
+    field: "type",
+    headerName: "Type",
+    width: 248,
   },
   {
-    field: "contactAddress",
-    headerName: "Address",
-    width: 288,
-  },
-  {
-    field: "contactCity",
-    headerName: "City",
-    width: 120,
-  },
-  {
-    field: "contactState",
-    headerName: "State",
-    width: 80,
-  },
-  {
-    field: "contactZipCode",
-    headerName: "Zip Code",
-    width: 100,
+    field: "createdAt",
+    width: 200,
   },
 ]);
 

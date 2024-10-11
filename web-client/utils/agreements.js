@@ -8,4 +8,11 @@ const previewAgreement = async (type, data) => {
   });
 };
 
-export { previewAgreement };
+const saveAgreement = async (data) => {
+  return $fetch('/api/agreements', {
+    method: "POST",
+    body: data,
+  });
+};
+
+export { previewAgreement, saveAgreement };

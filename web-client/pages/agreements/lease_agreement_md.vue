@@ -2,7 +2,7 @@
     <ILayout @keydown.esc="() => open = false">
         <ISidebar v-model="open" class="sidebar" collapse-position="fixed" :collapse="true" size="lg">
             <ILoader v-if="loadingPreview" />
-            <IButton size="sm" @click="() => open = false">Close</IButton>
+            <IButton v-else size="sm" @click="() => open = false">Close</IButton>
             <iframe ref="pdfPreview" class="preview-pdf">
             </iframe>
         </ISidebar>
@@ -109,19 +109,14 @@ const preview = async () => {
 }
 
 const save = async () => {
-    // loading.value = true;
-    // await saveEntity({
-    //   name: name.value,
-    //   contactEmail: email.value,
-    //   contactFirstName: firstName.value,
-    //   contactLastName: lastName.value,
-    //   contactAddress: address.value,
-    //   contactCity: city.value,
-    //   contactState: state.value,
-    //   contactZipCode: zipCode.value,
-    // }).then(() => {
-    //   navigateTo("/entities");
-    // });
+    loading.value = true;
+    await saveAgreement({
+        id: undefined,
+        type: pdfType,
+        metadata: form.value
+    }).then(() => {
+      navigateTo("/agreements");
+    });
 };
 </script>
 <style scoped>
