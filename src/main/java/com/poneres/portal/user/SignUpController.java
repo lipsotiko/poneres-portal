@@ -1,6 +1,7 @@
 package com.poneres.portal.user;
 
 import com.poneres.portal.email.EmailService;
+import com.poneres.portal.payments.PaymentService;
 import com.poneres.portal.security.auth0.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,14 @@ public class SignUpController {
     @Autowired
     private EmailService emailService;
 
-//    @Autowired
-//    private PaymentService paymentService;
+    @Autowired
+    private PaymentService paymentService;
 
     @PostMapping("/tenant")
     public ResponseEntity<Void> signUpLandlord(@RequestBody SignUp signUp) {
-        authenticationService.createUser(signUp, Role.TENANT);
+//        authenticationService.createUser(signUp, Role.TENANT);
 //        paymentService.createAccount(signUp);
-        emailService.send(signUp.getEmail(), "Welcome to Poneres.com", "welcome-tenant.html");
+//        emailService.send(signUp.getEmail(), "Welcome to Poneres.com", "welcome-tenant.html");
         return ResponseEntity.ok().build();
     }
 }

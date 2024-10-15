@@ -54,12 +54,12 @@ public class UserProfileInit {
 
     private void initPrescriber(String email, String firstNane, String lastName) {
         userProfileRepository.deleteByEmail(email);
-        UserProfile prescriberB = UserProfile.builder()
-                .roles(List.of(PRESCRIBER))
-                .email(email)
-                .firstName(firstNane)
-                .lastName(lastName)
-                .build();
-        userProfileRepository.save(prescriberB);
+//        UserProfile prescriberB = UserProfile.builder()
+//                .roles(List.of(PRESCRIBER))
+//                .email(email)
+//                .firstName(firstNane)
+//                .lastName(lastName)
+//                .build();
+//        userProfileRepository.save(prescriberB);
     }
 }
