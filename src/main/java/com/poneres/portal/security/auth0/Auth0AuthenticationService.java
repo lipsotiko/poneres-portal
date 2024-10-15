@@ -1,6 +1,5 @@
 package com.poneres.portal.security.auth0;
 
-import com.poneres.portal.applications.PatientApplication;
 import com.poneres.portal.helpers.FileService;
 import com.poneres.portal.helpers.RestApiService;
 import com.poneres.portal.security.auth0.auth0.*;
@@ -144,10 +143,6 @@ public class Auth0AuthenticationService implements AuthenticationService {
 
     public Boolean hasRole(Role role) {
         return getUserProfile().getRoles().contains(role);
-    }
-
-    public Boolean isAuthorized(PatientApplication application) {
-        return hasRole(Role.ADMIN) || (!hasRole(Role.ADMIN) && getEmail().equals(application.getPrescriberEmail()));
     }
 
     @Override

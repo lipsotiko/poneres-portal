@@ -1,6 +1,5 @@
 package com.poneres.portal.security.auth0;
 
-import com.poneres.portal.applications.PatientApplication;
 import com.poneres.portal.user.Role;
 import com.poneres.portal.user.SignUp;
 import com.poneres.portal.user.UserProfile;
@@ -22,8 +21,6 @@ public interface AuthenticationService {
     void sendVerificationEmail();
 
     void update(UserProfile userProfile);
-
-    Boolean isAuthorized(PatientApplication application);
 
     void deleteAccount(UserProfile userProfile);
 }

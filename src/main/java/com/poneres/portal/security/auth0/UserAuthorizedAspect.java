@@ -1,7 +1,6 @@
 package com.poneres.portal.security.auth0;
 
-import com.poneres.portal.applications.PatientApplicationRepository;
-import com.poneres.portal.documents.PatientDocumentRepository;
+import com.poneres.portal.user.Role;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -22,12 +21,6 @@ public class UserAuthorizedAspect {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @Autowired
-    private PatientApplicationRepository applicationRepository;
-
-    @Autowired
-    private PatientDocumentRepository documentRepository;
-
     @Before("@annotation(com.poneres.portal.security.auth0.UserAuthorized)")
     public void check(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -35,23 +28,9 @@ public class UserAuthorizedAspect {
         UserAuthorized userAuthorized = method.getAnnotation(UserAuthorized.class);
 
         String value = userAuthorized.value();
-        if (value.equals("applicationId")) {
-            String applicationId = (String) joinPoint.getArgs()[userAuthorized.position()];
-            authorizedForApplication(applicationId);
-            return;
+        if (value.equals("isAdmin") && !authenticationService.hasRole(Role.ADMIN)) {
+            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
         }
 
-        if (value.equals("documentId")) {
-            String documentId = (String) joinPoint.getArgs()[userAuthorized.position()];
-            documentRepository.findById(documentId).ifPresent(document -> authorizedForApplication(document.getApplicationId()));
-        }
-    }
-
-    private void authorizedForApplication(String applicationId) {
-        applicationRepository.findById(applicationId).ifPresent(application -> {
-            if (!authenticationService.isAuthorized(application)) {
-                throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
-            }
-        });
     }
 }
