@@ -126,6 +126,9 @@ const loadTestData = async () => {
 
 onMounted(async () => {
   if (agreementId) {
+    if (agreementId === 'New') {
+      return;
+    }
     const agreement = await getAgreement(agreementId);
     status.value = agreement.status;
     Object.keys(agreement.metadata).forEach((k) => {

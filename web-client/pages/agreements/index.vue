@@ -28,7 +28,7 @@ import { AgGridVue } from "ag-grid-vue3";
 import { ref } from "vue";
 
 const page = ref(1);
-const sort = ref("address,asc");
+const sort = ref("createdAt,asc");
 const colDefs = ref([
   {
     field: "client",
