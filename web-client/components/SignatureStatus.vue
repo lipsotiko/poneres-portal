@@ -59,7 +59,7 @@ const handleGetCompletedFile = async () => {
   getFileLoading.value = false;
 };
 </script>
-<style>
+<style scoped>
 .badge {
   width: 100px;
   margin-right: 12px;

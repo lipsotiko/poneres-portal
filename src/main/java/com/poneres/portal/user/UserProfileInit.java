@@ -47,32 +47,10 @@ public class UserProfileInit {
                 .build();
         userProfileRepository.save(christos);
 
-//        Entity everGreen = initEntity("Evergreen Apartments", "Joe", "Green", "123 S. Tough Ln.", "Chicago", "IL", "60600", "contact@evergreen.com");
-//        initProperty(everGreen, "2707 Hunting Ridge Ct.", "Baldwin", "21013");
-//        initProperty(everGreen, "2307 Oakmont Rd.", "Fallston", "21047");
-//
-//        Entity axeRealty = initEntity("Axe Realty", "Steve", "White", "333 S. Stuff Ln.", "Miami", "FL", "30600", "contact@axe.com");
-//        initProperty(axeRealty, "1037 Wingate Ct.", "Bel Air", "21014");
-//        initProperty(axeRealty, "1041 Wingate Ct.", "Bel Air", "21014");
-
         initPrescriber("prescriber_a@poneres.com", "Saul", "Goodman");
         initPrescriber("prescriber_b@poneres.com", "Johnny", "Walker");
         initPrescriber("prescriber_c@poneres.com", "Leo", "Getz");
-
-        initTenants();
     }
-
-//    private void initProperty(Entity entity, String address, String city, String zipCode) {
-//        for (int i = 0; i < 50; i++) {
-//            propertyRepository.save(Property.builder()
-//                    .address(address + " " + i + 1)
-//                    .city(city)
-//                    .state("MD")
-//                    .zipCode(zipCode)
-//                    .entityId(entity.getId())
-//                    .build());
-//        }
-//    }
 
     private void initPrescriber(String email, String firstNane, String lastName) {
         userProfileRepository.deleteByEmail(email);
@@ -83,18 +61,5 @@ public class UserProfileInit {
                 .lastName(lastName)
                 .build();
         userProfileRepository.save(prescriberB);
-    }
-
-    private void initTenants() {
-        userProfileRepository.deleteByRolesContains(Role.TENANT);
-        for (int i = 0; i < 50; i++) {
-            String tenant = String.format("tenant_%s", i + 1);
-            userProfileRepository.save(UserProfile.builder()
-                    .email(tenant + "@example.com")
-                    .firstName(tenant)
-                    .lastName("Wick")
-                    .roles(List.of(TENANT))
-                    .build());
-        }
     }
 }

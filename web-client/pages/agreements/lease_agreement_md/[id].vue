@@ -1,33 +1,22 @@
 <template>
+  <IToast v-if="errorMessage" color="warning">
+    <p>{{ errorMessage }}</p>
+  </IToast>
   <ILayout @keydown.esc="() => (open = false)">
-    <ISidebar
-      v-model="open"
-      class="sidebar"
-      collapse-position="fixed"
-      :collapse="true"
-      size="lg"
-    >
+    <ISidebar v-model="open" class="sidebar" collapse-position="fixed" :collapse="true" size="lg">
       <ILoader v-if="loadingPreview" />
       <IButton v-else size="sm" @click="() => (open = false)">Close</IButton>
       <iframe ref="pdfPreview" class="preview-pdf"> </iframe>
     </ISidebar>
     <IContainer>
-      <PageTitle
-        :title="`Residential Dwelling Lease (Maryland) - ${agreementId}`"
-        backTo="/agreements/new"
-      />
+      <PageTitle :title="`Residential Dwelling Lease (Maryland) - ${agreementId}`" backTo="/agreements" />
       <ClientOnly>
         <IForm v-model="schema">
           <IRow>
             <IColumn xs="2">
               <IFormGroup required>
                 <IFormLabel for="leaseOfferDate">Lease Date</IFormLabel>
-                <IInput
-                  id="leaseOfferDate"
-                  name="leaseOfferDate"
-                  type="date"
-                  :error="errorTypes"
-                />
+                <IInput id="leaseOfferDate" name="leaseOfferDate" type="date" :error="errorTypes" />
                 <IFormError for="leaseOfferDate" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
@@ -50,11 +39,7 @@
             <IColumn xs="6">
               <IFormGroup required>
                 <IFormLabel for="leasedAddress">Leased Address</IFormLabel>
-                <IInput
-                  id="leasedAddress"
-                  name="leasedAddress"
-                  :error="errorTypes"
-                />
+                <IInput id="leasedAddress" name="leasedAddress" :error="errorTypes" />
                 <IFormError for="leasedAddress" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
@@ -67,23 +52,16 @@
                     <IButton to="/agreements">Cancel</IButton>
                     <IButton @click="loadTestData()">Load Test Data</IButton>
                     <IButton @click="preview()">Preview</IButton>
-                    <IButton
-                      outline
-                      color="danger"
-                      @click="deleteModalVisible = true"
-                      :disabled="agreementId === 'New'"
-                      :loading="deleting"
-                      >Delete</IButton
-                    >
+
                   </div>
-                  <IButton
-                    color="primary"
-                    :loading="loading"
-                    @click="save"
-                    :disabled="!schema.touched || schema.invalid"
-                  >
-                    Save</IButton
-                  >
+                  <div class="right-buttons">
+                    <IButton color="danger" @click="deleteModalVisible = true" :disabled="agreementId === 'New'"
+                      :loading="deleting">Delete</IButton>
+                    <IButton color="primary" :loading="loading" @click="save"
+                      :disabled="!schema.touched || schema.invalid">
+                      Save</IButton>
+                  </div>
+
                 </div>
               </div>
             </IColumn>
@@ -91,22 +69,13 @@
         </IForm>
         <IModal v-model="deleteModalVisible">
           <template #header>Delete agreement?</template>
-          <span v-if="status === 'SENT'"
-            >This agreement has already been sent for signing.</span
-          >
+          <span v-if="status === 'SENT'">This agreement has already been sent for signing.</span>
           <br />
           <span>Are you sure you want to delete it?</span>
           <template #footer>
             <div style="display: flex; justify-content: space-between">
-              <IButton outline color="dark" @click="deleteModalVisible = false"
-                >No, keep it.</IButton
-              >
-              <IButton
-                color="danger"
-                @click="handleDelete()"
-                :loading="deleting"
-                >Yes, delete!</IButton
-              >
+              <IButton outline color="dark" @click="deleteModalVisible = false">No, keep it.</IButton>
+              <IButton color="danger" @click="handleDelete()" :loading="deleting">Yes, delete!</IButton>
             </div>
           </template>
         </IModal>
@@ -127,7 +96,7 @@ const fieldOptions = {
     },
   ],
 };
-
+const errorMessage = ref();
 const pdfType = "LEASE_AGREEMENT_MD_V1";
 const status = ref();
 const open = ref(false);
@@ -146,12 +115,13 @@ const { schema, form } = useForm({
 const errorTypes = ["touched", "invalid"];
 const loading = ref(false);
 
-const loadTestData = () => {
+const loadTestData = async () => {
   schema.value.leaseOfferDate.value = dayjs().format("YYYY-MM-DD");
   schema.value.landlord.value = "Evangelos Poneres";
   schema.value.tenant.value = "Stephan Michael Nutty, Kristy Diane Nutty";
   schema.value.leasedAddress.value =
     "10722 LANCEWOOD RD, COCKEYSVILLE, MD 21030";
+  schema.value.touched = true;
 };
 
 onMounted(async () => {
@@ -174,10 +144,17 @@ const preview = async () => {
   loadingPreview.value = false;
 };
 
-const handleDelete = async () => {
+const handleDelete = () => {
   deleting.value = true;
-  await deleteAgreement(agreementId);
-  navigateTo("/agreements");
+  deleteAgreement(agreementId)
+    .then(() => {
+      navigateTo("/agreements");
+    })
+    .catch((err) => {
+      errorMessage.value = err.data.message;
+      deleteModalVisible.value = false;
+      deleting.value = false;
+    });
 };
 
 const save = async () => {
@@ -198,6 +175,10 @@ const save = async () => {
 }
 
 .left-buttons button {
+  margin: 6px;
+}
+
+.right-buttons button {
   margin: 6px;
 }
 

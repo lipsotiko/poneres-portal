@@ -3,7 +3,9 @@ package com.poneres.portal.signatures;
 import com.poneres.portal.helpers.RestApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,11 +57,17 @@ public class SignwellSignatureService implements SignatureService {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Api-Key", apiKey);
 
-        try {
+        Map<String, Object> document = restApiService.get(apiUrl + "documents/" + ssdId, headers, HashMap.class);
+        if ((Boolean) document.get("test_mode")) {
             restApiService.delete(apiUrl + "documents/" + ssdId, headers);
-        } catch (Exception ex) {
-            // Do nothing;
+            return;
         }
+
+        if (document.get("status").equals("Completed")) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Complete documents may not be deleted in production.");
+        }
+
+        restApiService.delete(apiUrl + "documents/" + ssdId, headers);
     }
 
     @Override
@@ -71,8 +79,14 @@ public class SignwellSignatureService implements SignatureService {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Api-Key", apiKey);
 
-        Map<String, Object> response = restApiService.get(apiUrl + "documents/" + ssdId, headers, HashMap.class);
-        return (String) response.get("status");
+        try {
+            Map<String, Object> response = restApiService.get(apiUrl + "documents/" + ssdId, headers, HashMap.class);
+            return (String) response.get("status");
+        } catch (Exception ex) {
+            // Do nothing;
+        }
+
+        return "None";
     }
 
     @Override
