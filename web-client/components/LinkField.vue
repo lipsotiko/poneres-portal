@@ -10,5 +10,4 @@ const {
     colDef: { context },
   },
 } = props;
-console.log(context);
 </script>

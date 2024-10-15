@@ -31,6 +31,7 @@ auth0:
 stripe:
   private-key: ${STRIPE_PRIVATE_KEY}
 signwell:
+  api-url: "https://www.signwell.com/api/v1/"
   api-key: ${SIGNWELL_API_KEY}
 webapp:
   url: "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net"

@@ -15,8 +15,8 @@ const router = useRouter();
 
 const agreementTypes = [
   {
-    id: "/agreements/lease_agreement_md",
-    label: "Resedential Lease Agreement - Maryland",
+    id: "/agreements/lease_agreement_md/New",
+    label: "Residential Dwelling Lease (Maryland)",
   },
 ];
 const selectedAgreementPath = ref();

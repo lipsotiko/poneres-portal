@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -22,9 +24,9 @@ public class RestApiService {
     @Autowired
     private ObjectMapper jackson;
 
-    public <T> T post(String uri, String token, Object payload, Class<T> responseType) {
+    public <T> T post(String uri, Map<String, String> headers, Object payload, Class<T> responseType) {
         try {
-            CloseableHttpResponse response = post2(uri, token, payload);
+            CloseableHttpResponse response = post2(uri, headers, payload);
             handleSuccess(response, uri);
             String responseEntity = EntityUtils.toString(response.getEntity());
             return jackson.readValue(responseEntity, responseType);
@@ -33,20 +35,22 @@ public class RestApiService {
         }
     }
 
-    private CloseableHttpResponse post2(String uri, String token, Object payload) {
-        CloseableHttpResponse response = request(new HttpPost(uri), token, payload);
+    private CloseableHttpResponse post2(String uri, Map<String, String> headers, Object payload) {
+        CloseableHttpResponse response = request(new HttpPost(uri), headers, payload);
         handleSuccess(response, uri);
         return response;
     }
 
     public void patch(String uri, String token, Object payload) {
-        CloseableHttpResponse response = request(new HttpPatch(uri), token, payload);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", token);
+        CloseableHttpResponse response = request(new HttpPatch(uri), headers, payload);
         handleSuccess(response, uri);
     }
 
-    private CloseableHttpResponse request(HttpEntityEnclosingRequestBase httpRequest, String token, Object payload) {
-        if (token != null) {
-            httpRequest.setHeader("Authorization", token);
+    private CloseableHttpResponse request(HttpEntityEnclosingRequestBase httpRequest, Map<String, String> headers, Object payload) {
+        if (headers != null) {
+            headers.forEach(httpRequest::setHeader);
         }
 
         try {
@@ -66,16 +70,19 @@ public class RestApiService {
     }
 
     public void post(String uri, String token, Object payload) {
-        post2(uri, token, payload);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", token);
+        post2(uri, headers, payload);
     }
 
-    public <T> T get(String uri, String token, Class<T> responseType) {
+    public <T> T get(String uri, Map<String, String> headers, Class<T> responseType) {
         try {
-            final HttpGet get = new HttpGet(uri);
-            get.setHeader("Authorization", token);
-
+            final HttpGet httpRequest = new HttpGet(uri);
+            if (headers != null) {
+                headers.forEach(httpRequest::setHeader);
+            }
             CloseableHttpClient client = HttpClients.createDefault();
-            CloseableHttpResponse response = client.execute(get);
+            CloseableHttpResponse response = client.execute(httpRequest);
             handleSuccess(response, uri);
 
             String responseEntity = EntityUtils.toString(response.getEntity());
@@ -89,7 +96,7 @@ public class RestApiService {
         int responseCode = response.getStatusLine().getStatusCode();
         if (!HttpStatus.valueOf(responseCode).is2xxSuccessful()) {
             log.error("API Request {} failed with status code {}", uri, response.getStatusLine().getStatusCode());
-            throw new RuntimeException("API GET Request failed.");
+            throw new RuntimeException("API Request failed.");
         }
     }
 
@@ -97,9 +104,12 @@ public class RestApiService {
         return URLEncoder.encode(url, StandardCharsets.UTF_8);
     }
 
-    public void delete(String uri, String token) {
+    public void delete(String uri, Map<String, String> headers) {
         HttpDelete httpRequest = new HttpDelete(uri);
-        httpRequest.setHeader("Authorization", token);
+
+        if (headers != null) {
+            headers.forEach(httpRequest::setHeader);
+        }
 
         try {
             CloseableHttpResponse response = HttpClients.createDefault().execute(httpRequest);

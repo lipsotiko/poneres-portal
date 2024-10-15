@@ -1,5 +1,6 @@
 package com.poneres.portal.agreements;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.poneres.portal.pdfs.processors.PdfType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,9 @@ public class Agreement {
     @Id
     private String id;
     private PdfType type;
+    private AgreementStatus status;
     private Map<String, Object> metadata;
+    private String ssdId; // Signature Service Document ID
     private LocalDateTime createdAt;
 
     public Object getClient() {
@@ -28,4 +31,22 @@ public class Agreement {
 
         return "-";
     }
+
+    public String getFileName() {
+        if (type.equals(PdfType.LEASE_AGREEMENT_MD_V1)) {
+            return type.getDisplayName() + " - " + getClient() + ".pdf";
+        }
+
+        return "no-name.pdf";
+    }
+
+    @JsonProperty
+    public String getAgreementType() {
+        if (type == null) {
+            return "-";
+        }
+
+        return type.getDisplayName();
+    }
+
 }

@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.poneres.portal.helpers.Helpers.tmpFile;
-import static com.poneres.portal.pdfs.processors.PdfType.LILLY_CARES_V1;
 import static com.poneres.portal.pdfs.processors.DocumentHelper.docToBytes;
+import static com.poneres.portal.pdfs.processors.PdfType.LILLY_CARES_V1;
 
 @Service
 public class LillyCaresProcessorV1 extends AbstractProcessor {

@@ -1,5 +1,9 @@
 package com.poneres.portal.payments;
 
+import com.poneres.portal.security.auth0.AuthenticationService;
+import com.poneres.portal.user.SignUp;
+import com.poneres.portal.user.UserProfile;
+import com.poneres.portal.user.UserProfileRepository;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
@@ -8,10 +12,6 @@ import com.stripe.param.AccountCreateParams;
 import com.stripe.param.AccountCreateParams.BusinessProfile;
 import com.stripe.param.AccountCreateParams.Type;
 import com.stripe.param.AccountLinkCreateParams;
-import com.poneres.portal.security.auth0.AuthenticationService;
-import com.poneres.portal.user.SignUp;
-import com.poneres.portal.user.UserProfile;
-import com.poneres.portal.user.UserProfileRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

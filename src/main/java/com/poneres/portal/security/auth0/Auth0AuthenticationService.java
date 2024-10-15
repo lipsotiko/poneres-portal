@@ -66,8 +66,10 @@ public class Auth0AuthenticationService implements AuthenticationService {
 
         String token = getAccessToken();
         Auth0CreateUserRequest request = new Auth0CreateUserRequest(signUp);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", token);
         Auth0CreateUserResponse response =
-                restApiService.post(audience + "users", token, request, Auth0CreateUserResponse.class);
+                restApiService.post(audience + "users", headers, request, Auth0CreateUserResponse.class);
 
         UserProfile userProfile = UserProfile.builder()
                 .email(signUp.getEmail())
@@ -84,7 +86,9 @@ public class Auth0AuthenticationService implements AuthenticationService {
         UserProfile userProfile = userProfileRepository.findByAuthProviderId(getAuthProviderId());
         String token = getAccessToken();
         String uri = audience + "users/" + urlEncode(userProfile.getAuthProviderId());
-        Auth0UserResponse response = restApiService.get(uri, token, Auth0UserResponse.class);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", token);
+        Auth0UserResponse response = restApiService.get(uri, headers, Auth0UserResponse.class);
         return response.getEmailVerified();
     }
 
@@ -151,8 +155,11 @@ public class Auth0AuthenticationService implements AuthenticationService {
         if (userProfile.getAuthProviderId() == null) {
             return;
         }
-        String token = getAccessToken();
+
         String uri = audience + "users/" + urlEncode(userProfile.getAuthProviderId());
-        restApiService.delete(uri, token);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", getAccessToken());
+
+        restApiService.delete(uri, headers);
     }
 }

@@ -17,7 +17,9 @@ import org.apache.pdfbox.pdmodel.font.encoding.GlyphList;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.interactive.annotation.*;
-import org.apache.pdfbox.pdmodel.interactive.form.*;
+import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.apache.pdfbox.pdmodel.interactive.form.PDNonTerminalField;
 
 import java.awt.geom.Rectangle2D;
 import java.io.ByteArrayOutputStream;
@@ -50,7 +52,6 @@ public class DocumentHelper {
             System.out.println(outputString);
         }
     }
-
 
 
     public static byte[] docToBytes(PDDocument document) {

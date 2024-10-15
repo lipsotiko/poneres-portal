@@ -1,7 +1,6 @@
 package com.poneres.portal.user;
 
 import com.poneres.portal.email.EmailService;
-//import com.poneres.portal.payments.PaymentService;
 import com.poneres.portal.security.auth0.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

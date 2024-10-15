@@ -32,18 +32,28 @@ const sort = ref("address,asc");
 const colDefs = ref([
   {
     field: "client",
-    context: "/agreements",
+    context: "/agreements/lease_agreement_md",
     cellRenderer: "LinkField",
-    width: 408,
+    width: 500,
   },
   {
-    field: "type",
+    field: "agreementType",
     headerName: "Type",
-    width: 248,
+    width: 300,
   },
   {
     field: "createdAt",
     width: 200,
+  },
+  {
+    field: "ssdId",
+    headerName: "Signature",
+    context: {
+      onSend: () => refresh(),
+    },
+    cellRenderer: "SignatureStatus",
+    headerName: "Status / Action",
+    width: 288,
   },
 ]);
 
@@ -59,7 +69,7 @@ const gridOptions = {
   },
 };
 
-const { pending, data } = await useAsyncData(
+const { pending, data, refresh } = await useAsyncData(
   "agreements",
   () =>
     $fetch("/api/agreements", {
@@ -83,11 +93,12 @@ const { pending, data } = await useAsyncData(
 }
 </style>
 <script>
-import { LinkField } from "#components";
+import { LinkField, SignatureStatus } from "#components";
 
 export default {
   components: {
     LinkField,
+    SignatureStatus,
   },
 };
 </script>
