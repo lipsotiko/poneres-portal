@@ -6,8 +6,10 @@ import com.poneres.portal.signatures.SignatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -53,7 +55,13 @@ public class AgreementController {
 
     @PostMapping
     public Agreement save(@RequestBody Agreement agreement) {
-        agreement.setStatus(AgreementStatus.DRAFT);
+        if (agreement.getId() != null) {
+            agreementRepository.findById(agreement.getId()).ifPresent(existingAgreement -> {
+                if (existingAgreement.isSent()) {
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "Sent documents may not be updated.");
+                }
+            });
+        }
         agreement.setCreatedAt(LocalDateTime.now());
         return agreementRepository.save(agreement);
     }
@@ -61,7 +69,6 @@ public class AgreementController {
     @PostMapping("/{id}/send")
     public void sendAgreementToBeSigned(@PathVariable("id") String agreementId) {
         agreementRepository.findById(agreementId).ifPresent(agreement -> {
-            agreement.setStatus(AgreementStatus.SENT);
             String ssid = sendForSigning(agreement);
             agreement.setSsdId(ssid);
             agreementRepository.save(agreement);
@@ -82,6 +89,11 @@ public class AgreementController {
             String ssdId = agreement.getSsdId();
             return signatureService.fileUrl(ssdId);
         }).orElse(null);
+    }
+
+    @PostMapping("/{id}/send-reminder")
+    public void sendReminder(@PathVariable("id") String agreementId) {
+        agreementRepository.findById(agreementId).ifPresent(agreement -> signatureService.sendReminder(agreement.getSsdId()));
     }
 
     private String sendForSigning(Agreement agreement) {

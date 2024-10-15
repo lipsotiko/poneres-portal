@@ -11,7 +11,7 @@
     <IContainer>
       <PageTitle :title="`Residential Dwelling Lease (Maryland) - ${agreementId}`" backTo="/agreements" />
       <ClientOnly>
-        <IForm v-model="schema">
+        <IForm v-model="schema" :disabled="loading">
           <IRow>
             <IColumn xs="2">
               <IFormGroup required>
@@ -52,12 +52,11 @@
                     <IButton to="/agreements">Cancel</IButton>
                     <IButton @click="loadTestData()">Load Test Data</IButton>
                     <IButton @click="preview()">Preview</IButton>
-
                   </div>
-                  <div class="right-buttons">
+                  <div v-if="!loading" class="right-buttons">
                     <IButton color="danger" @click="deleteModalVisible = true" :disabled="agreementId === 'New'"
                       :loading="deleting">Delete</IButton>
-                    <IButton color="primary" :loading="loading" @click="save"
+                    <IButton v-if="!sent" color="primary" :loading="saving" @click="save"
                       :disabled="!schema.touched || schema.invalid">
                       Save</IButton>
                   </div>
@@ -69,9 +68,7 @@
         </IForm>
         <IModal v-model="deleteModalVisible">
           <template #header>Delete agreement?</template>
-          <span v-if="status === 'SENT'">This agreement has already been sent for signing.</span>
-          <br />
-          <span>Are you sure you want to delete it?</span>
+          <span>Are you sure you want to delete this agreement?</span>
           <template #footer>
             <div style="display: flex; justify-content: space-between">
               <IButton outline color="dark" @click="deleteModalVisible = false">No, keep it.</IButton>
@@ -98,7 +95,7 @@ const fieldOptions = {
 };
 const errorMessage = ref();
 const pdfType = "LEASE_AGREEMENT_MD_V1";
-const status = ref();
+const sent = ref();
 const open = ref(false);
 const loadingPreview = ref(false);
 const deleteModalVisible = ref(false);
@@ -113,6 +110,7 @@ const { schema, form } = useForm({
 });
 
 const errorTypes = ["touched", "invalid"];
+const saving = ref(false);
 const loading = ref(false);
 
 const loadTestData = async () => {
@@ -125,19 +123,22 @@ const loadTestData = async () => {
 };
 
 onMounted(async () => {
-  if (agreementId) {
-    if (agreementId === 'New') {
-      return;
-    }
-    const agreement = await getAgreement(agreementId);
-    status.value = agreement.status;
-    Object.keys(agreement.metadata).forEach((k) => {
-      schema.value[k].value = agreement.metadata[k];
-    });
+  if (agreementId === 'New') {
+    return;
   }
+  loading.value = true;
+
+  const agreement = await getAgreement(agreementId);
+  sent.value = agreement.sent;
+  Object.keys(agreement.metadata).forEach((k) => {
+    schema.value[k].value = agreement.metadata[k];
+  });
+
+  loading.value = false;
 });
 
 const preview = async () => {
+  pdfPreview.value.src = '';
   loadingPreview.value = true;
   open.value = true;
   await previewAgreement(pdfType, form.value).then((blob) => {
@@ -161,7 +162,7 @@ const handleDelete = () => {
 };
 
 const save = async () => {
-  loading.value = true;
+  saving.value = true;
   await saveAgreement({
     id: agreementId === "New" ? undefined : agreementId,
     type: pdfType,

@@ -10,26 +10,26 @@
     <IBadge v-else>
       {{ status }}
     </IBadge>
-    <IButton
-      v-if="status === 'Completed'"
-      size="sm"
-      color="secondary"
-      @click="handleGetCompletedFile()"
-      :loading="getFileLoading"
-    >
-      Download</IButton
-    >
+    <IButton v-if="status === 'Completed'" size="sm" color="secondary" @click="handleGetCompletedFile()"
+      :loading="getFileLoading">
+      Download</IButton>
+    <IButton v-else-if="status === 'Sent'" size="sm" color="secondary" @click="handleSendReminder()"
+      :loading="reminderLoading">
+      Send Reminder</IButton>
+    <IButton v-else size="sm" @click="refreshStatus()" :loading="loading">
+      Refresh</IButton>
   </span>
 </template>
 <script setup>
 const props = defineProps(["params"]);
 const loading = ref(false);
 const getFileLoading = ref(false);
+const reminderLoading = ref(false);
 const status = ref("-");
 const {
   params: {
     colDef: {
-      context: { onSend },
+      context: { onSend, onReminderSent },
     },
     data: { id, ssdId },
   },
@@ -58,6 +58,19 @@ const handleGetCompletedFile = async () => {
   });
   getFileLoading.value = false;
 };
+
+const handleSendReminder = async () => {
+  reminderLoading.value = true;
+  await sendReminder(id);
+  onReminderSent();
+  reminderLoading.value = false;
+}
+
+const refreshStatus = async () => {
+  loading.value = true;
+  status.value = await getSignatureStatus(id);
+  loading.value = false;
+}
 </script>
 <style scoped>
 .badge {
@@ -66,6 +79,7 @@ const handleGetCompletedFile = async () => {
 }
 
 .button {
+  width: 122px;
   height: 22px;
 }
 </style>

@@ -99,9 +99,11 @@ public class Auth0AuthenticationService implements AuthenticationService {
     @Override
     public void sendVerificationEmail() {
         String token = getAccessToken();
-        Map<String, String> request = new HashMap<>();
-        request.put("user_id", getAuthProviderId());
-        restApiService.post(audience + "jobs/verification-email", token, request);
+        Map<String, String> payload = new HashMap<>();
+        payload.put("user_id", getAuthProviderId());
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", token);
+        restApiService.post(audience + "jobs/verification-email", headers, payload);
     }
 
     @Override

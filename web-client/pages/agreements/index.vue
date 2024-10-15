@@ -1,4 +1,7 @@
 <template>
+  <IToast v-if="modalOpen" v-model="modalOpen" color="success" duration=2500 dismissible>
+    <p>{{ modalMessage }}</p>
+  </IToast>
   <IContainer>
     <PageTitle title="Agreements" backTo="/">
       <IButton circle color="primary" to="/agreements/new">
@@ -27,6 +30,8 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridVue } from "ag-grid-vue3";
 import { ref } from "vue";
 
+const modalOpen = ref(false);
+const modalMessage = ref();
 const page = ref(1);
 const sort = ref("createdAt,asc");
 const colDefs = ref([
@@ -49,7 +54,15 @@ const colDefs = ref([
     field: "ssdId",
     headerName: "Signature",
     context: {
-      onSend: () => refresh(),
+      onSend: () => {
+        modalMessage.value = 'Document sent for signing!';
+        modalOpen.value = true;
+        refresh()
+      },
+      onReminderSent: () => {
+        modalMessage.value = 'Reminder sent!';
+        modalOpen.value = true;
+      }
     },
     cellRenderer: "SignatureStatus",
     headerName: "Status / Action",

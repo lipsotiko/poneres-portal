@@ -19,7 +19,6 @@ public class Agreement {
     @Id
     private String id;
     private PdfType type;
-    private AgreementStatus status;
     private Map<String, Object> metadata;
     private String ssdId; // Signature Service Document ID
     private LocalDateTime createdAt;
@@ -47,6 +46,11 @@ public class Agreement {
         }
 
         return type.getDisplayName();
+    }
+
+    @JsonProperty
+    boolean isSent() {
+        return ssdId != null;
     }
 
 }

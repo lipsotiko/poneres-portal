@@ -9,4 +9,6 @@ public interface SignatureService {
     String status(String ssdId);
 
     String fileUrl(String ssdId);
+
+    void sendReminder(String ssdId);
 }

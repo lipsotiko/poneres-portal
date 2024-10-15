@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SignwellSignatureService implements SignatureService {
@@ -98,8 +95,21 @@ public class SignwellSignatureService implements SignatureService {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Api-Key", apiKey);
 
-        Map<String, Object> response = restApiService.get(apiUrl + "documents/" + ssdId + "/completed_pdf?url_only=true", headers, HashMap.class);
+        String uri = apiUrl + "documents/" + ssdId + "/completed_pdf?url_only=true";
+        Map<String, Object> response = restApiService.get(uri, headers, HashMap.class);
         return (String) response.get("file_url");
+    }
+
+    @Override
+    public void sendReminder(String ssdId) {
+        if (ssdId == null) {
+            return;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Api-Key", apiKey);
+
+        restApiService.post(apiUrl + "documents/" + ssdId + "/remind", headers, Collections.emptyMap());
     }
 
 }

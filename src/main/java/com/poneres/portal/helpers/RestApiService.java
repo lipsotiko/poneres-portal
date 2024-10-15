@@ -26,7 +26,7 @@ public class RestApiService {
 
     public <T> T post(String uri, Map<String, String> headers, Object payload, Class<T> responseType) {
         try {
-            CloseableHttpResponse response = post2(uri, headers, payload);
+            CloseableHttpResponse response = post(uri, headers, payload);
             handleSuccess(response, uri);
             String responseEntity = EntityUtils.toString(response.getEntity());
             return jackson.readValue(responseEntity, responseType);
@@ -35,7 +35,7 @@ public class RestApiService {
         }
     }
 
-    private CloseableHttpResponse post2(String uri, Map<String, String> headers, Object payload) {
+    public CloseableHttpResponse post(String uri, Map<String, String> headers, Object payload) {
         CloseableHttpResponse response = request(new HttpPost(uri), headers, payload);
         handleSuccess(response, uri);
         return response;
@@ -69,12 +69,6 @@ public class RestApiService {
         return post(uri, null, request, responseType);
     }
 
-    public void post(String uri, String token, Object payload) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", token);
-        post2(uri, headers, payload);
-    }
-
     public <T> T get(String uri, Map<String, String> headers, Class<T> responseType) {
         try {
             final HttpGet httpRequest = new HttpGet(uri);
@@ -96,6 +90,12 @@ public class RestApiService {
         int responseCode = response.getStatusLine().getStatusCode();
         if (!HttpStatus.valueOf(responseCode).is2xxSuccessful()) {
             log.error("API Request {} failed with status code {}", uri, response.getStatusLine().getStatusCode());
+
+            try {
+                log.error(new String(response.getEntity().getContent().readAllBytes()));
+            } catch (IOException e) {
+                // Do nothing.
+            }
             throw new RuntimeException("API Request failed.");
         }
     }

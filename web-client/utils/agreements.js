@@ -39,6 +39,12 @@ const getFileUrl = async (id) => {
   return $fetch(`/api/agreements/${id}/file-url`);
 };
 
+const sendReminder = async (id) => {
+  return $fetch(`/api/agreements/${id}/send-reminder`, {
+    method: 'POST'
+  });
+};
+
 export {
   previewAgreement,
   saveAgreement,
@@ -47,4 +53,5 @@ export {
   sendForSigning,
   getSignatureStatus,
   getFileUrl,
+  sendReminder
 };
