@@ -1,5 +1,11 @@
 <template>
-  <IToast v-if="modalOpen" v-model="modalOpen" color="success" duration=2500 dismissible>
+  <IToast
+    v-if="modalOpen"
+    v-model="modalOpen"
+    color="success"
+    :duration="2500"
+    dismissible
+  >
     <p>{{ modalMessage }}</p>
   </IToast>
   <IContainer>
@@ -55,14 +61,14 @@ const colDefs = ref([
     headerName: "Signature",
     context: {
       onSend: () => {
-        modalMessage.value = 'Document sent for signing!';
+        modalMessage.value = "Document sent for signing!";
         modalOpen.value = true;
-        refresh()
+        refresh();
       },
       onReminderSent: () => {
-        modalMessage.value = 'Reminder sent!';
+        modalMessage.value = "Reminder sent!";
         modalOpen.value = true;
-      }
+      },
     },
     cellRenderer: "SignatureStatus",
     headerName: "Status / Action",

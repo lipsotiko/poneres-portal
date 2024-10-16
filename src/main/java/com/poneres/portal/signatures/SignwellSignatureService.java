@@ -1,5 +1,6 @@
 package com.poneres.portal.signatures;
 
+import com.poneres.portal.agreements.SignatureRecipient;
 import com.poneres.portal.helpers.RestApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 @Service
 public class SignwellSignatureService implements SignatureService {
@@ -22,7 +24,7 @@ public class SignwellSignatureService implements SignatureService {
     private String apiUrl;
 
     @Override
-    public String create(String name, Boolean draft, Boolean withSignaturePage, String base64File) {
+    public String create(String name, Boolean draft, Boolean withSignaturePage, String base64File, List<SignatureRecipient> recipients) {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Api-Key", apiKey);
 
@@ -31,12 +33,12 @@ public class SignwellSignatureService implements SignatureService {
         body.put("draft", draft);
         body.put("with_signature_page", withSignaturePage);
 
-        List<Object> recipients = new ArrayList<>();
-        recipients.add(new HashMap<>() {{
-            put("id", 1);
-            put("email", "evangelos.poneres@gmail.com");
-        }});
-        body.put("recipients", recipients);
+        body.put("recipients", IntStream.range(0, recipients.size())
+                .mapToObj(i -> new HashMap<>() {{
+                    put("id", i);
+                    put("email", recipients.get(i).getEmail());
+                    put("name", recipients.get(i).getName());
+                }}).toList());
 
         List<Object> files = new ArrayList<>();
         files.add(new HashMap<>() {{
@@ -51,6 +53,9 @@ public class SignwellSignatureService implements SignatureService {
 
     @Override
     public void delete(String ssdId) {
+        if (ssdId == null) {
+            return;
+        }
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Api-Key", apiKey);
 

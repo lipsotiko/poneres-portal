@@ -10,10 +10,9 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,27 +47,6 @@ public class RestApiService {
         handleSuccess(response, uri);
     }
 
-    private CloseableHttpResponse request(HttpEntityEnclosingRequestBase httpRequest, Map<String, String> headers, Object payload) {
-        if (headers != null) {
-            headers.forEach(httpRequest::setHeader);
-        }
-
-        try {
-            StringEntity params = new StringEntity(jackson.writeValueAsString(payload));
-            httpRequest.setEntity(params);
-            httpRequest.addHeader("content-type", "application/json");
-
-            CloseableHttpClient client = HttpClients.createDefault();
-            return client.execute(httpRequest);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T> T post(String uri, Object request, Class<T> responseType) {
-        return post(uri, null, request, responseType);
-    }
-
     public <T> T get(String uri, Map<String, String> headers, Class<T> responseType) {
         try {
             final HttpGet httpRequest = new HttpGet(uri);
@@ -86,24 +64,6 @@ public class RestApiService {
         }
     }
 
-    private void handleSuccess(CloseableHttpResponse response, String uri) {
-        int responseCode = response.getStatusLine().getStatusCode();
-        if (!HttpStatus.valueOf(responseCode).is2xxSuccessful()) {
-            log.error("API Request {} failed with status code {}", uri, response.getStatusLine().getStatusCode());
-
-            try {
-                log.error(new String(response.getEntity().getContent().readAllBytes()));
-            } catch (IOException e) {
-                // Do nothing.
-            }
-            throw new RuntimeException("API Request failed.");
-        }
-    }
-
-    public static String urlEncode(String url) {
-        return URLEncoder.encode(url, StandardCharsets.UTF_8);
-    }
-
     public void delete(String uri, Map<String, String> headers) {
         HttpDelete httpRequest = new HttpDelete(uri);
 
@@ -116,6 +76,36 @@ public class RestApiService {
             handleSuccess(response, uri);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private CloseableHttpResponse request(HttpEntityEnclosingRequestBase httpRequest, Map<String, String> headers, Object payload) {
+        if (headers != null) {
+            headers.forEach(httpRequest::setHeader);
+        }
+
+        try {
+            StringEntity params = new StringEntity(jackson.writeValueAsString(payload));
+            httpRequest.setEntity(params);
+            httpRequest.addHeader("content-type", "application/json");
+
+            CloseableHttpClient client = HttpClients.createDefault();
+            return client.execute(httpRequest);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void handleSuccess(CloseableHttpResponse response, String uri) {
+        int responseCode = response.getStatusLine().getStatusCode();
+        if (!HttpStatus.valueOf(responseCode).is2xxSuccessful()) {
+            log.error("API Request {} failed with status code {}", uri, response.getStatusLine().getStatusCode());
+
+            try {
+                log.error(new String(response.getEntity().getContent().readAllBytes()));
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            }
         }
     }
 }

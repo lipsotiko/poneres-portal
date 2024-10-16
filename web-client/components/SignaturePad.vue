@@ -73,7 +73,6 @@ onMounted(async () => {
     signed.value = true;
     signaturePad.fromDataURL(props.signature);
   }
-
 });
 
 const emit = defineEmits(["save", "clear"]);
