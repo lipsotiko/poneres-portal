@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.poneres.portal.helpers.RestApiService.urlEncode;
+import static com.poneres.portal.helpers.Helpers.urlEncode;
 
 @Slf4j
 @Service
@@ -131,7 +131,7 @@ public class Auth0AuthenticationService implements AuthenticationService {
         }
 
         Auth0TokenResponse token = restApiService.post(
-                tokenUrl, new Auth0TokenRequest(clientId, clientSecret, audience), Auth0TokenResponse.class);
+                tokenUrl, null, new Auth0TokenRequest(clientId, clientSecret, audience), Auth0TokenResponse.class);
         token.setTimestamp(LocalDateTime.now());
 
         fileService.writeToFile(cachedTokenFilePath, token);

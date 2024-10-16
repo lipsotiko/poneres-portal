@@ -1,23 +1,32 @@
 <template>
   <div v-if="ssdId == null">
     <IBadge>Draft</IBadge>
-    <IButton size="sm" color="primary" @click="send(id)" :loading="loading">
-      Send for signing
-    </IButton>
+    <IButton size="sm" color="primary" @click="send(id)" :loading="loading"> Send for signing </IButton>
   </div>
   <span v-else>
     <IBadge v-if="loading" color="warning">Loading...</IBadge>
     <IBadge v-else>
       {{ status }}
     </IBadge>
-    <IButton v-if="status === 'Completed'" size="sm" color="secondary" @click="handleGetCompletedFile()"
-      :loading="getFileLoading">
-      Download</IButton>
-    <IButton v-else-if="status === 'Sent'" size="sm" color="secondary" @click="handleSendReminder()"
-      :loading="reminderLoading">
-      Send Reminder</IButton>
-    <IButton v-else size="sm" @click="refreshStatus()" :loading="loading">
-      Refresh</IButton>
+    <IButton
+      v-if="status === 'Completed'"
+      size="sm"
+      color="secondary"
+      @click="handleGetCompletedFile()"
+      :loading="getFileLoading"
+    >
+      Download</IButton
+    >
+    <IButton
+      v-else-if="status === 'Sent'"
+      size="sm"
+      color="secondary"
+      @click="handleSendReminder()"
+      :loading="reminderLoading"
+    >
+      Send Reminder</IButton
+    >
+    <IButton v-else size="sm" @click="refreshStatus()" :loading="loading"> Refresh</IButton>
   </span>
 </template>
 <script setup>
@@ -64,13 +73,13 @@ const handleSendReminder = async () => {
   await sendReminder(id);
   onReminderSent();
   reminderLoading.value = false;
-}
+};
 
 const refreshStatus = async () => {
   loading.value = true;
   status.value = await getSignatureStatus(id);
   loading.value = false;
-}
+};
 </script>
 <style scoped>
 .badge {

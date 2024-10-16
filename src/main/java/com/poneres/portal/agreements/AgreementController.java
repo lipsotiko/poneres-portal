@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -49,8 +50,10 @@ public class AgreementController {
     }
 
     @PostMapping(value = "/preview", produces = MediaType.APPLICATION_PDF_VALUE)
-    public byte[] preview(@RequestParam PdfType type, @RequestBody Map<String, Object> metadata) {
-        return processorFactory.get(type).process(metadata, null, null);
+    public byte[] preview(@RequestParam PdfType type,
+                          @RequestParam Boolean fieldsPreview,
+                          @RequestBody Map<String, Object> metadata) {
+        return processorFactory.get(type).process(metadata, fieldsPreview, null, null);
     }
 
     @PostMapping
@@ -79,6 +82,9 @@ public class AgreementController {
     public String status(@PathVariable("id") String agreementId) {
         return agreementRepository.findById(agreementId).map(agreement -> {
             String ssdId = agreement.getSsdId();
+            if (ssdId == null) {
+                return "None";
+            }
             return signatureService.status(ssdId);
         }).orElse(null);
     }
@@ -100,9 +106,10 @@ public class AgreementController {
         PdfType type = agreement.getType();
         Map<String, Object> metadata = agreement.getMetadata();
         String fileName = agreement.getFileName();
+        List<SignatureRecipient> recipients = agreement.getRecipients();
 
-        byte[] fileBytes = processorFactory.get(type).process(metadata, null, null);
+        byte[] fileBytes = processorFactory.get(type).process(metadata, false, null, null);
         String fileBase64 = bytesToBase64(fileBytes);
-        return signatureService.create(fileName, false, true, fileBase64);
+        return signatureService.create(fileName, false, true, fileBase64, recipients);
     }
 }

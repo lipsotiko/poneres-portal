@@ -20,9 +20,7 @@
             <IColumn>
               <div class="have-an-account">
                 <p class="lead">Log in to view your dashboard!</p>
-                <IButton block color="primary" :href="loginPage"
-                  >Log in</IButton
-                >
+                <IButton block color="primary" :href="loginPage">Log in</IButton>
               </div>
             </IColumn>
           </IRow>
@@ -32,13 +30,7 @@
             <IColumn xs="12">
               <IFormGroup required>
                 <IFormLabel for="email">Email address</IFormLabel>
-                <IInput
-                  v-model="email"
-                  id="email"
-                  name="email"
-                  autocomplete
-                  :error="errorTypes"
-                >
+                <IInput v-model="email" id="email" name="email" autocomplete :error="errorTypes">
                   <template #append>
                     <i class="fa-regular fa-envelope"></i>
                   </template>
@@ -51,26 +43,14 @@
             <IColumn xs="6">
               <IFormGroup required>
                 <IFormLabel for="firstName">First name</IFormLabel>
-                <IInput
-                  v-model="firstName"
-                  id="firstName"
-                  name="firstName"
-                  autocomplete
-                  :error="errorTypes"
-                />
+                <IInput v-model="firstName" id="firstName" name="firstName" autocomplete :error="errorTypes" />
                 <IFormError for="firstName" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
             <IColumn xs="6">
               <IFormGroup required>
                 <IFormLabel for="lastName">Last name</IFormLabel>
-                <IInput
-                  v-model="lastName"
-                  id="lastName"
-                  name="lastName"
-                  autocomplete
-                  :error="errorTypes"
-                />
+                <IInput v-model="lastName" id="lastName" name="lastName" autocomplete :error="errorTypes" />
                 <IFormError for="lastName" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
@@ -126,8 +106,7 @@
 <script setup>
 import { useForm } from "@inkline/inkline/composables";
 
-const loginPage =
-  "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net/oauth2/authorization/okta";
+const loginPage = "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net/oauth2/authorization/okta";
 
 definePageMeta({
   layout: "public",
@@ -163,12 +142,9 @@ const { schema } = useForm({
       },
       {
         name: "custom",
-        message:
-          "Password must contain at least one lower case, one upper case, and one special character.",
+        message: "Password must contain at least one lower case, one upper case, and one special character.",
         validator: (password) => {
-          var isValidPassword = new RegExp(
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})",
-          );
+          var isValidPassword = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
           return isValidPassword.test(password);
         },
       },

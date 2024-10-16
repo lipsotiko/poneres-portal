@@ -1,12 +1,5 @@
 <template>
-  <IButton
-    color="primary"
-    size="sm"
-    @click="download(id)"
-    :loading="downloading"
-  >
-    Download
-  </IButton>
+  <IButton color="primary" size="sm" @click="download(id)" :loading="downloading"> Download </IButton>
 </template>
 <script>
 import FileSaver from "file-saver";

@@ -8,12 +8,7 @@
             <IColumn xs="12">
               <IFormGroup required>
                 <IFormLabel for="firstName">First name</IFormLabel>
-                <IInput
-                  id="firstName"
-                  name="firstName"
-                  autocomplete
-                  :error="errorTypes"
-                />
+                <IInput id="firstName" name="firstName" autocomplete :error="errorTypes" />
                 <IFormError for="firstName" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
@@ -22,12 +17,7 @@
             <IColumn xs="12">
               <IFormGroup required>
                 <IFormLabel for="lastName">Last name</IFormLabel>
-                <IInput
-                  id="lastName"
-                  name="lastName"
-                  autocomplete
-                  :error="errorTypes"
-                />
+                <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
                 <IFormError for="lastName" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
@@ -36,19 +26,9 @@
             <IColumn xs="12">
               <IFormGroup required>
                 <IFormLabel for="email">Email</IFormLabel>
-                <IInput
-                  id="email"
-                  name="email"
-                  autocomplete
-                  :error="errorTypes"
-                >
-                  <template
-                    #suffix
-                    v-if="!pendingUserInfo && !userInfo.verified"
-                  >
-                    <IButton link size="sm" color="info" @click="verifyEmail"
-                      >verify</IButton
-                    >
+                <IInput id="email" name="email" autocomplete :error="errorTypes">
+                  <template #suffix v-if="!pendingUserInfo && !userInfo.verified">
+                    <IButton link size="sm" color="info" @click="verifyEmail">verify</IButton>
                   </template>
                 </IInput>
                 <IFormError for="email" :visible="errorTypes" />
@@ -56,23 +36,12 @@
             </IColumn>
           </IRow>
           <div class="save-profile">
-            <IButton
-              block
-              color="primary"
-              :loading="loading"
-              @click="saveProfile"
-              :disabled="schema.invalid"
-            >
+            <IButton block color="primary" :loading="loading" @click="saveProfile" :disabled="schema.invalid">
               Save changes</IButton
             >
           </div>
         </IForm>
-        <IToast
-          v-if="verifyEmailBanner"
-          v-model="verifyEmailBanner"
-          color="info"
-          dismissible
-        >
+        <IToast v-if="verifyEmailBanner" v-model="verifyEmailBanner" color="info" dismissible>
           <p>Please check your email for a verification link.</p>
         </IToast>
       </ClientOnly>
@@ -82,13 +51,10 @@
 <script setup>
 import { useForm } from "@inkline/inkline/composables";
 
-const { pending: pendingUserInfo, data: userInfo } = useFetch(
-  "/api/user/info",
-  {
-    lazy: true,
-    server: false,
-  },
-);
+const { pending: pendingUserInfo, data: userInfo } = useFetch("/api/user/info", {
+  lazy: true,
+  server: false,
+});
 
 const errorTypes = ["touched", "invalid"];
 const loading = ref(false);

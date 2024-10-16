@@ -22,11 +22,7 @@
       style="height: 888px"
       class="ag-theme-quartz"
     />
-    <IPagination
-      v-model="page"
-      :items-total="data?.totalElements"
-      :items-per-page="data?.size"
-    />
+    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
   </IContainer>
 </template>
 <script setup>
@@ -66,9 +62,7 @@ const gridOptions = {
     }
   },
   onSelectionChanged: (e) => {
-    selectedUserIds.value = e.api
-      .getSelectedNodes()
-      .map(({ data: { id } }) => id);
+    selectedUserIds.value = e.api.getSelectedNodes().map(({ data: { id } }) => id);
   },
 };
 

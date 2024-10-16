@@ -72,8 +72,7 @@ export default defineConfig({
         fontFamily: {
           primary: {
             base: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif",
-            monospace:
-              "'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+            monospace: "'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
             print: "'Georgia', 'Times New Roman', 'Times', serif",
           },
           secondary: {
@@ -145,24 +144,19 @@ export default defineConfig({
           },
         },
         d1: {
-          fontSize:
-            "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-5))",
+          fontSize: "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-5))",
         },
         d2: {
-          fontSize:
-            "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-4))",
+          fontSize: "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-4))",
         },
         d3: {
-          fontSize:
-            "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-3))",
+          fontSize: "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-3))",
         },
         d4: {
-          fontSize:
-            "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-2))",
+          fontSize: "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-2))",
         },
         d5: {
-          fontSize:
-            "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-1))",
+          fontSize: "calc(var(--font-size) * var(--scale-ratio-pow-5) * var(--scale-ratio-pow-1))",
         },
         d6: {
           fontSize: "calc(var(--font-size) * var(--scale-ratio-pow-5))",

@@ -1,5 +1,5 @@
 const previewAgreement = async (type, data) => {
-  return $fetch(`/api/agreements/preview?type=${type}`, {
+  return $fetch(`/api/agreements/preview?type=${type}&fieldsPreview=true`, {
     headers: {
       Accept: "application/pdf",
     },
@@ -41,7 +41,7 @@ const getFileUrl = async (id) => {
 
 const sendReminder = async (id) => {
   return $fetch(`/api/agreements/${id}/send-reminder`, {
-    method: 'POST'
+    method: "POST",
   });
 };
 
@@ -53,5 +53,5 @@ export {
   sendForSigning,
   getSignatureStatus,
   getFileUrl,
-  sendReminder
+  sendReminder,
 };

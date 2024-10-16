@@ -2,11 +2,7 @@
   <IContainer>
     <PageTitle title="New Agreement" backTo="/agreements" />
     <div>
-      <ISelect
-        v-model="selectedAgreementPath"
-        :options="agreementTypes"
-        @update:modelValue="handleSelection()"
-      />
+      <ISelect v-model="selectedAgreementPath" :options="agreementTypes" @update:modelValue="handleSelection()" />
     </div>
   </IContainer>
 </template>

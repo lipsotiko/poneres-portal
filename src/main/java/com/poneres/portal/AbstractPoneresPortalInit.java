@@ -1,20 +1,20 @@
-package com.poneres.portal.user;
+package com.poneres.portal;
 
-import jakarta.annotation.PostConstruct;
+import com.poneres.portal.user.UserProfile;
+import com.poneres.portal.user.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
-import static com.poneres.portal.user.Role.*;
+import static com.poneres.portal.user.Role.ADMIN;
+import static com.poneres.portal.user.Role.PROPERTY_MANAGER;
 
-@Component
-public class UserProfileInit {
-
+@Service
+public class AbstractPoneresPortalInit {
     @Autowired
     private UserProfileRepository userProfileRepository;
 
-    @PostConstruct
     public void init() {
         userProfileRepository.deleteById("1");
         UserProfile evangelos = UserProfile.builder()

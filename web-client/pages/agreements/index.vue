@@ -1,5 +1,5 @@
 <template>
-  <IToast v-if="modalOpen" v-model="modalOpen" color="success" duration=2500 dismissible>
+  <IToast v-if="modalOpen" v-model="modalOpen" color="success" :duration="2500" dismissible>
     <p>{{ modalMessage }}</p>
   </IToast>
   <IContainer>
@@ -18,11 +18,7 @@
       style="height: 888px"
       class="ag-theme-quartz"
     />
-    <IPagination
-      v-model="page"
-      :items-total="data?.totalElements"
-      :items-per-page="data?.size"
-    />
+    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
   </IContainer>
 </template>
 <script setup>
@@ -55,14 +51,14 @@ const colDefs = ref([
     headerName: "Signature",
     context: {
       onSend: () => {
-        modalMessage.value = 'Document sent for signing!';
+        modalMessage.value = "Document sent for signing!";
         modalOpen.value = true;
-        refresh()
+        refresh();
       },
       onReminderSent: () => {
-        modalMessage.value = 'Reminder sent!';
+        modalMessage.value = "Reminder sent!";
         modalOpen.value = true;
-      }
+      },
     },
     cellRenderer: "SignatureStatus",
     headerName: "Status / Action",

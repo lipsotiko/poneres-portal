@@ -101,45 +101,26 @@ abstract class AbstractProcessor implements PdfProcessor {
         return list;
     }
 
-    protected void applySignatures(PDDocument doc, List<SignatureConfig> configs) {
-        if (!configs.isEmpty()) {
-            signatureApplicator.apply(doc, configs);
-        }
-    }
-
-    protected String getPatientFullName(Map<String, Object> metadata) {
-        String patientFirstName = (String) metadata.get("patient_first_name");
-        String patientMiddleInitial = (String) metadata.get("patient_middle_initial");
-        String patientLastName = (String) metadata.get("patient_last_name");
-
-        return (patientMiddleInitial != null)
-                ? String.format("%s %s. %s", patientFirstName, patientMiddleInitial, patientLastName)
-                : String.format("%s %s", patientFirstName, patientLastName);
-    }
-
-    protected void assignSignatureDate(PDDocument document) throws IOException {
-        for (String pdfFieldName : reverseMap().getOrDefault("signature_date", Collections.emptyList())) {
-            setField(document, pdfFieldName, LocalDate.now().format(formatter));
-        }
-    }
-
-    public byte[] process(Map<String, Object> metadata, String patientSignatureId, String prescriberSignatureId) {
+    public byte[] process(Map<String, Object> metadata, Boolean fieldsPreview, String patientSignatureId, String prescriberSignatureId) {
         try (PDDocument doc = loadPdfDoc()) {
             removePages(doc, pagesToRemove());
-            assignValues(doc, metadata);
-            assignSignatureDate(doc);
+            preProcess(metadata);
+            assignValues(doc, metadata, fieldsPreview);
             return additionalProcessing(doc, metadata, patientSignatureId, prescriberSignatureId);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public void preProcess(Map<String, Object> metadata) {
+
+    }
+
     public byte[] additionalProcessing(PDDocument doc, Map<String, Object> metadata, String patientSignature, String prescriberSignature) {
-        applySignatures(doc, signatureConfigs(patientSignature, prescriberSignature));
         return docToBytes(doc);
     }
 
-    protected void assignValues(PDDocument doc, Map<String, Object> metadata) throws IOException {
+    protected void assignValues(PDDocument doc, Map<String, Object> metadata, Boolean fieldsPreview) throws IOException {
         String metadataKey = null;
         try {
             for (Map.Entry<String, Object> entry : metadata.entrySet()) {
@@ -148,11 +129,6 @@ abstract class AbstractProcessor implements PdfProcessor {
                 metadataKey = entry.getKey();
 
                 if (pdfFieldNames == null && entry.getValue() instanceof ArrayList<?>) {
-                    continue;
-                }
-
-                if (isDerivedField(metadataKey)) {
-                    setDerivedField(doc, metadata, metadataKey);
                     continue;
                 }
 
@@ -194,14 +170,26 @@ abstract class AbstractProcessor implements PdfProcessor {
         } catch (Exception ex) {
             log.error("Error: Metadata key {} could not be assigned", metadataKey);
         }
-    }
 
-    public void setDerivedField(PDDocument doc, Map<String, Object> metadata, String key) {
+        if (!fieldsPreview) {
+            return;
+        }
 
-    }
+        for (PDField field : doc.getDocumentCatalog().getAcroForm().getFields()) {
+            if (pdfFieldsMap().containsKey(field.getPartialName()) && metadata.containsKey(field.getPartialName())) {
+                continue;
+            }
+            System.out.println(field.getPartialName());
+            if (field instanceof PDTextField) {
+                setField(doc, field.getPartialName(), field.getPartialName());
+            } else if (field instanceof PDCheckBox) {
+                configureCheckbox(doc, (PDCheckBox) field);
+                setField(doc, field.getPartialName(), "X");
+            } else {
+                processField(field, "|--", field.getPartialName());
+            }
+        }
 
-    private boolean isDerivedField(String key) {
-        return derivedFields().contains(key);
     }
 
     protected boolean isDateField(String field) {
@@ -214,32 +202,6 @@ abstract class AbstractProcessor implements PdfProcessor {
 
     private boolean isSingleCheckBoxField(String field) {
         return pdfFieldsMap().get(field).getType().equals(FieldType.SINGLE_CHECKBOX);
-    }
-
-    public byte[] previewWithFieldsPopulated(Boolean skipAddedFields) {
-        try (PDDocument doc = Loader.loadPDF(new ClassPathResource(applicationType().getFormPath()).getFile())) {
-            for (PDField field : doc.getDocumentCatalog().getAcroForm().getFields()) {
-                if (skipAddedFields && pdfFieldsMap().containsKey(field.getPartialName())) {
-                    continue;
-                }
-                System.out.println(field.getPartialName());
-                if (field instanceof PDTextField) {
-                    setField(doc, field.getPartialName(), field.getPartialName());
-                } else if (field instanceof PDCheckBox) {
-                    configureCheckbox(doc, (PDCheckBox) field);
-                    setField(doc, field.getPartialName(), "X");
-                } else {
-                    processField(field, "|--", field.getPartialName());
-                }
-            }
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            doc.save(byteArrayOutputStream);
-            doc.close();
-            return byteArrayOutputStream.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     protected void setField(PDDocument document, String name, String value) throws IOException {
