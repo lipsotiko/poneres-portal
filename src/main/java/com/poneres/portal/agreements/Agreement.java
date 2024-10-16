@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -21,6 +22,7 @@ public class Agreement {
     private PdfType type;
     private Map<String, Object> metadata;
     private String ssdId; // Signature Service Document ID
+    private List<SignatureRecipient> recipients;
     private LocalDateTime createdAt;
 
     public Object getClient() {

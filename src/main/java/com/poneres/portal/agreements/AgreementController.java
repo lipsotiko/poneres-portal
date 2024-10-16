@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -100,9 +102,10 @@ public class AgreementController {
         PdfType type = agreement.getType();
         Map<String, Object> metadata = agreement.getMetadata();
         String fileName = agreement.getFileName();
+        List<SignatureRecipient> recipients = agreement.getRecipients();
 
         byte[] fileBytes = processorFactory.get(type).process(metadata, null, null);
         String fileBase64 = bytesToBase64(fileBytes);
-        return signatureService.create(fileName, false, true, fileBase64);
+        return signatureService.create(fileName, false, true, fileBase64, recipients);
     }
 }

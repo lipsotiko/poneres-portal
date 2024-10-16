@@ -41,7 +41,7 @@ const getFileUrl = async (id) => {
 
 const sendReminder = async (id) => {
   return $fetch(`/api/agreements/${id}/send-reminder`, {
-    method: 'POST'
+    method: "POST",
   });
 };
 
@@ -53,5 +53,5 @@ export {
   sendForSigning,
   getSignatureStatus,
   getFileUrl,
-  sendReminder
+  sendReminder,
 };
