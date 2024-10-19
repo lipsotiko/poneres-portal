@@ -21,12 +21,16 @@ public class Agreement {
     private String id;
     private PdfType type;
     private Map<String, Object> metadata;
-    private String ssdId; // Signature Service Document ID
+    private String ssdId;
     private List<SignatureRecipient> recipients;
     private LocalDateTime createdAt;
 
-    public Object getClient() {
+    private Object getClient() {
         if (type.equals(PdfType.LEASE_AGREEMENT_MD_V1)) {
+            return metadata.get("tenant");
+        }
+
+        if (type.equals(PdfType.LEAD_PAINT_ADDENDUM_MD_V1)) {
             return metadata.get("tenant");
         }
 
@@ -34,20 +38,7 @@ public class Agreement {
     }
 
     public String getFileName() {
-        if (type.equals(PdfType.LEASE_AGREEMENT_MD_V1)) {
-            return type.getDisplayName() + " - " + getClient() + ".pdf";
-        }
-
-        return "no-name.pdf";
-    }
-
-    @JsonProperty
-    public String getAgreementType() {
-        if (type == null) {
-            return "-";
-        }
-
-        return type.getDisplayName();
+        return createdAt.getYear() + "_" + type.getDisplayName() + "_" + getClient() + ".pdf";
     }
 
     @JsonProperty

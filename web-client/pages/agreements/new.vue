@@ -14,6 +14,10 @@ const agreementTypes = [
     id: "/agreements/lease_agreement_md/New",
     label: "Residential Dwelling Lease (Maryland)",
   },
+  {
+    id: "/agreements/lead_paint_disclosure_md/New",
+    label: "Lead Paint Disclosure (Maryland)",
+  },
 ];
 const selectedAgreementPath = ref();
 

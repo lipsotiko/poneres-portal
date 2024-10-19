@@ -32,15 +32,9 @@ const page = ref(1);
 const sort = ref("createdAt,asc");
 const colDefs = ref([
   {
-    field: "client",
-    context: "/agreements/lease_agreement_md",
-    cellRenderer: "LinkField",
-    width: 500,
-  },
-  {
-    field: "agreementType",
-    headerName: "Type",
-    width: 300,
+    field: "fileName",
+    cellRenderer: "AgreementLinkField",
+    width: 800,
   },
   {
     field: "createdAt",
@@ -102,12 +96,13 @@ const { pending, data, refresh } = await useAsyncData(
 }
 </style>
 <script>
-import { LinkField, SignatureStatus } from "#components";
+import { LinkField, SignatureStatus, AgreementLinkField } from "#components";
 
 export default {
   components: {
     LinkField,
     SignatureStatus,
+    AgreementLinkField,
   },
 };
 </script>

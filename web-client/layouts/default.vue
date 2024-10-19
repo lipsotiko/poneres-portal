@@ -1,6 +1,9 @@
 <template>
   <div>
     <ILayout>
+      <IToast v-if="errorMessage" color="warning" position="bottom" dismissible>
+        <p>{{ errorMessage }}</p>
+      </IToast>
       <ILayoutHeader>
         <IDropdown class="_display:flex _justify-content:flex-end">
           <IButton circle size="md" class="profile">
@@ -38,10 +41,14 @@
   </div>
 </template>
 <script setup>
+import { provide } from 'vue'
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 const { isAdmin } = useAuth();
+const errorMessage = ref();
+provide('errorMessage', errorMessage);
+
 </script>
-<style>
+<style scoped>
 .profile {
   margin: 10px 12px;
 }

@@ -55,46 +55,53 @@
     }
 
     input[name="landlord"],
+    input[name="landlord2"],
+    input[name="landlord3"],
     input[name="tenant"],
+    input[name="tenant2"],
+    input[name="tenant3"],
     input[name="leasedAddress"],
+    input[name="leasedAddress2"],
+    input[name="leasedAddress3"],
     input[name="occupyingPersons"],
     input[name="noticeName"],
     input[name="noticeAddress"],
     input[name="noticePhone"],
     input[name="additionalInclusions"],
-    input[name="additionalExclusions"] {
+    input[name="additionalExclusions"],
+    input[name="oilPropane"] {
       width: 100%;
     }
 
-    input[name="monthToMonthTerminationDaysDuringLeaseTerm"],
-    input[name="monthToMonthTerminationDaysAfterLeaseTerm"] {
-      width: 22px;
-    }
-
+    input[name="monthToMonthTerminationDaysPriorToEndOfLeaseTerm"],
+    input[name="monthToMonthTerminationDaysPriorToFinalRentalMonth"],
+    input[name="yearToYearNotice"],
+    input[name="dueWithinDaysNumber"],
     input[name="petsAllowedNumber"],
     input[name="serviceAnimalsAllowedNumber"] {
-      width: 26px;
+      width: 38px;
     }
 
     input[name="termLength"] {
-      width: 56px;
+      width: 156px;
     }
 
     input[name="startDay"],
     input[name="endDay"] {
-      width: 42px;
+      width: 52px;
     }
 
     input[name="startMonthYear"],
     input[name="endMonthYear"] {
-      width: 182px;
+      width: 168px;
     }
 
     input[name="monthlyRent"] {
       width: 472px;
     }
 
-    input[name="monthlyRentNumber"] {
+    input[name="monthlyRentNumber"],
+    input[name="securityDepositNumber"] {
       width: 100px;
     }
 
@@ -173,16 +180,15 @@
       <p>
         <b>INITIAL LEASE TERM:</b>
         Landlord leases to Tenant and Tenant leases from Landlord the Property for the term of <input name="termLength"
-          type="text" /> year(s) or month(s) commencing on the <input name="startDay" type="text" /> day of <input
-          name="startMonthYear" type="text" /> (mo./yr.) and ending on the <input name="endDay" type="text" /> day of
-        <input name="endMonthYear" type="text" />(mo./yr.) (the “Initial Term”), at a total rental of <input
-          name="totalRent" type="text" /> Dollars ($<input name="totalRentNumber" type="text" />) for said Term, due and
-        payable in equal monthly installments of <input name="monthlyRent" type="text" /> Dollars ($<input
-          name="monthlyRentNumber" type="text" />), in advance, on the first day of each and every month ("Rent Due
-        Date") of said Term, plus if applicable the sum of <input name="proRatedRent" type="text" /> Dollars ($<input
-          name="proRatedRentNumber" type="text" />) on <input name="proRatedPaymentDate" type="text" /> as “pro rata”
-        rent for the period <input name="proRatedLeaseStartDate" type="text" /> through <input
-          name="proRatedLeaseEndDate" type="text" />.
+          type="text" /> commencing on the <input name="startDay" type="text" /> day of <input name="startMonthYear"
+          type="text" /> (mo./yr.) and ending on the <input name="endDay" type="text" /> day of <input
+          name="endMonthYear" type="text" />(mo./yr.) (the “Initial Term”), at a total rental of <input name="totalRent"
+          type="text" /> Dollars ($<input name="totalRentNumber" type="text" />) for said Term, due and payable in equal
+        monthly installments of <input name="monthlyRent" type="text" /> Dollars ($<input name="monthlyRentNumber"
+          type="text" />), in advance, on the first day of each and every month ("Rent Due Date") of said Term, plus if
+        applicable the sum of <input name="proRatedRent" type="text" /> Dollars ($<input name="proRatedRentNumber"
+          type="text" />) on <input name="proRatedPaymentDate" type="text" /> as “pro rata” rent for the period <input
+          name="proRatedLeaseStartDate" type="text" /> through <input name="proRatedLeaseEndDate" type="text" />.
       </p>
       <p>
         If this Lease commences on a day other than the first day of the month, the amount of Rent to be paid for the
@@ -203,14 +209,14 @@
       <p>
         <b>PERSONS WHO WILL OCCUPY THE PROPERTY:</b>
         Tenant covenants and agrees that the Property shall be occupied only by the following person(s), and by no other
-        persons: <br /><input name="occupyingPersons" /><br /> Tenant represents and warrants to Landlord that
-        neither Tenant nor any person(s) identified in this Paragraph has been convicted of a felony crime in any
+        persons: <br /><input name="occupyingPersons" type="text" /><br /> Tenant represents and warrants to Landlord
+        that neither Tenant nor any person(s) identified in this Paragraph has been convicted of a felony crime in any
         federal or state court except as otherwise disclosed by Tenant to Landlord on the application for tenancy form,
         as signed by Tenant.
       </p>
     </li>
-    <li>
-      <p class="new-page">
+    <li class="new-page">
+      <p>
         <b>RENEWAL OF LEASE TERMS (Landlord and Tenant to initial one selection):</b>
       </p>
       <ol style="list-style-type: upper-alpha">
@@ -225,13 +231,13 @@
             <b>MONTH-TO-MONTH:</b>
             This Lease shall continue in force from month to month after the expiration of the Initial Term. However,
             either party may terminate this Lease at the end of the Initial Term by giving written notice to the other
-            party <input name="monthToMonthTerminationDaysAfterLeaseTerm" type="text" /> days prior to the end of the
-            Initial Term. Either party may terminate the month-to-month lease at the end of any rental month, provided
-            that written notice of not less than thirty (30) days is given to the other party <input
-              name="monthToMonthTerminationDaysDuringLeaseTerm" type="text" /> days prior to the last day of the desired
-            final rental month of the tenancy.<br /> <b>NOTICE: notice requirements vary depending on the jurisdiction.
-              The State requires that Landlord give 90 days' notice to Tenant of termination of a lease with a term of a
-              year or longer</b>
+            party <input name="monthToMonthTerminationDaysPriorToEndOfLeaseTerm" type="text" /> days prior to the end of
+            the Initial Term. Either party may terminate the month-to-month lease at the end of any rental month,
+            provided that written notice of not less than thirty (30) days is given to the other party <input
+              name="monthToMonthTerminationDaysPriorToFinalRentalMonth" type="text" /> days prior to the last day of the
+            desired final rental month of the tenancy.<br /> <b>NOTICE: notice requirements vary depending on the
+              jurisdiction. The State requires that Landlord give 90 days' notice to Tenant of termination of a lease
+              with a term of a year or longer</b>
           </p>
         </li>
         <li>
@@ -239,14 +245,12 @@
             <b>YEAR-TO-YEAR:</b>
             This Lease shall continue in force from year to year after the expiration of the Initial
             Term. Either party may terminate this Lease at the end of the Initial Term, or any renewal term, provided
-            that written notice of not less than ninety (90) days is given to the other party
-            <input name="yearToYearNotice" />
-            days prior to
-            the last day of the desired final rental month of the tenancy.
+            that written notice of not less than ninety (90) days is given to the other party <input
+              name="yearToYearNotice" type="text" /> days prior to the last day of the desired final rental month of the
+            tenancy.
             <br />
-            <b>NOTICE: any written notice given pursuant to renewal term
-              becomes effective upon the first day of the month following
-              delivery of the notice.
+            <b>NOTICE: any written notice given pursuant to renewal term becomes effective upon the first day of the
+              month following delivery of the notice.
             </b>
           </p>
         </li>
@@ -259,7 +263,7 @@
         more than <input name="dueWithinDays" type="text" />(<input name="dueWithinDaysNumber" type="text" />) days
         after the date when due, Tenant shall pay, as additional rent, a sum equal to 5% of the amount of delinquent
         rent due. If a check is accepted by Landlord from Tenant for rent, it is purely as an accommodation to Tenant.
-        If the check is dishonored, Tenant agrees to pay a $<input name="lastFeeNumber" type="text" /> charge to
+        If the check is dishonored, Tenant agrees to pay a $<input name="lateFeeNumber" type="text" /> charge to
         Landlord as additional rent. The amount of late fees and bad check fees shall be added to and deemed part of the
         rent due and shall be payable by Tenant to Landlord on demand. Landlord shall have the same remedies for the
         collection of such charges and fees as Landlord has for the non-payment of rent. Tenant is hereby notified that
@@ -308,7 +312,7 @@
         of possession.
       </p>
     </li>
-    <li>
+    <li class="new-page">
       <p>
         <b>DELIVERY OF NOTICES:</b>
         All notices required to be given by Landlord to Tenant shall be sufficiently given by leaving the
@@ -420,7 +424,7 @@
         Security Deposit is deemed to be held by Landlord as a deposit made by the assignee or sublessee and Landlord
         will have no further liability with respect to return of such Security Deposit to the assignor.
       </p>
-      <p>
+      <p class="new-page">
         The failure of Landlord to comply with the Security Deposit Law may result in Landlord being liable to Tenant
         for a penalty of up to three (3) times the Security Deposit withheld, plus reasonable attorney's fees. Landlord,
         by Maryland law, shall retain a copy of this receipt for a period of two (2) years following the termination of
@@ -457,8 +461,8 @@
             <label>Yes</label><input type="checkbox" name="petsAllowedYes" />
             <label>No</label><input type="checkbox" name="petsAllowedNo" />
             <label># ALLOWED</label><input type="text" name="petsAllowedNumber" />
-            <label>TYPE OF PET(S)</label><input type="text" name="petsAllowedType" /> <label>WEIGHT</label><input
-              type="text" name="petsAllowedWeight" />
+            <label>TYPE OF PET(S)</label><input type="text" name="petsAllowedType" style="width: 222px"; />
+            <label>WEIGHT</label><input type="text" name="petsAllowedWeight" style="width: 52px"; />
           </p>
           <p>
             Pet Deposit: $<input name="petDeposit" type="text" /> has been added to the security deposit in
@@ -486,7 +490,7 @@
             <label>Yes</label><input type="checkbox" name="serviceAnimalsAllowedYes" />
             <label>No</label><input type="checkbox" name="serviceAnimalsAllowedNo" />
             <label># ALLOWED</label><input type="text" name="serviceAnimalsAllowedNumber" />
-            <label>TYPE OF SERVICE ANIMAL(S)</label><input type="text" name="serviceAnimalsAllowedType" />
+            <label>TYPE OF SERVICE ANIMAL(S)</label><input type="text" name="serviceAnimalsAllowedType" style="width: 222px" />
           </p>
         </li>
       </ol>
@@ -667,7 +671,7 @@
         </tr>
       </table>
     </li>
-    <li>
+    <li class="new-page">
       <p>
         <b>TENANT’S OBLIGATIONS REGARDING USE AND OCCUPANCY:</b>
         Tenant agrees to use the Property in a careful manner and not to use or permit the use of any portion of the
@@ -784,20 +788,6 @@
 
         <tr>
           <td>
-            e. Heating Fuel
-          </td>
-          <td>
-            <input type="checkbox" name="furnishedByLandlord_5" />
-            <label>Landlord</label>
-          </td>
-          <td>
-            <input type="checkbox" name="furnishedByTenant_5" />
-            <label>Tenant</label>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
             f. Heating of Water
           </td>
           <td>
@@ -825,8 +815,8 @@
       </table>
       <p>
         In the event the Property uses oil/propane for heat, the arrangement is as follows:
-        <input name="utilitiesAgreement" />
       </p>
+      <input name="oilPropane" type="text" />
       <p>
         Costs for utilities which are to be furnished at the expense of Tenant, as listed above, shall be considered
         additional rent and Tenant agrees to pay such costs when due. If Tenant fails to pay any utility costs within
@@ -857,7 +847,7 @@
         continue in full force and effect for the full rent without abatement.
       </p>
     </li>
-    <li>
+    <li class="new-page">
       <p>
         <b>MAINTENANCE AND REPAIRS:</b>
         Landlord shall maintain, and/or repair/replace (if necessary in Landlord's sole discretion) the plumbing,
@@ -957,7 +947,7 @@
             in designated pickup locations no earlier than the evening before scheduled pickup.
           </p>
         </li>
-        <li>
+        <li class="new-page">
           <p>
             <b>WATERBEDS:</b>
             Tenant acknowledges that waterbeds are <u>not</u> permitted on or about the Property.
@@ -1060,7 +1050,7 @@
             as to the presence of lead-based paint and/or lead-based paint hazards.
           </p>
         </li>
-        <li>
+        <li class="new-page">
           <p>
             <b>ACKNOWLEDGMENT:</b>
             Tenant understands that the Property may be subject to the Federal Program and the Maryland Program as to
@@ -1161,7 +1151,7 @@
         <b>NOTICE: Some jurisdictions require acknowledgment of this notice.</b>
       </p>
     </li>
-    <li>
+    <li class="new-page">
       <p>
         <b>TENANT’S LIABILITY AND RESPONSIBILITY TO OBTAIN INSURANCE:</b>
         Tenant agrees that with respect to those portions of the Property within the exclusive control of Tenant,
@@ -1260,7 +1250,7 @@
         obligation to show or lease the Property in preference to any other rental property(ies) owned by Landlord.
       </p>
     </li>
-    <li>
+    <li class="new-page">
       <p>
         <b>TENANT AND LANDLORD MAY MEDIATE DISPUTES:</b>
         In the event a dispute between Landlord and Tenant arises out of or from this Lease, Landlord and Tenant
@@ -1350,7 +1340,7 @@
         Time is of the essence of this Lease.
       </p>
     </li>
-    <li>
+    <li class="new-page">
       <p>
         <b>ADDITIONAL PROVISIONS:</b><br />
         <textarea name="additionalProvisions"></textarea>
@@ -1373,6 +1363,167 @@
     LANDLORD AND TENANT BY THEIR SIGNATURES BELOW, HEREBY ACCEPT AND AGREE TO BE BOUND BY ALL THE TERMS AND CONDITIONS
     CONTAINED IN THIS LEASE.
   </p>
+  <h3 class="new-page" style="text-align: center;">
+    MDE LEAD POISONING PREVENTION PROGRAM<br>
+    SUMMARY OF OWNER RIGHTS AND RESPONSIBILITIES
+  </h3>
+  <h4>
+    PURPOSE
+  </h4>
+  <ul>
+    <li>To reduce childhood lead poisoning</li>
+    <li>To provide liability relief to rental property owners meeting basic risk reduction standards</li>
+  </ul>
+  <ol type="I">
+    <li>
+      <p>SCOPE</p>
+      <p>Portions of the law apply to every residential rental dwelling unit built prior to 1979 Exemptions are allowed
+        for:</p>
+      <ol style="list-style-type: upper-alpha">
+        <li>Government owned or operated housing subject to a stricter standard</li>
+        <li>Hotel, motel, or seasonal rentals</li>
+        <li>Certified lead free by MD accredited inspector</li>
+      </ol>
+    </li>
+    <li>
+      <p>FEES</p>
+      <p>For properties built in 1950 and up to and including 1978:</p>
+      <ol style="list-style-type: upper-alpha">
+        <li>If opting into the programs, $10 per unit per year</li>
+        <li>If opting out of the program, $5 per unit per year</li>
+        <li>For properties built before 1950, $10 per unit per year</li>
+      </ol>
+    </li>
+    <li>
+      <p>REGISTRATION</p>
+      <ul>
+        <li>Required to properties built before 1950</li>
+        <li>Register on MDE form with Unique Owner ID #</li>
+        <li>Registration updated annually</li>
+        <li>Changes in ownership and property management must be reported within 30 days</li>
+      </ul>
+    </li>
+    <li>
+      <p>TURNOVER UNITS: RISK REDUCTION TREATMENT</p>
+      <p>At turnover (changes of occupancy) of a unit, the Owner must meet Full Risk Reduction Standard by either:</p>
+      <ol style="list-style-type: upper-alpha">
+        <li>Passing a lead dust test; or</li>
+        <li>Performing the following Lead Hazard Reduction Treatments:</li>
+        <ul>
+          <li>Remove any chipping, peeling or flaking paint and repaint</li>
+          <li>Repair structural defects that cause paint to chip, peel and flake</li>
+          <li>Strip, replace and encapsulate interior sills</li>
+          <li>Cap window wells in order to make them smooth and cleanable</li>
+          <li>Fix the top sash of all windows to prevent friction caused by the opening and closing of windows</li>
+          <li>Rehang all doors to prevent rubbing</li>
+          <li>Ensure that kitchens and bathrooms have smooth, water-resistant floors</li>
+          <li>Make all bare floors smooth and cleanable; and</li>
+          <li>HEPA-vacuum and phosphate wash the interior of the unit</li>
+        </ul>
+      </ol>
+      <p>
+        Treatments must be performed by an accredited contractor or under the supervision of an accredited supervisor;
+        compliance must be verified by an accredited inspector and a report submitted to MDE.
+      </p>
+    </li>
+    <li>
+      <p>OTHER TREATMENT REQUIREMENTS</p>
+      <p>Owing must satisfy the Modified Rise Reduction Standard in response to:</p>
+      <ol style="list-style-type: upper-alpha">
+        <li>A notice that a child under six or a pregnant women in the unit has an elevated blood level (EBL) of 15
+          micrograms or more per deciliter of blood</li>
+        <li>A notice that the unit contains a defect such as chipping, peeling or flaking paint</li>
+        <li>In general response to be made within 30 days</li>
+      </ol>
+      <p>
+        Modified treatment is the same as the full treatment except there is no obligation to smooth bare floors and
+        HEPA-vacuuming and phosphate washing are limited to the area of repairs. Compliance is confirmed by submitted to
+        MDE of statement of work verified by an accredited contractor or supervisor.<br>
+        - 50% of an Owner's units must receive Full Risk Reduction Treatment by 10/1/99<br>
+        - 100% of units must reach at Least Modified Risk Reduction Standard by 10/1/2004
+      </p>
+    </li>
+    <li class="new-page">
+      <p>QUALIFIED OFFER</p>
+      <p>Owner who receives notice of a child or pregnant woman in a unit with an EBL of 25 micrograms or more per
+        deciliter of blood may make a Qualified Offer, using a form developed by MDE, consisting of:</p>
+      <ol style="list-style-type: upper-alpha">
+        <li>Payments up to $9,500 to relocate household to lead-safe housing; and</li>
+        <li>Payments up to $7,500 for uncovered, lead-related medical expenses.</li>
+      </ol>
+    </li>
+    <li>
+      <p>LIMITED LIABILITY PROTECTION</p>
+      <p>Owner may make a qualified offer if Owner:</p>
+      <ol style="list-style-type: upper-alpha">
+        <li>Registers Units</li>
+        <li>Sends Notice to Tenant's Rights and Lead Information Packet (Protect Your Family From Lead) to Tenant (Given
+          to new tenants at turnover, to current tenants now and every two years thereafter)</li>
+        <li>Complies with Full Risk Reduction Standard at turnover or, upon receipt of notice, Modified Risk Reduction
+          Standard during tenancy</li>
+      </ol>
+    </li>
+    <li>
+      <p>DISCLOSURE ON SALE</p>
+      <p>
+        At or prior to time contract of sale is executed, owner must disclose to prospective buyer any obligation to
+        perform Risk Reduction Treatments not yet performed that have been triggered by turnover, Notice of defect, or
+        EBL of 15 or above.<br>
+        <b>
+          NOTE:This is in addition to any disclosure requirements contained in the Federal law commonly known as Title
+          X, section 1018 of the Residential Lead-Based Paint Hazard Reduction Act of 1992.
+        </b>
+      </p>
+    </li>
+    <li>
+      <p>MDE ENFORCEMENT</p>
+      <p>
+        - Department has authority to order compliance<br>
+        - Assess civil penalties against inspectors, supervisors and owners for non-compliance<br>
+        - Perform spot checks to ensure and order compliance
+      </p>
+    </li>
+  </ol>
+  <b>
+    FOR ADDITIONAL INFORMATION, CONTACT THE MARYLAND DEPARTMENT OF THE ENVIRONMENT, LEAD POISONING PREVENTION PROGRAM AT
+    410-631-4199 OR 1-800-776-2706 (TDD 410-631-3009).
+  </b>
+  <h3 class="new-page" style="text-align: center;">
+    RECEIPT<br>
+    LEAD-BASED PAINT DISCLOSURE TO TENANT
+  </h3>
+  <label>Tenant(s)</label><input name="tenant2" type="text"/><br>
+  <label>Landlord(s)</label><input name="landlord2" type="text"/><br>
+  <label>Property</label><input name="leasedAddress2" type="text"/>
+  <p>
+    The Maryland Lead Poisoning Prevention Program (the "Program") requires the owner of residential real property
+    participating in the Program, whether on a mandatory or voluntary basis, to deliver to tenant, before a lease is
+    entered into and every two (2) years thereafter, a copy of the "Notice of Tenant's Rights, Lead-Poisoning
+    Prevention" as published by the Maryland Department of the Environment (the "Notice") and the EPA brochure entitled
+    "Protect Your Family From Lead In Your Home" (the "EPA Pamphlet"). Tenant has acknowledged Tenant's receipt of the
+    Notice and EPA Pamphlet prior to the execution of the Lease. In the event Tenant shall continue to occupy the leased
+    premises for two (2) years or longer, Landlord or Landlord's agent will provide Tenant with the Notice and EPA
+    Pamphlet within two (2) years from the date of occupancy and every two (2) years thereafter as required by the
+    Program. The Notice and EPA Pamphlet will be delivered to Tenant either by 1) certified mail, return receipt
+    requested; 2) by hand delivery; or 3) by such other verifiable method as certified mail, return receipt requested;
+    2) by hand delivery; or 3) by such other verifiable method as approved by the Maryland Department of the
+    Environment.approved by the Maryland Department of the Environment.
+  </p>
+  <p>Tenant hereby acknowledges receipt of the Notice and the EPA Pamphlet.</p>
+  <a href="https://mde.maryland.gov/programs/Land/Documents/LeadPamphlets/LeadPamphletMDENoticeOfTenantsRights.pdf">
+    https://mde.maryland.gov/programs/Land/Documents/LeadPamphlets/LeadPamphletMDENoticeOfTenantsRights.pdf
+  </a>
+  <h3 class="new-page" style="text-align: center;">
+    AMENDMENT/ADDENDUM
+  </h3>
+  <label>Tenant(s)</label><input name="tenant3" type="text"/><br>
+  <label>Landlord(s)</label><input name="landlord3" type="text"/><br>
+  <label>Property</label><input name="leasedAddress3" type="text"/>
+  <p>For valuable consideration, receipt of which is hereby acknowledged, we, the undersigned parties hereby agree as follows:</p>
+  <textarea name="addendum" style="height: 788px;"></textarea>
+  <div class="new-page">
+    <img src="./MD_Smoke_Alarm_Laws.png" width="100%" />
+  </div>
 </body>
 
 </html>
