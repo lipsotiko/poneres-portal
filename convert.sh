@@ -7,5 +7,5 @@ files=$(ls web-client/agreements | sed -e 's/\.html$//')
 for file in $files
 do
 	echo "converting ${file}.html to ${file}.pdf"
-	wkhtmltopdf --enable-forms --print-media-type web-client/agreements/${file}.html src/main/resources/pdfs/${file}.pdf
+	wkhtmltopdf --enable-forms --print-media-type --footer-center 'Page [page] of [topage]' web-client/agreements/${file}.html src/main/resources/pdfs/${file}.pdf
 done

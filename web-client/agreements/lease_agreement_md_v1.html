@@ -66,9 +66,11 @@
       width: 100%;
     }
 
-    input[name="monthToMonthTerminationDaysDuringLeaseTerm"],
-    input[name="monthToMonthTerminationDaysAfterLeaseTerm"] {
-      width: 22px;
+    input[name="monthToMonthTerminationDaysPriorToEndOfLeaseTerm"],
+    input[name="monthToMonthTerminationDaysPriorToFinalRentalMonth"],
+    input[name="yearToYearNotice"],
+    input[name="dueWithinDaysNumber"] {
+      width: 38px;
     }
 
     input[name="petsAllowedNumber"],
@@ -94,7 +96,8 @@
       width: 472px;
     }
 
-    input[name="monthlyRentNumber"] {
+    input[name="monthlyRentNumber"],
+    input[name="securityDepositNumber"] {
       width: 100px;
     }
 
@@ -203,14 +206,14 @@
       <p>
         <b>PERSONS WHO WILL OCCUPY THE PROPERTY:</b>
         Tenant covenants and agrees that the Property shall be occupied only by the following person(s), and by no other
-        persons: <br /><input name="occupyingPersons" /><br /> Tenant represents and warrants to Landlord that
-        neither Tenant nor any person(s) identified in this Paragraph has been convicted of a felony crime in any
+        persons: <br /><input name="occupyingPersons" type="text" /><br /> Tenant represents and warrants to Landlord
+        that neither Tenant nor any person(s) identified in this Paragraph has been convicted of a felony crime in any
         federal or state court except as otherwise disclosed by Tenant to Landlord on the application for tenancy form,
         as signed by Tenant.
       </p>
     </li>
-    <li>
-      <p class="new-page">
+    <li class="new-page">
+      <p>
         <b>RENEWAL OF LEASE TERMS (Landlord and Tenant to initial one selection):</b>
       </p>
       <ol style="list-style-type: upper-alpha">
@@ -225,13 +228,13 @@
             <b>MONTH-TO-MONTH:</b>
             This Lease shall continue in force from month to month after the expiration of the Initial Term. However,
             either party may terminate this Lease at the end of the Initial Term by giving written notice to the other
-            party <input name="monthToMonthTerminationDaysAfterLeaseTerm" type="text" /> days prior to the end of the
-            Initial Term. Either party may terminate the month-to-month lease at the end of any rental month, provided
-            that written notice of not less than thirty (30) days is given to the other party <input
-              name="monthToMonthTerminationDaysDuringLeaseTerm" type="text" /> days prior to the last day of the desired
-            final rental month of the tenancy.<br /> <b>NOTICE: notice requirements vary depending on the jurisdiction.
-              The State requires that Landlord give 90 days' notice to Tenant of termination of a lease with a term of a
-              year or longer</b>
+            party <input name="monthToMonthTerminationDaysPriorToEndOfLeaseTerm" type="text" /> days prior to the end of
+            the Initial Term. Either party may terminate the month-to-month lease at the end of any rental month,
+            provided that written notice of not less than thirty (30) days is given to the other party <input
+              name="monthToMonthTerminationDaysPriorToFinalRentalMonth" type="text" /> days prior to the last day of the
+            desired final rental month of the tenancy.<br /> <b>NOTICE: notice requirements vary depending on the
+              jurisdiction. The State requires that Landlord give 90 days' notice to Tenant of termination of a lease
+              with a term of a year or longer</b>
           </p>
         </li>
         <li>
@@ -239,14 +242,12 @@
             <b>YEAR-TO-YEAR:</b>
             This Lease shall continue in force from year to year after the expiration of the Initial
             Term. Either party may terminate this Lease at the end of the Initial Term, or any renewal term, provided
-            that written notice of not less than ninety (90) days is given to the other party
-            <input name="yearToYearNotice" />
-            days prior to
-            the last day of the desired final rental month of the tenancy.
+            that written notice of not less than ninety (90) days is given to the other party <input
+              name="yearToYearNotice" type="text" /> days prior to the last day of the desired final rental month of the
+            tenancy.
             <br />
-            <b>NOTICE: any written notice given pursuant to renewal term
-              becomes effective upon the first day of the month following
-              delivery of the notice.
+            <b>NOTICE: any written notice given pursuant to renewal term becomes effective upon the first day of the
+              month following delivery of the notice.
             </b>
           </p>
         </li>
@@ -259,7 +260,7 @@
         more than <input name="dueWithinDays" type="text" />(<input name="dueWithinDaysNumber" type="text" />) days
         after the date when due, Tenant shall pay, as additional rent, a sum equal to 5% of the amount of delinquent
         rent due. If a check is accepted by Landlord from Tenant for rent, it is purely as an accommodation to Tenant.
-        If the check is dishonored, Tenant agrees to pay a $<input name="lastFeeNumber" type="text" /> charge to
+        If the check is dishonored, Tenant agrees to pay a $<input name="lateFeeNumber" type="text" /> charge to
         Landlord as additional rent. The amount of late fees and bad check fees shall be added to and deemed part of the
         rent due and shall be payable by Tenant to Landlord on demand. Landlord shall have the same remedies for the
         collection of such charges and fees as Landlord has for the non-payment of rent. Tenant is hereby notified that
@@ -308,7 +309,7 @@
         of possession.
       </p>
     </li>
-    <li>
+    <li class="new-page">
       <p>
         <b>DELIVERY OF NOTICES:</b>
         All notices required to be given by Landlord to Tenant shall be sufficiently given by leaving the
@@ -420,7 +421,7 @@
         Security Deposit is deemed to be held by Landlord as a deposit made by the assignee or sublessee and Landlord
         will have no further liability with respect to return of such Security Deposit to the assignor.
       </p>
-      <p>
+      <p class="new-page">
         The failure of Landlord to comply with the Security Deposit Law may result in Landlord being liable to Tenant
         for a penalty of up to three (3) times the Security Deposit withheld, plus reasonable attorney's fees. Landlord,
         by Maryland law, shall retain a copy of this receipt for a period of two (2) years following the termination of
@@ -667,7 +668,7 @@
         </tr>
       </table>
     </li>
-    <li>
+    <li class="new-page">
       <p>
         <b>TENANT’S OBLIGATIONS REGARDING USE AND OCCUPANCY:</b>
         Tenant agrees to use the Property in a careful manner and not to use or permit the use of any portion of the
@@ -768,20 +769,6 @@
             <label>Tenant</label>
           </td>
         </tr>
-        <tr>
-          <td>
-            e. Heating Fuel
-          </td>
-          <td>
-            <input type="checkbox" name="furnishedByLandlord_5" />
-            <label>Landlord</label>
-          </td>
-          <td>
-            <input type="checkbox" name="furnishedByTenant_5" />
-            <label>Tenant</label>
-          </td>
-        </tr>
-
         <tr>
           <td>
             e. Heating Fuel

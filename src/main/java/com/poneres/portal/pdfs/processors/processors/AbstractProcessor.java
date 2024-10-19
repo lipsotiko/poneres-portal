@@ -5,11 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType3Font;
 import org.apache.pdfbox.pdmodel.interactive.form.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -21,8 +25,6 @@ import static com.poneres.portal.pdfs.processors.DocumentHelper.*;
 @Slf4j
 abstract class AbstractProcessor implements PdfProcessor {
 
-    @Autowired
-    protected SignatureApplicator signatureApplicator;
     protected String CHECK = "X";
     protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     protected Map<Integer, String> radioChoices = new HashMap<>() {
@@ -42,15 +44,7 @@ abstract class AbstractProcessor implements PdfProcessor {
         return Collections.emptyList();
     }
 
-    public List<String> derivedFields() {
-        return Collections.emptyList();
-    }
-
     public List<Integer> pagesToRemove() {
-        return Collections.emptyList();
-    }
-
-    public List<SignatureConfig> signatureConfigs(String patientSignature, String prescriberSignature) {
         return Collections.emptyList();
     }
 
@@ -133,7 +127,7 @@ abstract class AbstractProcessor implements PdfProcessor {
                 }
 
                 if (pdfFieldNames == null) {
-                    setField(doc, metadataKey, (String) entry.getValue());
+                    setField(doc, metadataKey, entry.getValue().toString());
                     continue;
                 }
 
@@ -160,7 +154,7 @@ abstract class AbstractProcessor implements PdfProcessor {
                                 continue;
                             }
                         } else {
-                            value = (String) entry.getValue();
+                                value = entry.getValue().toString();
                         }
 
                         setField(doc, pdfFieldName, value);
@@ -168,7 +162,7 @@ abstract class AbstractProcessor implements PdfProcessor {
                 }
             }
         } catch (Exception ex) {
-            log.error("Error: Metadata key {} could not be assigned", metadataKey);
+            log.error("Error: Metadata key {} could not be assigned", metadataKey, ex);
         }
 
         if (!fieldsPreview) {
@@ -176,7 +170,7 @@ abstract class AbstractProcessor implements PdfProcessor {
         }
 
         for (PDField field : doc.getDocumentCatalog().getAcroForm().getFields()) {
-            if (pdfFieldsMap().containsKey(field.getPartialName()) && metadata.containsKey(field.getPartialName())) {
+            if (metadata.containsKey(field.getPartialName())) {
                 continue;
             }
             System.out.println(field.getPartialName());
@@ -189,7 +183,6 @@ abstract class AbstractProcessor implements PdfProcessor {
                 processField(field, "|--", field.getPartialName());
             }
         }
-
     }
 
     protected boolean isDateField(String field) {
@@ -225,6 +218,8 @@ abstract class AbstractProcessor implements PdfProcessor {
             } else if (field instanceof PDTextField) {
                 field.setValue(value);
             }
+
+
         } else {
             System.err.println("No field found with name:" + name);
         }

@@ -27,7 +27,7 @@
           <IRow>
             <IColumn xs="2">
               <IFormGroup required>
-                <IFormLabel for="leaseOfferDate">Offer Date</IFormLabel>
+                <IFormLabel for="leaseOfferDate">Offer date</IFormLabel>
                 <IInput
                   id="leaseOfferDate"
                   name="leaseOfferDate"
@@ -55,7 +55,7 @@
           <IRow>
             <IColumn xs="6">
               <IFormGroup required>
-                <IFormLabel for="leasedAddress">Leased Address</IFormLabel>
+                <IFormLabel for="leasedAddress">Leased address</IFormLabel>
                 <IInput
                   id="leasedAddress"
                   name="leasedAddress"
@@ -64,40 +64,220 @@
                 <IFormError for="leasedAddress" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
-            <IColumn xs="2">
+            <IColumn xs="3">
               <IFormGroup required>
-                <IFormLabel for="termLength">Lease Term</IFormLabel>
-                <IInput
-                  id="termLength"
-                  name="termLength"
-                  placeholder="Years / Months"
-                  :error="errorTypes"
-                />
-                <IFormError for="termLength" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-            <IColumn xs="2">
-              <IFormGroup required>
-                <IFormLabel for="startDate">Start Date</IFormLabel>
+                <IFormLabel for="startDate">Start date</IFormLabel>
                 <IInput
                   id="startDate"
                   name="startDate"
-                  type="date"
+                  type="month"
                   :error="errorTypes"
                 />
                 <IFormError for="startDate" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
-            <IColumn xs="2">
+            <IColumn xs="3">
               <IFormGroup required>
-                <IFormLabel for="endDate">End Date</IFormLabel>
+                <IFormLabel for="endDate">End date</IFormLabel>
                 <IInput
                   id="endDate"
                   name="endDate"
-                  type="date"
+                  type="month"
                   :error="errorTypes"
                 />
                 <IFormError for="endDate" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <IColumn xs="3">
+              <IFormGroup required>
+                <IFormLabel for="monthlyRentInDollars">Total rent ($)</IFormLabel>
+                <IInput
+                  id="monthlyRentInDollars"
+                  name="monthlyRentInDollars"
+                  type="number"
+                  step="1"
+                  :error="errorTypes"
+                />
+                <IFormError for="monthlyRentInDollars" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="3">
+              <IFormGroup required>
+                <IFormLabel for="dueWithinDaysNumber">Due within days</IFormLabel>
+                <IInput
+                  id="dueWithinDaysNumber"
+                  name="dueWithinDaysNumber"
+                  type="number"
+                  :error="errorTypes"
+                />
+                <IFormError for="dueWithinDaysNumber" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="3">
+              <IFormGroup required>
+                <IFormLabel for="lateFeeNumber">Late fee ($)</IFormLabel>
+                <IInput
+                  id="lateFeeNumber"
+                  name="lateFeeNumber"
+                  type="number"
+                  :error="errorTypes"
+                />
+                <IFormError for="lateFeeNumber" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="3">
+              <IFormGroup required>
+                <IFormLabel for="securityDepositInDollars">Security deposit ($)</IFormLabel>
+                <IInput
+                  id="securityDepositInDollars"
+                  name="securityDepositInDollars"
+                  type="number"
+                  :error="errorTypes"
+                />
+                <IFormError for="securityDepositInDollars" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <IColumn xs="3">
+              <IFormGroup>
+                <IFormLabel for="proRatedRentInDollars">Pro-rated rent ($)</IFormLabel>
+                <IInput
+                  id="proRatedRentInDollars"
+                  name="proRatedRentInDollars"
+                  type="number"
+                  step="1"
+                  :error="errorTypes"
+                />
+                <IFormError for="proRatedRentInDollars" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="3">
+              <IFormGroup>
+                <IFormLabel for="proRatedPaymentDate">Pro rated payment date</IFormLabel>
+                <IInput
+                  id="proRatedPaymentDate"
+                  name="proRatedPaymentDate"
+                  type="date"
+                  :error="errorTypes"
+                />
+                <IFormError for="proRatedPaymentDate" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="3">
+              <IFormGroup>
+                <IFormLabel for="proRatedLeaseStartDate">Pro rated lease start date</IFormLabel>
+                <IInput
+                  id="proRatedLeaseStartDate"
+                  name="proRatedLeaseStartDate"
+                  type="date"
+                  :error="errorTypes"
+                />
+                <IFormError for="proRatedLeaseStartDate" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="3">
+              <IFormGroup>
+                <IFormLabel for="proRatedLeaseEndDate">Pro rated lease end date</IFormLabel>
+                <IInput
+                  id="proRatedLeaseEndDate"
+                  name="proRatedLeaseEndDate"
+                  type="date"
+                  :error="errorTypes"
+                />
+                <IFormError for="proRatedLeaseEndDate" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <IColumn xs="6">
+              <IFormGroup required>
+                <IFormLabel for="rentRecipient">Rent recipient</IFormLabel>
+                <IInput id="rentRecipient" name="rentRecipient" :error="errorTypes" />
+                <IFormError for="rentRecipient" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="6">
+              <IFormGroup required>
+                <IFormLabel for="rentRecipientAddress">Rent recipient address</IFormLabel>
+                <IInput id="rentRecipientAddress" name="rentRecipientAddress" :error="errorTypes" />
+                <IFormError for="rentRecipientAddress" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <IColumn>
+              <IFormGroup required>
+                <IFormLabel for="occupyingPersons">Occupying persons</IFormLabel>
+                <IInput id="occupyingPersons" name="occupyingPersons" :error="errorTypes" />
+                <IFormError for="occupyingPersons" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <p class="lead">Termination notice</p>
+          </IRow>
+          <IRow>
+            <IColumn>
+              <IFormGroup required>
+                <IFormLabel for="monthToMonthTerminationDaysPriorToEndOfLeaseTerm">Month-to-month written termination notice days prior to initial term end</IFormLabel>
+                <IInput id="monthToMonthTerminationDaysPriorToEndOfLeaseTerm" name="monthToMonthTerminationDaysPriorToEndOfLeaseTerm" type="number" :error="errorTypes" />
+                <IFormError for="monthToMonthTerminationDaysPriorToEndOfLeaseTerm" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <IColumn>
+              <IFormGroup required>
+                <IFormLabel for="monthToMonthTerminationDaysPriorToFinalRentalMonth">Month-to-month written termination notice days prior to final rental month</IFormLabel>
+                <IInput id="monthToMonthTerminationDaysPriorToFinalRentalMonth" name="monthToMonthTerminationDaysPriorToFinalRentalMonth" type="number" :error="errorTypes" />
+                <IFormError for="monthToMonthTerminationDaysPriorToFinalRentalMonth" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <IColumn>
+              <IFormGroup>
+                <IFormLabel for="yearToYearNotice">Year-to-year written termination notice days prior to final rental month</IFormLabel>
+                <IInput id="yearToYearNotice" name="yearToYearNotice" :error="errorTypes" />
+                <IFormError for="yearToYearNotice" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <p class="lead">Delivery of Notices</p>
+          </IRow>
+          <IRow>
+            <IColumn xs="3">
+              <IFormGroup required>
+                <IFormLabel for="noticeName">Name</IFormLabel>
+                <IInput id="noticeName" name="noticeName" :error="errorTypes" />
+                <IFormError for="noticeName" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="6">
+              <IFormGroup required>
+                <IFormLabel for="noticeAddress">Address</IFormLabel>
+                <IInput id="noticeAddress" name="noticeAddress" :error="errorTypes" />
+                <IFormError for="noticeAddress" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="3">
+              <IFormGroup required>
+                <IFormLabel for="noticePhone">Phone number</IFormLabel>
+                <IInput id="noticePhone" name="noticePhone" :error="errorTypes" />
+                <IFormError for="noticePhone" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
+            <IColumn>
+              <IFormGroup required>
+                <IFormLabel for="sendNoticeTo">Send notice to</IFormLabel>
+                <IRadioGroup id="sendNoticeTo" name="sendNoticeTo" :options="[{ id: 'isLandlord', label: 'Landlord'}, {id: 'isPropertyManager', label: 'Property Manager'}]" />
+                <IFormError for="sendNoticeTo" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
           </IRow>
@@ -247,9 +427,26 @@ const {
   landlord: fieldOptions,
   tenant: fieldOptions,
   leasedAddress: fieldOptions,
-  termLength: fieldOptions,
   startDate: fieldOptions,
   endDate: fieldOptions,
+  monthlyRentInDollars: fieldOptions,
+  proRatedRentInDollars: {},
+  proRatedPaymentDate: {},
+  proRatedLeaseStartDate: {},
+  proRatedLeaseEndDate: {},
+  rentRecipient: fieldOptions,
+  rentRecipientAddress: fieldOptions,
+  occupyingPersons: fieldOptions,
+  monthToMonthTerminationDaysPriorToEndOfLeaseTerm: fieldOptions,
+  monthToMonthTerminationDaysPriorToFinalRentalMonth: fieldOptions,
+  dueWithinDaysNumber: fieldOptions,
+  lateFeeNumber: fieldOptions,
+  yearToYearNotice: {},
+  noticeName: fieldOptions, 
+  noticeAddress: fieldOptions,
+  noticePhone: fieldOptions,
+  sendNoticeTo: fieldOptions,
+  securityDepositInDollars: fieldOptions,
 });
 
 const {
@@ -278,9 +475,27 @@ const loadTestData = async () => {
   metaDataSchema.value.landlord.value = "Evangelos Poneres";
   metaDataSchema.value.tenant.value = "Stephan Michael Nutty, Kristy Diane Nutty";
   metaDataSchema.value.leasedAddress.value = "10722 LANCEWOOD RD, COCKEYSVILLE, MD 21030";
-  metaDataSchema.value.termLength.value = "1 Year";
-  metaDataSchema.value.startDate.value = dayjs().format("YYYY-MM-DD");
-  metaDataSchema.value.endDate.value = dayjs().format("YYYY-MM-DD");
+  metaDataSchema.value.startDate.value = dayjs().format("YYYY-MM");
+  metaDataSchema.value.endDate.value = dayjs().add(1, 'year').add(-1, 'month').format("YYYY-MM");
+  metaDataSchema.value.monthlyRentInDollars.value = 2000;
+  metaDataSchema.value.proRatedRentInDollars.value = 1000;
+  metaDataSchema.value.proRatedPaymentDate.value = dayjs().add(-8, 'day').format("YYYY-MM-DD");
+  metaDataSchema.value.proRatedLeaseStartDate.value = dayjs().add(-5, 'day').format("YYYY-MM-DD");
+  metaDataSchema.value.proRatedLeaseEndDate.value = dayjs().add(-1, 'day').format("YYYY-MM-DD");
+  metaDataSchema.value.rentRecipient.value = "Evangelos Poneres";
+  metaDataSchema.value.rentRecipientAddress.value = "PO Box 11, Park Ridge, IL 60068";
+  metaDataSchema.value.occupyingPersons.value = "Snoopy";
+  metaDataSchema.value.monthToMonthTerminationDaysPriorToEndOfLeaseTerm.value = 30;
+  metaDataSchema.value.monthToMonthTerminationDaysPriorToFinalRentalMonth.value = 60;
+  metaDataSchema.value.yearToYearNotice.value = 'N/A';
+  metaDataSchema.value.dueWithinDaysNumber.value = 5;
+  metaDataSchema.value.lateFeeNumber.value = 50;
+  metaDataSchema.value.noticeName.value = "Evangelos Poneres";
+  metaDataSchema.value.noticeAddress.value = "PO Box 11, Park Ridge, IL 60068";
+  metaDataSchema.value.noticePhone.value = "444 555 1234";
+  metaDataSchema.value.sendNoticeTo.value = "isLandlord";
+  metaDataSchema.value.securityDepositInDollars.value = 3000;
+
   metaDataSchema.value.touched = true;
 
   recipientsSchema.value.recipients[0].name.value = "John Wick";
