@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ILayout>
+    <ILayout @keydown.esc="() => (open = false)">
       <IToast v-if="errorMessage" color="warning" position="bottom" dismissible>
         <p>{{ errorMessage }}</p>
       </IToast>
@@ -46,7 +46,8 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 const { isAdmin } = useAuth();
 const errorMessage = ref();
 provide('errorMessage', errorMessage);
-
+const open = ref(false);
+provide('sideBarOpen', open);
 </script>
 <style scoped>
 .profile {

@@ -45,6 +45,8 @@ const sendReminder = async (id) => {
   });
 };
 
+const errorTypes = ["touched", "invalid"];
+
 export {
   previewAgreement,
   saveAgreement,
@@ -54,4 +56,5 @@ export {
   getSignatureStatus,
   getFileUrl,
   sendReminder,
+  errorTypes
 };

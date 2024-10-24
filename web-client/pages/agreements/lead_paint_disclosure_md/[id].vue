@@ -1,141 +1,139 @@
 <template>
-  <ILayout @keydown.esc="() => (open = false)">
-    <PdfPreview :key="metadataForm" :metadata="metadataForm" :type="pdfType" />
-    <IContainer>
-      <PageTitle :title="`Lead Paint Disclosure (Maryland) - ${agreementId}`" backTo="/agreements" />
-      <ClientOnly>
-        <IForm v-model="metaDataSchema" :disabled="loading">
-          <IRow>
-            <IColumn xs="6">
-              <IFormGroup required>
-                <IFormLabel for="landlord">Landlord</IFormLabel>
-                <IInput id="landlord" name="landlord" :error="errorTypes" />
-                <IFormError for="landlord" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-            <IColumn xs="6">
-              <IFormGroup required>
-                <IFormLabel for="tenant">Tenant</IFormLabel>
-                <IInput id="tenant" name="tenant" :error="errorTypes" />
-                <IFormError for="tenant" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-          </IRow>
-          <IRow>
-            <IColumn xs="12">
-              <IFormGroup required>
-                <IFormLabel for="leasedAddress">Leased address</IFormLabel>
-                <IInput id="leasedAddress" name="leasedAddress" :error="errorTypes" />
-                <IFormError for="leasedAddress" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-          </IRow>
-          <IRow>
-            <IColumn xs="4">
-              <IFormGroup required>
-                <IFormLabel for="leadKnown">Presence of lead paint?</IFormLabel>
-                <IRadioGroup
-                  id="leadKnown"
-                  name="leadKnown"
-                  :options="[
-                    { id: 'yes', label: 'Yes' },
-                    { id: 'no', label: 'No' },
-                  ]"
-                />
-                <IFormError for="leadKnown" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-            <IColumn>
-              <IFormGroup>
-                <IFormLabel for="explain1"
-                  >Known lead-based paint and/or lead-based paint hazards are present in the housing
-                  (explain)</IFormLabel
-                >
-                <ITextarea id="explain1" name="explain1" :error="errorTypes" />
-                <IFormError for="explain1" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-          </IRow>
-          <IRow>
-            <IColumn xs="4">
-              <IFormGroup required>
-                <IFormLabel for="documentsProvided">Records available to the lessor?</IFormLabel>
-                <IRadioGroup
-                  id="documentsProvided"
-                  name="documentsProvided"
-                  :options="[
-                    { id: 'yes', label: 'Yes' },
-                    { id: 'no', label: 'No' },
-                  ]"
-                />
-                <IFormError for="leadKnown" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-            <IColumn>
-              <IFormGroup>
-                <IFormLabel for="explain2"
-                  >Lessor has provided the lessee with all available records and reports pertaining to lead-based paint
-                  and/or lead-based paint hazards in the housing</IFormLabel
-                >
-                <ITextarea id="explain2" name="explain2" :error="errorTypes" />
-                <IFormError for="explain2" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-          </IRow>
-        </IForm>
+  <PdfPreview :key="metadataForm" :metadata="metadataForm" :type="pdfType" />
+  <IContainer>
+    <PageTitle :title="`Lead Paint Disclosure (Maryland) - ${agreementId}`" backTo="/agreements" />
+    <ClientOnly>
+      <IForm v-model="metaDataSchema" :disabled="loading">
         <IRow>
-          <p class="lead">Recipients</p>
-        </IRow>
-        <IForm v-model="recipientsSchema" :disabled="loading">
-          <IRow v-for="(_, index) in recipientsSchema.recipients" :key="index">
-            <IColumn xs="6">
-              <IFormGroup required>
-                <IFormLabel :for="`recipients.${index}.name`">
-                  <span v-if="index === 0">Landlord name</span>
-                  <span v-else>Tenant name {{ index }}</span>
-                </IFormLabel>
-                <IInput :name="`recipients.${index}.name`" :error="errorTypes" />
-                <IFormError :for="`recipients.${index}`" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-            <IColumn xs="6">
-              <IFormGroup required>
-                <IFormLabel :for="`recipients.${index}.email`">
-                  <span v-if="index === 0">Landlord email</span>
-                  <span v-else>Tenant email {{ index }}</span>
-                </IFormLabel>
-                <IInput :name="`recipients.${index}.email`" :error="errorTypes">
-                  <template #append>
-                    <IButton v-if="index > 1" size="sm" @click="removeRecipient(index)">
-                      <i class="fa-solid fa-trash"></i>
-                    </IButton>
-                  </template>
-                </IInput>
-                <IFormError :for="`recipients.${index}`" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-          </IRow>
-        </IForm>
-        <IRow>
-          <IColumn>
-            <div class="save">
-              <div class="_display:flex _justify-content:space-between">
-                <div class="left-buttons">
-                  <IButton @click="loadTestData()">Load Test Data</IButton>
-                  <IButton @click="addRecipient">Add recipient</IButton>
-                  <IButton @click="open = true">Preview</IButton>
-                </div>
-                <div v-if="!loading" class="right-buttons">
-                  <DeleteAgreementButton :id="agreementId" :isNew="isNew" />
-                  <IButton v-if="!sent" color="primary" :loading="saving" @click="save">Save</IButton>
-                </div>
-              </div>
-            </div>
+          <IColumn xs="6">
+            <IFormGroup required>
+              <IFormLabel for="landlord">Landlord</IFormLabel>
+              <IInput id="landlord" name="landlord" :error="errorTypes" />
+              <IFormError for="landlord" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+          <IColumn xs="6">
+            <IFormGroup required>
+              <IFormLabel for="tenant">Tenant</IFormLabel>
+              <IInput id="tenant" name="tenant" :error="errorTypes" />
+              <IFormError for="tenant" :visible="errorTypes" />
+            </IFormGroup>
           </IColumn>
         </IRow>
-      </ClientOnly>
-    </IContainer>
-  </ILayout>
+        <IRow>
+          <IColumn xs="12">
+            <IFormGroup required>
+              <IFormLabel for="leasedAddress">Leased address</IFormLabel>
+              <IInput id="leasedAddress" name="leasedAddress" :error="errorTypes" />
+              <IFormError for="leasedAddress" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+        </IRow>
+        <IRow>
+          <IColumn xs="4">
+            <IFormGroup required>
+              <IFormLabel for="leadKnown">Presence of lead paint?</IFormLabel>
+              <IRadioGroup
+                id="leadKnown"
+                name="leadKnown"
+                :options="[
+                  { id: 'yes', label: 'Yes' },
+                  { id: 'no', label: 'No' },
+                ]"
+              />
+              <IFormError for="leadKnown" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+          <IColumn>
+            <IFormGroup>
+              <IFormLabel for="explain1"
+                >Known lead-based paint and/or lead-based paint hazards are present in the housing
+                (explain)</IFormLabel
+              >
+              <ITextarea id="explain1" name="explain1" :error="errorTypes" />
+              <IFormError for="explain1" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+        </IRow>
+        <IRow>
+          <IColumn xs="4">
+            <IFormGroup required>
+              <IFormLabel for="documentsProvided">Records available to the lessor?</IFormLabel>
+              <IRadioGroup
+                id="documentsProvided"
+                name="documentsProvided"
+                :options="[
+                  { id: 'yes', label: 'Yes' },
+                  { id: 'no', label: 'No' },
+                ]"
+              />
+              <IFormError for="leadKnown" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+          <IColumn>
+            <IFormGroup>
+              <IFormLabel for="explain2"
+                >Lessor has provided the lessee with all available records and reports pertaining to lead-based paint
+                and/or lead-based paint hazards in the housing</IFormLabel
+              >
+              <ITextarea id="explain2" name="explain2" :error="errorTypes" />
+              <IFormError for="explain2" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+        </IRow>
+      </IForm>
+      <IRow>
+        <p class="lead">Recipients</p>
+      </IRow>
+      <IForm v-model="recipientsSchema" :disabled="loading">
+        <IRow v-for="(_, index) in recipientsSchema.recipients" :key="index">
+          <IColumn xs="6">
+            <IFormGroup required>
+              <IFormLabel :for="`recipients.${index}.name`">
+                <span v-if="index === 0">Landlord name</span>
+                <span v-else>Tenant name {{ index }}</span>
+              </IFormLabel>
+              <IInput :name="`recipients.${index}.name`" :error="errorTypes" />
+              <IFormError :for="`recipients.${index}`" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+          <IColumn xs="6">
+            <IFormGroup required>
+              <IFormLabel :for="`recipients.${index}.email`">
+                <span v-if="index === 0">Landlord email</span>
+                <span v-else>Tenant email {{ index }}</span>
+              </IFormLabel>
+              <IInput :name="`recipients.${index}.email`" :error="errorTypes">
+                <template #append>
+                  <IButton v-if="index > 1" size="sm" @click="removeRecipient(index)">
+                    <i class="fa-solid fa-trash"></i>
+                  </IButton>
+                </template>
+              </IInput>
+              <IFormError :for="`recipients.${index}`" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+        </IRow>
+      </IForm>
+      <IRow>
+        <IColumn>
+          <div class="save">
+            <div class="_display:flex _justify-content:space-between">
+              <div class="left-buttons">
+                <IButton @click="loadTestData()">Load Test Data</IButton>
+                <IButton @click="addRecipient">Add recipient</IButton>
+                <IButton @click="open = true">Preview</IButton>
+              </div>
+              <div v-if="!loading" class="right-buttons">
+                <DeleteAgreementButton :id="agreementId" :isNew="isNew" />
+                <IButton v-if="!sent" color="primary" :loading="saving" @click="save">Save</IButton>
+              </div>
+            </div>
+          </div>
+        </IColumn>
+      </IRow>
+    </ClientOnly>
+  </IContainer>
 </template>
 <script setup>
 import { provide } from 'vue'
@@ -204,7 +202,6 @@ const {
   ],
 });
 
-const errorTypes = ["touched", "invalid"];
 const saving = ref(false);
 const loading = ref(false);
 
