@@ -2,9 +2,6 @@
   <IToast v-if="successfulUserRegistration" color="success">
     <p>You successfully signed up!</p>
   </IToast>
-  <IToast v-if="errorMessage" color="warning">
-    <p>{{ errorMessage }}</p>
-  </IToast>
   <IContainer class="sign-up-container">
     <ClientOnly>
       <IForm v-model="schema">
@@ -104,6 +101,7 @@
   </IContainer>
 </template>
 <script setup>
+import { inject } from "vue";
 import { useForm } from "@inkline/inkline/composables";
 
 const loginPage = "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net/oauth2/authorization/okta";
@@ -154,7 +152,7 @@ const { schema } = useForm({
 
 const errorTypes = ["touched", "invalid"];
 const loading = ref(false);
-const errorMessage = ref();
+const errorMessage = inject("errorMessage");
 const successfulUserRegistration = ref(false);
 
 const createAccount = async () => {

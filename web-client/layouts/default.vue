@@ -41,13 +41,13 @@
   </div>
 </template>
 <script setup>
-import { provide } from 'vue'
+import { provide } from "vue";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 const { isAdmin } = useAuth();
 const errorMessage = ref();
-provide('errorMessage', errorMessage);
+provide("errorMessage", errorMessage);
 const open = ref(false);
-provide('sideBarOpen', open);
+provide("sideBarOpen", open);
 </script>
 <style scoped>
 .profile {

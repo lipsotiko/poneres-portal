@@ -46,6 +46,26 @@ const sendReminder = async (id) => {
 };
 
 const errorTypes = ["touched", "invalid"];
+const fieldOptions = {
+  validators: [
+    {
+      name: "required",
+    },
+  ],
+};
+
+const emailFieldOptions = {
+  validators: [
+    {
+      name: "required",
+    },
+    {
+      name: "custom",
+      message: "Please enter a valid email address.",
+      validator: emailValidator,
+    },
+  ],
+};
 
 export {
   previewAgreement,
@@ -56,5 +76,7 @@ export {
   getSignatureStatus,
   getFileUrl,
   sendReminder,
-  errorTypes
+  errorTypes,
+  fieldOptions,
+  emailFieldOptions,
 };

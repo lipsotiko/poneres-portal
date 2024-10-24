@@ -1,0 +1,143 @@
+<template>
+    <PdfPreview :key="metadataForm" :metadata="metadataForm" :type="pdfType" />
+    <IContainer>
+        <PageTitle :title="`${title} - ${agreementId}`" backTo="/agreements" />
+        <IRow>
+            <p class="lead">Agreement</p>
+        </IRow>
+        <ClientOnly>
+            <IForm v-model="metaDataSchema" :disabled="loading">
+                <slot></slot>
+            </IForm>
+        </ClientOnly>
+        <Recipients v-model="recipientsSchema" />
+        <IRow>
+            <IColumn>
+                <div class="save">
+                    <div class="_display:flex _justify-content:space-between">
+                        <div class="left-buttons">
+                            <IButton @click="loadTestData()">Load Test Data</IButton>
+                            <IButton @click="addRecipient()">Add recipient</IButton>
+                            <IButton @click="open = true">Preview</IButton>
+                        </div>
+                        <div v-if="!loading" class="right-buttons">
+                            <DeleteAgreementButton :id="agreementId" :isNew="isNew" />
+                            <IButton v-if="!sent" color="primary" :loading="saving" @click="save()">Save</IButton>
+                        </div>
+                    </div>
+                </div>
+            </IColumn>
+        </IRow>
+    </IContainer>
+</template>
+<script setup>
+import { inject } from "vue";
+import { useForm } from "@inkline/inkline/composables";
+const { pdfType, title, agreementId, schema, testData } = defineProps([
+    "pdfType",
+    "title",
+    "agreementId",
+    "schema",
+    "testData",
+]);
+
+const isNew = agreementId === "New";
+const sent = ref();
+const saving = ref(false);
+const loading = ref(false);
+const open = inject("sideBarOpen");
+
+const { schema: metaDataSchema, form: metadataForm, validate: metadataValidate } = useForm({ ...schema });
+
+const {
+    schema: recipientsSchema,
+    form: recipientsForm,
+    validate: recipientsValidate,
+} = useForm({
+    recipients: [
+        {
+            name: fieldOptions,
+            email: emailFieldOptions,
+        },
+        {
+            name: fieldOptions,
+            email: emailFieldOptions,
+        },
+    ],
+});
+
+const addRecipient = () => {
+    recipientsSchema.value.recipients.push({
+        name: { ...fieldOptions },
+        email: { ...emailFieldOptions },
+    });
+};
+
+onMounted(async () => {
+    if (isNew) {
+        return;
+    }
+    loading.value = true;
+
+    const agreement = await getAgreement(agreementId);
+    sent.value = agreement.sent;
+    Object.keys(agreement.metadata).forEach((k) => {
+        metaDataSchema.value[k].value = agreement.metadata[k];
+    });
+
+    agreement.recipients.forEach((recipient, index) => {
+        if (index > 1) {
+            addRecipient(recipientsSchema);
+        }
+        recipientsSchema.value.recipients[index].email.value = recipient.email;
+        recipientsSchema.value.recipients[index].name.value = recipient.name;
+    });
+
+    loading.value = false;
+});
+
+const save = async () => {
+    await metadataValidate();
+    await recipientsValidate();
+
+    if (!metaDataSchema.value.valid || !recipientsSchema.value.valid) {
+        return;
+    }
+
+    saving.value = true;
+
+    await saveAgreement({
+        id: isNew ? undefined : agreementId,
+        type: pdfType,
+        metadata: metadataForm.value,
+        recipients: recipientsForm.value.recipients,
+    }).then(() => {
+        navigateTo("/agreements");
+    });
+};
+
+const loadTestData = () => {
+    Object.keys(testData).forEach((k) => {
+        metaDataSchema.value[k].value = testData[k];
+    });
+    (metaDataSchema.value.touched = true), (recipientsSchema.value.recipients[0].name.value = "John Wick");
+    recipientsSchema.value.recipients[0].email.value = "landlord@poneres.com";
+    recipientsSchema.value.recipients[1].name.value = "Stephan Michael Nutty";
+    recipientsSchema.value.recipients[1].email.value = "tenant_a@hello.io";
+    recipientsSchema.value.touched = true;
+};
+</script>
+<style>
+.save {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.left-buttons button {
+  margin: 6px;
+}
+
+.right-buttons button {
+  margin: 6px;
+}
+</style>
