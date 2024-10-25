@@ -9,7 +9,7 @@ import java.util.Map;
 public class LeadPaintDisclosureMarylandProcessorV1 extends AbstractProcessor {
 
     @Override
-    public PdfType applicationType() {
+    public PdfType type() {
         return PdfType.LEAD_PAINT_ADDENDUM_MD_V1;
     }
 

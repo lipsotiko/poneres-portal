@@ -6,6 +6,7 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -22,7 +23,10 @@ import static com.poneres.portal.pdfs.processors.DocumentHelper.*;
 @Slf4j
 abstract class AbstractProcessor implements PdfProcessor {
 
-    abstract PdfType applicationType();
+    @Autowired
+    private SignatureApplicator signatureApplicator;
+
+    abstract PdfType type();
 
     public List<Integer> pagesToRemove() {
         return Collections.emptyList();
@@ -36,7 +40,7 @@ abstract class AbstractProcessor implements PdfProcessor {
         // https://stackoverflow.com/questions/25869428/classpath-resource-not-found-when-running-as-jar
         File tmpFile = tmpFile();
         try (OutputStream outStream = new FileOutputStream(tmpFile)) {
-            String formPath = applicationType().getFormPath();
+            String formPath = type().getFormPath();
             outStream.write(new ClassPathResource(formPath).getInputStream().readAllBytes());
             return Loader.loadPDF(tmpFile);
         }
@@ -48,25 +52,20 @@ abstract class AbstractProcessor implements PdfProcessor {
         }
     }
 
-//    protected static List<?> convertObjectToList(Object obj) {
-//        List<?> list = new ArrayList<>();
-//        if (obj.getClass().isArray()) {
-//            list = Arrays.asList((Object[]) obj);
-//        } else if (obj instanceof Collection) {
-//            list = new ArrayList<>((Collection<?>) obj);
-//        }
-//        return list;
-//    }
-
-    public byte[] process(Map<String, Object> metadata, Boolean fieldsPreview, String patientSignatureId, String prescriberSignatureId) {
+    public byte[] process(Map<String, Object> metadata, Boolean fieldsPreview) {
         try (PDDocument doc = loadPdfDoc()) {
             removePages(doc, pagesToRemove());
             preProcess(metadata);
             assignValues(doc, metadata, fieldsPreview);
+            applySignatures(doc);
             return docToBytes(doc);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected void applySignatures(PDDocument doc) {
+        signatureApplicator.apply(doc, type().getSignatureConfigurations());
     }
 
     public void preProcess(Map<String, Object> metadata) {

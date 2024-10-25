@@ -18,7 +18,7 @@ import java.util.Map;
 public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
 
     @Override
-    public PdfType applicationType() {
+    public PdfType type() {
         return PdfType.LEASE_AGREEMENT_MD_V1;
     }
 

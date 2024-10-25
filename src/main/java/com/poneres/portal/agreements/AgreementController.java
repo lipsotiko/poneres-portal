@@ -53,7 +53,7 @@ public class AgreementController {
     public byte[] preview(@RequestParam PdfType type,
                           @RequestParam Boolean fieldsPreview,
                           @RequestBody Map<String, Object> metadata) {
-        return processorFactory.get(type).process(metadata, fieldsPreview, null, null);
+        return processorFactory.get(type).process(metadata, fieldsPreview);
     }
 
     @PostMapping
@@ -108,7 +108,7 @@ public class AgreementController {
         String fileName = agreement.getFileName();
         List<SignatureRecipient> recipients = agreement.getRecipients();
 
-        byte[] fileBytes = processorFactory.get(type).process(metadata, false, null, null);
+        byte[] fileBytes = processorFactory.get(type).process(metadata, false);
         String fileBase64 = bytesToBase64(fileBytes);
         return signatureService.create(fileName, false, true, fileBase64, recipients);
     }
