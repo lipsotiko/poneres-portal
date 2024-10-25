@@ -1,11 +1,13 @@
 package com.poneres.portal.pdfs.processors.processors;
 
+import com.poneres.portal.agreements.SignatureRecipient;
 import com.poneres.portal.pdfs.processors.PdfType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -15,6 +17,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static com.poneres.portal.helpers.Helpers.tmpFile;
 import static com.poneres.portal.pdfs.processors.DocumentHelper.*;
@@ -22,7 +25,10 @@ import static com.poneres.portal.pdfs.processors.DocumentHelper.*;
 @Slf4j
 abstract class AbstractProcessor implements PdfProcessor {
 
-    abstract PdfType applicationType();
+    @Autowired
+    private SignatureApplicator signatureApplicator;
+
+    abstract PdfType type();
 
     public List<Integer> pagesToRemove() {
         return Collections.emptyList();
@@ -36,7 +42,7 @@ abstract class AbstractProcessor implements PdfProcessor {
         // https://stackoverflow.com/questions/25869428/classpath-resource-not-found-when-running-as-jar
         File tmpFile = tmpFile();
         try (OutputStream outStream = new FileOutputStream(tmpFile)) {
-            String formPath = applicationType().getFormPath();
+            String formPath = type().getFormPath();
             outStream.write(new ClassPathResource(formPath).getInputStream().readAllBytes());
             return Loader.loadPDF(tmpFile);
         }
@@ -48,25 +54,55 @@ abstract class AbstractProcessor implements PdfProcessor {
         }
     }
 
-//    protected static List<?> convertObjectToList(Object obj) {
-//        List<?> list = new ArrayList<>();
-//        if (obj.getClass().isArray()) {
-//            list = Arrays.asList((Object[]) obj);
-//        } else if (obj instanceof Collection) {
-//            list = new ArrayList<>((Collection<?>) obj);
-//        }
-//        return list;
-//    }
-
-    public byte[] process(Map<String, Object> metadata, Boolean fieldsPreview, String patientSignatureId, String prescriberSignatureId) {
+    public byte[] process(Map<String, Object> metadata, List<SignatureRecipient> recipients, Boolean fieldsPreview) {
         try (PDDocument doc = loadPdfDoc()) {
             removePages(doc, pagesToRemove());
             preProcess(metadata);
             assignValues(doc, metadata, fieldsPreview);
+            applySignatures(doc, recipients);
             return docToBytes(doc);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    void applySignatures(PDDocument doc, List<SignatureRecipient> recipients) {
+        List<Map<String, Object>> signatureFields = signatureFields(recipients);
+        if (recipients.isEmpty()) {
+            return;
+        }
+
+        String sampleSignature = randomChars();
+        signatureApplicator.apply(doc, toSignatureConfigs(signatureFields, sampleSignature));
+    }
+
+    private List<SignatureConfig> toSignatureConfigs(List<Map<String, Object>> signatureFields, String signature) {
+        String initials = signature.subSequence(0, 2).toString().toUpperCase();
+        return signatureFields.stream().map(entry -> {
+            int x = (int) entry.get("x");
+            int y = (int) entry.get("y");
+            int page = (int) entry.get("page");
+            int recipientId = (int) entry.get("recipient_id");
+            String type = (String) entry.get("type");
+            return SignatureConfig.builder()
+                    .xPos(x)
+                    .yPos(y)
+                    .page(page)
+                    .recipientId(recipientId)
+                    .maxHeight(38)
+                    .signatureText((type.equals("signature") ? signature : initials))
+                    .build();
+        }).toList();
+    }
+
+    private String randomChars() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 12; i++) {
+            Random r = new Random();
+            char c = (char)(r.nextInt(26) + 'a');
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     public void preProcess(Map<String, Object> metadata) {

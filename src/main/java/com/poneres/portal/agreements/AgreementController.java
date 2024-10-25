@@ -1,6 +1,7 @@
 package com.poneres.portal.agreements;
 
 import com.poneres.portal.pdfs.processors.PdfType;
+import com.poneres.portal.pdfs.processors.processors.PdfProcessor;
 import com.poneres.portal.pdfs.processors.processors.ProcessorFactory;
 import com.poneres.portal.signatures.SignatureService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,8 +54,10 @@ public class AgreementController {
     @PostMapping(value = "/preview", produces = MediaType.APPLICATION_PDF_VALUE)
     public byte[] preview(@RequestParam PdfType type,
                           @RequestParam Boolean fieldsPreview,
-                          @RequestBody Map<String, Object> metadata) {
-        return processorFactory.get(type).process(metadata, fieldsPreview, null, null);
+                          @RequestBody AgreementPreview agreementPreview) {
+        Map<String, Object> metadata = agreementPreview.getMetadata();
+        List<SignatureRecipient> recipients = agreementPreview.getRecipients();
+        return processorFactory.get(type).process(metadata, recipients, fieldsPreview);
     }
 
     @PostMapping
@@ -108,8 +112,10 @@ public class AgreementController {
         String fileName = agreement.getFileName();
         List<SignatureRecipient> recipients = agreement.getRecipients();
 
-        byte[] fileBytes = processorFactory.get(type).process(metadata, false, null, null);
+        PdfProcessor pdfProcessor = processorFactory.get(type);
+        byte[] fileBytes = pdfProcessor.process(metadata, Collections.emptyList(), false);
+        List<Map<String, Object>> signatureFields = pdfProcessor.signatureFields(recipients);
         String fileBase64 = bytesToBase64(fileBytes);
-        return signatureService.create(fileName, false, true, fileBase64, recipients);
+        return signatureService.create(fileName, false, true, fileBase64, recipients, signatureFields);
     }
 }

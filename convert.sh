@@ -9,5 +9,5 @@ cd ../..
 for file in $files
 do
 	echo "converting ${file}.html to ${file}.pdf"
-	wkhtmltopdf --enable-local-file-access --enable-forms --print-media-type --footer-center 'Page [page] of [topage]' web-client/agreements/${file}.html src/main/resources/pdfs/${file}.pdf
+	wkhtmltopdf --enable-local-file-access --enable-forms --print-media-type --footer-center 'Page [page] of [topage]' --footer-spacing 4 --margin-bottom 30mm web-client/agreements/${file}.html src/main/resources/pdfs/${file}.pdf
 done

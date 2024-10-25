@@ -38,7 +38,8 @@ public class Agreement {
     }
 
     public String getFileName() {
-        return createdAt.getYear() + "_" + type.getDisplayName() + "_" + getClient() + ".pdf";
+        String fileName = createdAt.getYear() + "_" + type.getDisplayName() + "_" + getClient() + ".pdf";
+        return fileName.replaceAll(" ", "_").replaceAll(",", "");
     }
 
     @JsonProperty

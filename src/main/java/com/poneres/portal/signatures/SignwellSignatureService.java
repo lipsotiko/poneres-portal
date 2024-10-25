@@ -26,11 +26,11 @@ public class SignwellSignatureService implements SignatureService {
     private String apiUrl;
 
     @Override
-    public String create(String name, Boolean draft, Boolean withSignaturePage, String base64File, List<SignatureRecipient> recipients) {
+    public String create(String name, Boolean draft, Boolean withSignaturePage, String base64File, List<SignatureRecipient> recipients, List<Map<String, Object>> signatureFields) {
         Map<String, Object> body = new HashMap<>();
         body.put("test_mode", true);
         body.put("draft", draft);
-        body.put("with_signature_page", withSignaturePage);
+        body.put("with_signature_page", false);
 
         body.put("recipients", IntStream.range(0, recipients.size())
                 .mapToObj(i -> new HashMap<>() {{
@@ -38,6 +38,8 @@ public class SignwellSignatureService implements SignatureService {
                     put("email", recipients.get(i).getEmail());
                     put("name", recipients.get(i).getName());
                 }}).toList());
+
+        body.put("fields", new ArrayList<>(){{ add(signatureFields); }});
 
         List<Object> files = new ArrayList<>();
         files.add(new HashMap<>() {{

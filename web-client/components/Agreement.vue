@@ -1,5 +1,5 @@
 <template>
-    <PdfPreview :key="metadataForm" :metadata="metadataForm" :type="pdfType" />
+    <PdfPreview :key="getKey()" :metadata="metadataForm" :recipients="recipientsForm.recipients" :type="pdfType" />
     <IContainer>
         <PageTitle :title="`${title} - ${agreementId}`" backTo="/agreements" />
         <IRow>
@@ -17,7 +17,7 @@
                     <div class="_display:flex _justify-content:space-between">
                         <div class="left-buttons">
                             <IButton @click="loadTestData()">Load Test Data</IButton>
-                            <IButton @click="addRecipient()">Add recipient</IButton>
+                            <IButton @click="addRecipient()" :disabled="recipientsForm.recipients.length === 3">Add recipient</IButton>
                             <IButton @click="open = true">Preview</IButton>
                         </div>
                         <div v-if="!loading" class="right-buttons">
@@ -73,6 +73,8 @@ const addRecipient = () => {
     });
 };
 
+const getKey = () => JSON.stringify(metadataForm.value) + JSON.stringify(recipientsForm.value);
+
 onMounted(async () => {
     if (isNew) {
         return;
@@ -120,10 +122,11 @@ const loadTestData = () => {
     Object.keys(testData).forEach((k) => {
         metaDataSchema.value[k].value = testData[k];
     });
-    (metaDataSchema.value.touched = true), (recipientsSchema.value.recipients[0].name.value = "John Wick");
-    recipientsSchema.value.recipients[0].email.value = "landlord@poneres.com";
-    recipientsSchema.value.recipients[1].name.value = "Stephan Michael Nutty";
-    recipientsSchema.value.recipients[1].email.value = "tenant_a@hello.io";
+    metaDataSchema.value.touched = true;
+    recipientsSchema.value.recipients[0].name.value = "Hello World";
+    recipientsSchema.value.recipients[0].email.value = "evangelos.poneres@gmail.com";
+    recipientsSchema.value.recipients[1].name.value = "Hello World";
+    recipientsSchema.value.recipients[1].email.value = "hello@poneres.com";
     recipientsSchema.value.touched = true;
 };
 </script>

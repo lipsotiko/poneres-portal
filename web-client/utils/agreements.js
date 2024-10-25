@@ -45,6 +45,23 @@ const sendReminder = async (id) => {
   });
 };
 
+const agreementTypes = [
+  {
+    id: "/agreements/lease_agreement_md/",
+    label: "Residential Dwelling Lease (Maryland)",
+    type: "LEASE_AGREEMENT_MD_V1"
+  },
+  {
+    id: "/agreements/lead_paint_disclosure_md/",
+    label: "Lead Paint Disclosure (Maryland)",
+    type: "LEAD_PAINT_ADDENDUM_MD_V1"
+  },
+];
+
+const getAgreementPath = (type) => {
+  return agreementTypes.find(t => t.type === type).id
+};
+
 const errorTypes = ["touched", "invalid"];
 const fieldOptions = {
   validators: [
@@ -76,7 +93,9 @@ export {
   getSignatureStatus,
   getFileUrl,
   sendReminder,
+  getAgreementPath,
   errorTypes,
   fieldOptions,
   emailFieldOptions,
+  agreementTypes
 };

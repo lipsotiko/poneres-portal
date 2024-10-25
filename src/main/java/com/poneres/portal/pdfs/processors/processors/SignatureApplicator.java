@@ -1,7 +1,7 @@
 package com.poneres.portal.pdfs.processors.processors;
 
-import com.poneres.portal.signatures.Signature;
-import com.poneres.portal.signatures.SignatureRepository;
+import com.poneres.portal.helpers.TextToImageBuilder;
+import com.poneres.portal.signatures.SignatureFont;
 import org.apache.pdfbox.multipdf.Overlay;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -19,20 +19,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import static com.poneres.portal.helpers.Helpers.base64ToFile;
 import static com.poneres.portal.helpers.Helpers.tmpFile;
 import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class SignatureApplicator {
 
+    private static final float MARGIN_TOP = 24;
+    private static final double PIXELS_TO_POINTS_RATIO = 0.75;
+    //    private static final double PIXELS_TO_POINTS_RATIO = .74999943307122;
+    @Autowired
+    private TextToImageBuilder textToImageBuilder;
+
     @Value("${spring.profiles.active}")
     private String activeProfile;
-
-    @Autowired
-    private SignatureRepository signatureRepository;
 
     public void apply(PDDocument doc, List<SignatureConfig> configs) {
         try (Overlay overlay = new Overlay()) {
@@ -61,25 +62,18 @@ public class SignatureApplicator {
             PDPageContentStream contents = new PDPageContentStream(signatureDoc, signaturePage);
 
             for (SignatureConfig config : signatureConfigs) {
-                Optional<Signature> signatureOptional = signatureRepository.findById(config.getSignatureId());
-
-                if (signatureOptional.isEmpty()) {
-                    continue;
-                }
-
-                File signatureFile = base64ToFile(signatureOptional.get().getBase64());
+                byte[] bytes = textToImageBuilder.convertToPng(config.getSignatureText(), SignatureFont.BERLIMAN);
+                File signatureFile = tmpFile(bytes, ".png");
                 BufferedImage image = ImageIO.read(signatureFile);
 
-                if (activeProfile.equals("develop")) {
-                    applyBorder(image);
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    try {
-                        ImageIO.write(image, "png", baos);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    signatureFile = tmpFile(baos.toByteArray(), ".png");
+                applyBorder(image);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                try {
+                    ImageIO.write(image, "png", baos);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
+                signatureFile = tmpFile(baos.toByteArray(), ".png");
 
                 int width = image.getWidth();
                 int height = image.getHeight();
@@ -92,7 +86,11 @@ public class SignatureApplicator {
                 }
 
                 PDImageXObject pdImage = PDImageXObject.createFromFileByExtension(signatureFile, new PDDocument());
-                contents.drawImage(pdImage, config.getXPos(), config.getYPos(), width, height);
+
+                // Mimic SignWell field position, top left corner using pixels.
+                float y = signaturePage.getMediaBox().getHeight() - MARGIN_TOP - (float)(config.getYPos() * PIXELS_TO_POINTS_RATIO);
+                float x = (float)(config.getXPos() * PIXELS_TO_POINTS_RATIO);
+                contents.drawImage(pdImage, x, y, width, height);
             }
             contents.close();
             return signatureDoc;

@@ -1,5 +1,6 @@
 package com.poneres.portal.pdfs.processors.processors;
 
+import com.poneres.portal.agreements.SignatureRecipient;
 import com.poneres.portal.pdfs.processors.PdfType;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
@@ -11,14 +12,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.TextStyle;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
 
     @Override
-    public PdfType applicationType() {
+    public PdfType type() {
         return PdfType.LEASE_AGREEMENT_MD_V1;
     }
 
@@ -225,5 +225,65 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
     @Override
     public boolean runCheckBoxConfiguration() {
         return true;
+    }
+
+    @Override
+    public List<Map<String, Object>> signatureFields(List<SignatureRecipient> recipients) {
+        List<Map<String, Object>> fields = new ArrayList<>();
+        List<Integer> initialBottomOfPages = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 17);
+
+        int multiTenantInitialsGap = 0;
+        int page12SignaturePosition = 932;
+        int page14SignaturePosition = 640;
+        int page15SignaturePosition = 542;
+        int page16SignaturePosition = 914;
+
+        for (int i = 0; i < recipients.size(); i++) {
+            if (i == 0) {
+                for (Integer page : initialBottomOfPages) {
+                    fields.add(buildField(page, 730, 1044, i, "initials"));
+                }
+                fields.add(buildField(12, 72, page12SignaturePosition, i, "signature"));
+                fields.add(buildField(14, 72, page14SignaturePosition, i, "signature"));
+                fields.add(buildField(15, 72, page15SignaturePosition, i, "signature"));
+                fields.add(buildField(16, 72, page16SignaturePosition, i, "signature"));
+            } else {
+                for (Integer page : initialBottomOfPages) {
+                    fields.add(buildField(page, 36 + multiTenantInitialsGap, 1044, i, "initials"));
+                }
+
+                fields.add(buildField(4, 90 + multiTenantInitialsGap, 244, i, "initials"));
+                fields.add(buildField(5, 90 + multiTenantInitialsGap, 619, i, "initials"));
+                fields.add(buildField(6, 90 + multiTenantInitialsGap, 777, i, "initials"));
+                fields.add(buildField(9, 90 + multiTenantInitialsGap, 70, i, "initials"));
+                fields.add(buildField(10, 122 + multiTenantInitialsGap, 101, i, "initials"));
+                fields.add(buildField(10, 90 + multiTenantInitialsGap, 623, i, "initials"));
+                multiTenantInitialsGap += 54;
+
+                page12SignaturePosition -= 50;
+                fields.add(buildField(12, 72, page12SignaturePosition, i, "signature"));
+
+                page14SignaturePosition -= 50;
+                fields.add(buildField(14, 72, page14SignaturePosition, i, "signature"));
+
+                page15SignaturePosition -= 50;
+                fields.add(buildField(15, 72, page15SignaturePosition, i, "signature"));
+
+                page16SignaturePosition -= 50;
+                fields.add(buildField(16, 72, page16SignaturePosition, i, "signature"));
+            }
+        }
+
+        return fields;
+    }
+
+    private Map<String, Object> buildField(int page, int x, int y, int recipientId, String type) {
+        Map<String, Object> field = new HashMap<>();
+        field.put("page", page);
+        field.put("x", x);
+        field.put("y", y);
+        field.put("type", type);
+        field.put("recipient_id", recipientId);
+        return field;
     }
 }

@@ -10,13 +10,13 @@ import { inject } from "vue";
 const sideBarOpen = inject("sideBarOpen");
 const pdfPreview = ref();
 const loadingPreview = ref(false);
-const { type, metadata } = defineProps(["type", "metadata"]);
+const { type, metadata, recipients } = defineProps(["type", "metadata", "recipients"]);
 
 onUpdated(async () => {
   if (sideBarOpen.value) {
     pdfPreview.value.src = "";
     loadingPreview.value = true;
-    await previewAgreement(type, metadata).then((blob) => {
+    await previewAgreement(type, { metadata, recipients }).then((blob) => {
       var file = window.URL.createObjectURL(blob);
       pdfPreview.value.src = file;
     });
