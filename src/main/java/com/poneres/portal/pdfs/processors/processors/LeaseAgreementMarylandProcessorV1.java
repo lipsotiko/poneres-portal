@@ -84,8 +84,10 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
     private void putDollars(Map<String, Object> metadata, String dollarsKey, String putKey) {
         if (metadata.containsKey(dollarsKey)) {
             Double dueWithinDaysNumber = fromObj(metadata.get(dollarsKey));
-            Money lateFee = Money.of(CurrencyUnit.USD, dueWithinDaysNumber);
-            metadata.put(putKey, formatMoney(lateFee));
+            if (dueWithinDaysNumber != null) {
+                Money lateFee = Money.of(CurrencyUnit.USD, dueWithinDaysNumber);
+                metadata.put(putKey, formatMoney(lateFee));
+            }
             metadata.remove(dollarsKey);
         }
     }
@@ -167,6 +169,7 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
             if (proRatedRentInDollarsDouble != null) {
                 return getMoney(metadata, proRatedRentInDollarsDouble, "proRatedRentNumber", "proRatedRentInDollars");
             }
+            metadata.remove("proRatedRentInDollars");
         }
 
         return null;
@@ -193,7 +196,11 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
         if (obj instanceof Integer) {
             return Double.parseDouble(Integer.toString((int) obj));
         } else if (obj instanceof String) {
-            return Double.parseDouble(String.valueOf(obj));
+            String s = String.valueOf(obj);
+            if (s.isEmpty()) {
+                return null;
+            }
+            return Double.parseDouble(s);
         } else {
             return null;
         }
