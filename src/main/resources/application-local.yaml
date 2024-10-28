@@ -1,2 +1,4 @@
 webapp:
   url: "http://localhost:3000"
+pdf:
+  fields-preview: true

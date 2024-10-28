@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface PdfProcessor {
-    byte[] process(Map<String, Object> metadata, List<SignatureRecipient> recipients, Boolean fieldsPreview);
+    byte[] process(Map<String, Object> metadata, List<SignatureRecipient> recipients);
 
     List<Map<String, Object>> signatureFields(List<SignatureRecipient> recipients);
 

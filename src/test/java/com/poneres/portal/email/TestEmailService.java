@@ -2,11 +2,13 @@ package com.poneres.portal.email;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@ActiveProfiles("local")
 @EqualsAndHashCode(callSuper = true)
 public class TestEmailService extends AbstractEmailService implements EmailService {
 

@@ -53,11 +53,10 @@ public class AgreementController {
 
     @PostMapping(value = "/preview", produces = MediaType.APPLICATION_PDF_VALUE)
     public byte[] preview(@RequestParam PdfType type,
-                          @RequestParam Boolean fieldsPreview,
                           @RequestBody AgreementPreview agreementPreview) {
         Map<String, Object> metadata = agreementPreview.getMetadata();
         List<SignatureRecipient> recipients = agreementPreview.getRecipients();
-        return processorFactory.get(type).process(metadata, recipients, fieldsPreview);
+        return processorFactory.get(type).process(metadata, recipients);
     }
 
     @PostMapping
@@ -113,7 +112,7 @@ public class AgreementController {
         List<SignatureRecipient> recipients = agreement.getRecipients();
 
         PdfProcessor pdfProcessor = processorFactory.get(type);
-        byte[] fileBytes = pdfProcessor.process(metadata, Collections.emptyList(), false);
+        byte[] fileBytes = pdfProcessor.process(metadata, Collections.emptyList());
         List<Map<String, Object>> signatureFields = pdfProcessor.signatureFields(recipients);
         String fileBase64 = bytesToBase64(fileBytes);
         return signatureService.create(fileName, false, true, fileBase64, recipients, signatureFields);

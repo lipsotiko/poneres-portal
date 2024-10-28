@@ -8,6 +8,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -24,6 +25,9 @@ import static com.poneres.portal.pdfs.processors.DocumentHelper.*;
 
 @Slf4j
 abstract class AbstractProcessor implements PdfProcessor {
+
+    @Value("${pdf.fields-preview}")
+    private Boolean fieldsPreview;
 
     @Autowired
     private SignatureApplicator signatureApplicator;
@@ -54,7 +58,7 @@ abstract class AbstractProcessor implements PdfProcessor {
         }
     }
 
-    public byte[] process(Map<String, Object> metadata, List<SignatureRecipient> recipients, Boolean fieldsPreview) {
+    public byte[] process(Map<String, Object> metadata, List<SignatureRecipient> recipients) {
         try (PDDocument doc = loadPdfDoc()) {
             removePages(doc, pagesToRemove());
             preProcess(metadata);
