@@ -14,6 +14,11 @@ public class ViewControllers {
         return new ClassPathResource("public/sign-up/index.html").getInputStream().readAllBytes();
     }
 
+    @GetMapping(path = "/apply", produces = "text/html")
+    public byte[] apply() throws IOException {
+        return new ClassPathResource("public/apply/index.html").getInputStream().readAllBytes();
+    }
+
     @GetMapping(path = "/earnings/payout-method", produces = "text/html")
     public byte[] payoutMethod() throws IOException {
         return new ClassPathResource("public/earnings/payout-method/index.html").getInputStream().readAllBytes();

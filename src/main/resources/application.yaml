@@ -24,6 +24,8 @@ s3:
   access-secret: ${AWS_ACCESS_SECRET}
 email:
   no-reply: "hello@poneres.com"
+  applications:
+    to: evangelos.poneres@gmail.com
 auth0:
   administration:
     client-id: ${AUTH0_ADMIN_CLIENT_ID}
@@ -48,3 +50,5 @@ logging:
 #          mongodb:
 #            core:
 #              MongoTemplate: DEBUG
+pdf:
+  fields-preview: true

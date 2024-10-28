@@ -16,7 +16,7 @@
                 <div class="save">
                     <div class="_display:flex _justify-content:space-between">
                         <div class="left-buttons">
-                            <IButton @click="loadTestData()">Load Test Data</IButton>
+                            <IButton @click="loadTestData()" v-if="$config.public.deploymentType === 'local'">Load Test Data</IButton>
                             <IButton @click="addRecipient()" :disabled="recipientsForm.recipients.length === 3">Add recipient</IButton>
                             <IButton @click="open = true">Preview</IButton>
                         </div>
