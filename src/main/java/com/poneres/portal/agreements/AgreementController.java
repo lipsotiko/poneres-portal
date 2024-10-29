@@ -59,6 +59,18 @@ public class AgreementController {
         return processorFactory.get(type).process(metadata, recipients);
     }
 
+    @PostMapping(value = "/{id}/copy", produces = MediaType.APPLICATION_PDF_VALUE)
+    public void copy(@PathVariable("id") String agreementId) {
+        agreementRepository.findById(agreementId).ifPresent(agreement -> {
+            Agreement copy = Agreement.builder()
+                    .type(agreement.getType())
+                    .metadata(agreement.getMetadata())
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            agreementRepository.save(copy);
+        });
+    }
+
     @PostMapping
     public Agreement save(@RequestBody Agreement agreement) {
         if (agreement.getId() != null) {

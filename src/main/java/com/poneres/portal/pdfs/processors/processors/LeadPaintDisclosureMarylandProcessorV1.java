@@ -4,6 +4,7 @@ import com.poneres.portal.agreements.SignatureRecipient;
 import com.poneres.portal.pdfs.processors.PdfType;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,24 @@ public class LeadPaintDisclosureMarylandProcessorV1 extends AbstractProcessor {
 
     @Override
     public List<Map<String, Object>> signatureFields(List<SignatureRecipient> recipients) {
-        return List.of();
+        List<Map<String, Object>> fields = new ArrayList<>();
+
+        int signaturePosition = 914;
+        int multiTenantInitialsGap = 0;
+
+        for(int i = 0; i < recipients.size(); i++) {
+            if (i == 0) {
+                fields.add(buildField(1, 88, 356, i, "initials"));
+                fields.add(buildField(1, 88, 466, i, "initials"));
+            } else {
+                fields.add(buildField(1, 70 + multiTenantInitialsGap, 639, i, "initials"));
+                fields.add(buildField(1, 70 + multiTenantInitialsGap, 675, i, "initials"));
+                multiTenantInitialsGap += 54;
+            }
+
+            fields.add(buildField(1, 72, signaturePosition, i, "signature"));
+            signaturePosition -= 50;
+        }
+        return fields;
     }
 }

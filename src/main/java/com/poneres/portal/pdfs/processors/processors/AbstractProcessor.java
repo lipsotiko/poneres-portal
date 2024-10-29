@@ -15,10 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static com.poneres.portal.helpers.Helpers.tmpFile;
 import static com.poneres.portal.pdfs.processors.DocumentHelper.*;
@@ -94,7 +91,7 @@ abstract class AbstractProcessor implements PdfProcessor {
                     .page(page)
                     .recipientId(recipientId)
                     .maxHeight(38)
-                    .signatureText((type.equals("signature") ? signature : initials))
+                    .signatureText((type.equals("signature") ? signature + "_" + recipientId : initials))
                     .build();
         }).toList();
     }
@@ -103,7 +100,7 @@ abstract class AbstractProcessor implements PdfProcessor {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 12; i++) {
             Random r = new Random();
-            char c = (char)(r.nextInt(26) + 'a');
+            char c = (char) (r.nextInt(26) + 'a');
             sb.append(c);
         }
         return sb.toString();
@@ -187,5 +184,15 @@ abstract class AbstractProcessor implements PdfProcessor {
             }
             metadata.remove(key);
         }
+    }
+
+    public Map<String, Object> buildField(int page, int x, int y, int recipientId, String type) {
+        Map<String, Object> field = new HashMap<>();
+        field.put("page", page);
+        field.put("x", x);
+        field.put("y", y);
+        field.put("type", type);
+        field.put("recipient_id", recipientId);
+        return field;
     }
 }

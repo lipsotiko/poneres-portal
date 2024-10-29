@@ -250,10 +250,6 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
                 for (Integer page : initialBottomOfPages) {
                     fields.add(buildField(page, 730, 1044, i, "initials"));
                 }
-                fields.add(buildField(12, 72, page12SignaturePosition, i, "signature"));
-                fields.add(buildField(14, 72, page14SignaturePosition, i, "signature"));
-                fields.add(buildField(15, 72, page15SignaturePosition, i, "signature"));
-                fields.add(buildField(16, 72, page16SignaturePosition, i, "signature"));
             } else {
                 for (Integer page : initialBottomOfPages) {
                     fields.add(buildField(page, 36 + multiTenantInitialsGap, 1044, i, "initials"));
@@ -266,31 +262,21 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
                 fields.add(buildField(10, 122 + multiTenantInitialsGap, 101, i, "initials"));
                 fields.add(buildField(10, 90 + multiTenantInitialsGap, 623, i, "initials"));
                 multiTenantInitialsGap += 54;
-
-                page12SignaturePosition -= 50;
-                fields.add(buildField(12, 72, page12SignaturePosition, i, "signature"));
-
-                page14SignaturePosition -= 50;
-                fields.add(buildField(14, 72, page14SignaturePosition, i, "signature"));
-
-                page15SignaturePosition -= 50;
-                fields.add(buildField(15, 72, page15SignaturePosition, i, "signature"));
-
-                page16SignaturePosition -= 50;
-                fields.add(buildField(16, 72, page16SignaturePosition, i, "signature"));
             }
+
+            fields.add(buildField(12, 72, page12SignaturePosition, i, "signature"));
+            page12SignaturePosition -= 50;
+
+            fields.add(buildField(14, 72, page14SignaturePosition, i, "signature"));
+            page14SignaturePosition -= 50;
+
+            fields.add(buildField(15, 72, page15SignaturePosition, i, "signature"));
+            page15SignaturePosition -= 50;
+
+            fields.add(buildField(16, 72, page16SignaturePosition, i, "signature"));
+            page16SignaturePosition -= 50;
         }
 
         return fields;
-    }
-
-    private Map<String, Object> buildField(int page, int x, int y, int recipientId, String type) {
-        Map<String, Object> field = new HashMap<>();
-        field.put("page", page);
-        field.put("x", x);
-        field.put("y", y);
-        field.put("type", type);
-        field.put("recipient_id", recipientId);
-        return field;
     }
 }

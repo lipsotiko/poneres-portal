@@ -36,7 +36,7 @@
 
     textarea {
       width: 100%;
-      height: 100px;
+      height: 72px;
     }
 
     .header {
@@ -54,9 +54,29 @@
       border-top: 1px solid black;
     }
 
-    .signature-block {
+    .initials {
+      margin-top: 48px;
+    }
+
+    .signature {
+      margin: 0;
+      padding: 12px;
+    }
+
+    .signature label {
+      margin-top: 18px;
+      display: block;
+      border-top: 1px solid black;
       width: 100%;
-      height: 200px;
+    }
+
+    .tenant-signatures {
+      margin-top: 28px;
+      display: flex;
+    }
+
+    .tenant-signatures p {
+      width: 100%;
     }
 
     @media print {
@@ -138,7 +158,23 @@
   <p>The following parties have reviewed the information above and certify, to the best of their knowledge, that the
     information provided by the signatory is true and accurate.</p>
   <div class="signature-block">
-
+    <div class="tenant-signatures">
+      <p class="signature">
+        <label>
+          <b>Tenant's Signature</b>
+        </label>
+      </p>
+      <p class="signature">
+        <label>
+          <b>Tenant's Signature</b>
+        </label>
+      </p>
+    </div>
+    <p class="signature">
+      <label>
+        <b>Landlord or Authorized Representative of Landlord</b>
+      </label>
+    </p>
   </div>
 </body>
 
