@@ -1,7 +1,6 @@
 package com.poneres.portal.pdfs.processors.processors;
 
 import com.poneres.portal.agreements.SignatureRecipient;
-import com.poneres.portal.pdfs.processors.PdfType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,11 +9,6 @@ import java.util.Map;
 
 @Service
 public class LeadPaintDisclosureMarylandProcessorV1 extends AbstractProcessor {
-
-    @Override
-    public PdfType type() {
-        return PdfType.LEAD_PAINT_ADDENDUM_MD_V1;
-    }
 
     @Override
     public void preProcess(Map<String, Object> metadata) {

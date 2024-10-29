@@ -29,7 +29,9 @@ abstract class AbstractProcessor implements PdfProcessor {
     @Autowired
     private SignatureApplicator signatureApplicator;
 
-    abstract PdfType type();
+    public List<Map<String, Object>> signatureFields(List<SignatureRecipient> recipients) {
+        return List.of();
+    }
 
     public List<Integer> pagesToRemove() {
         return Collections.emptyList();
@@ -39,11 +41,11 @@ abstract class AbstractProcessor implements PdfProcessor {
         return false;
     }
 
-    protected PDDocument loadPdfDoc() throws IOException {
+    protected PDDocument loadPdfDoc(PdfType type) throws IOException {
         // https://stackoverflow.com/questions/25869428/classpath-resource-not-found-when-running-as-jar
         File tmpFile = tmpFile();
         try (OutputStream outStream = new FileOutputStream(tmpFile)) {
-            String formPath = type().getFormPath();
+            String formPath = type.getFormPath();
             outStream.write(new ClassPathResource(formPath).getInputStream().readAllBytes());
             return Loader.loadPDF(tmpFile);
         }
@@ -55,8 +57,8 @@ abstract class AbstractProcessor implements PdfProcessor {
         }
     }
 
-    public byte[] process(Map<String, Object> metadata, List<SignatureRecipient> recipients) {
-        try (PDDocument doc = loadPdfDoc()) {
+    public byte[] process(PdfType type, Map<String, Object> metadata, List<SignatureRecipient> recipients) {
+        try (PDDocument doc = loadPdfDoc(type)) {
             removePages(doc, pagesToRemove());
             preProcess(metadata);
             assignValues(doc, metadata, fieldsPreview);

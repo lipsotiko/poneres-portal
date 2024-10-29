@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 public class ProcessorFactory {
 
     @Autowired
+    private DefaultAgreementProcessor defaultAgreementProcessor;
+
+    @Autowired
     private LeaseAgreementMarylandProcessorV1 leaseAgreementMarylandProcessorV1;
 
     @Autowired
@@ -19,7 +22,8 @@ public class ProcessorFactory {
         } else if (type.equals(PdfType.LEAD_PAINT_ADDENDUM_MD_V1)) {
             return leadPaintDisclosureMarylandProcessorV1;
         } else {
-            return null;
+            return defaultAgreementProcessor;
         }
     }
 }
+

@@ -1,7 +1,6 @@
 package com.poneres.portal.pdfs.processors.processors;
 
 import com.poneres.portal.agreements.SignatureRecipient;
-import com.poneres.portal.pdfs.processors.PdfType;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.joda.money.format.MoneyFormatter;
@@ -16,11 +15,6 @@ import java.util.*;
 
 @Service
 public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
-
-    @Override
-    public PdfType type() {
-        return PdfType.LEASE_AGREEMENT_MD_V1;
-    }
 
     @Override
     public void preProcess(Map<String, Object> metadata) {

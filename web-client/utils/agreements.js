@@ -56,6 +56,11 @@ const agreementTypes = [
     label: "Lead Paint Disclosure (Maryland)",
     type: "LEAD_PAINT_ADDENDUM_MD_V1"
   },
+  {
+    id: "/agreements/property_management_agreement/",
+    label: "Property Management Agreement",
+    type: "PROPERTY_MANAGEMENT_AGREEMENT_V1"
+  }
 ];
 
 const getAgreementPath = (type) => {
