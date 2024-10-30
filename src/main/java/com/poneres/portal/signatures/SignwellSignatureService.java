@@ -25,12 +25,13 @@ public class SignwellSignatureService implements SignatureService {
     @Value("${signwell.api-url}")
     private String apiUrl;
 
+    @Value("${signwell.test-mode}")
+    private Boolean testMode;
+
     @Override
-    public String create(String name, Boolean draft, Boolean withSignaturePage, String base64File, List<SignatureRecipient> recipients, List<Map<String, Object>> signatureFields) {
+    public String create(String name, String base64File, List<SignatureRecipient> recipients, List<Map<String, Object>> signatureFields) {
         Map<String, Object> body = new HashMap<>();
-        body.put("test_mode", true);
-        body.put("draft", draft);
-        body.put("with_signature_page", false);
+        body.put("test_mode", testMode);
 
         body.put("recipients", IntStream.range(0, recipients.size())
                 .mapToObj(i -> new HashMap<>() {{
@@ -55,7 +56,7 @@ public class SignwellSignatureService implements SignatureService {
     @Override
     public void delete(String ssdId) {
         if (ssdId == null) {
-            log.info("NULL ssdId was supplied");
+            log.info("NULL ssdId was supplied when attempting to delete document");
             return;
         }
 
@@ -76,7 +77,7 @@ public class SignwellSignatureService implements SignatureService {
     @Override
     public String status(String ssdId) {
         if (ssdId == null) {
-            log.info("NULL ssdId was supplied");
+            log.info("NULL ssdId was supplied when attempting to procure status");
             return "None";
         }
 

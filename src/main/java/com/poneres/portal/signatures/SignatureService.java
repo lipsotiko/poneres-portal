@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface SignatureService {
 
-    String create(String name, Boolean isDraft, Boolean withSignaturePage, String base64File, List<SignatureRecipient> recipients, List<Map<String, Object>> signatureFields);
+    String create(String name, String base64File, List<SignatureRecipient> recipients, List<Map<String, Object>> signatureFields);
 
     void delete(String ssdId);
 

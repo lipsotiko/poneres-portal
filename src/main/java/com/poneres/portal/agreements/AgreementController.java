@@ -127,6 +127,6 @@ public class AgreementController {
         byte[] fileBytes = pdfProcessor.process(type, metadata, Collections.emptyList());
         List<Map<String, Object>> signatureFields = pdfProcessor.signatureFields(recipients);
         String fileBase64 = bytesToBase64(fileBytes);
-        return signatureService.create(fileName, false, true, fileBase64, recipients, signatureFields);
+        return signatureService.create(fileName, fileBase64, recipients, signatureFields);
     }
 }

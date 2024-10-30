@@ -10,3 +10,5 @@ pdf:
 email:
   applications:
     to: evangelos.poneres@gmail.com,poneres.c@gmail.com
+signwell:
+  test-mode: false

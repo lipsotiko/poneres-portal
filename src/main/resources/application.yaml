@@ -35,6 +35,7 @@ stripe:
 signwell:
   api-url: "https://www.signwell.com/api/v1/"
   api-key: ${SIGNWELL_API_KEY}
+  test-mode: true
 webapp:
   url: "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net"
 server:
