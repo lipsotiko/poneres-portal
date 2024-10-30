@@ -46,8 +46,8 @@ const {
 
 const send = async (id) => {
   loading.value = true;
-  await sendForSigning(id);
-  onSend();
+  onSend(id);
+  loading.value = false;
 };
 
 onMounted(async () => {

@@ -84,7 +84,6 @@ onMounted(async () => {
     const agreement = await getAgreement(agreementId);
     sent.value = agreement.sent;
 
-    console.log(agreement.metadata);
     Object.keys(agreement.metadata).forEach((k) => {
         if (metaDataSchema.value.hasOwnProperty(k)) {
             metaDataSchema.value[k].value = agreement.metadata[k];

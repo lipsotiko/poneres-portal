@@ -117,6 +117,11 @@ public class AgreementController {
         agreementRepository.findById(agreementId).ifPresent(agreement -> signatureService.sendReminder(agreement.getSsdId()));
     }
 
+    @GetMapping("/test-mode")
+    public Boolean isTestMode() {
+        return signatureService.isTestMode();
+    }
+
     private String sendForSigning(Agreement agreement) {
         PdfType type = agreement.getType();
         Map<String, Object> metadata = agreement.getMetadata();

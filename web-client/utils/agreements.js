@@ -45,6 +45,10 @@ const sendReminder = async (id) => {
   });
 };
 
+const isTestMode = async () => {
+  return $fetch('/api/agreements/test-mode');
+}
+
 const agreementTypes = [
   {
     id: "/agreements/lease_agreement_md/",
@@ -99,6 +103,7 @@ export {
   getFileUrl,
   sendReminder,
   getAgreementPath,
+  isTestMode,
   errorTypes,
   fieldOptions,
   emailFieldOptions,

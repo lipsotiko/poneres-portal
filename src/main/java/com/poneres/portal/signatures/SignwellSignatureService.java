@@ -111,6 +111,11 @@ public class SignwellSignatureService implements SignatureService {
         restApiService.post(apiUrl + "documents/" + ssdId + "/remind", headers(), Collections.emptyMap());
     }
 
+    @Override
+    public Boolean isTestMode() {
+        return testMode;
+    }
+
     private Map<String, String> headers() {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Api-Key", apiKey);

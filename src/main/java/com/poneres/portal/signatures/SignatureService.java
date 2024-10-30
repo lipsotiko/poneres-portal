@@ -16,4 +16,6 @@ public interface SignatureService {
     String fileUrl(String ssdId);
 
     void sendReminder(String ssdId);
+
+    Boolean isTestMode();
 }
