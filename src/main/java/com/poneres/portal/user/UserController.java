@@ -63,12 +63,6 @@ public class UserController {
         return authenticationService.getUserProfile();
     }
 
-    @UserAuthorized("isAdmin")
-    @GetMapping("/prescribers")
-    public List<UserProfile> getPrescribers() {
-        return userProfileRepository.findByRolesContains(Role.PRESCRIBER);
-    }
-
     @GetMapping("/payment-account")
     public PaymentAccount getPaymentAccount() {
         return paymentService.getAccount();

@@ -6,7 +6,7 @@
             <p class="lead">Agreement</p>
         </IRow>
         <ClientOnly>
-            <IForm v-model="metaDataSchema" :disabled="loading">
+            <IForm v-model="metaDataSchema" :disabled="loading || sent">
                 <slot></slot>
             </IForm>
         </ClientOnly>
@@ -17,6 +17,7 @@
                     <div class="_display:flex _justify-content:space-between">
                         <div class="left-buttons">
                             <IButton @click="loadTestData()" v-if="$config.public.deploymentType === 'local'">Load Test Data</IButton>
+                            <IButton v-if="!isNew" @click="handleCopy()" :loading="copying">Copy</IButton>
                             <IButton @click="addRecipient()" :disabled="recipientsForm.recipients.length === 3">Add recipient</IButton>
                             <IButton @click="open = true">Preview</IButton>
                         </div>
@@ -45,6 +46,7 @@ const isNew = agreementId === "New";
 const sent = ref();
 const saving = ref(false);
 const loading = ref(false);
+const copying = ref(false);
 const open = inject("sideBarOpen");
 
 const { schema: metaDataSchema, form: metadataForm, validate: metadataValidate } = useForm({ ...schema });
@@ -120,6 +122,13 @@ const save = async () => {
         navigateTo("/agreements");
     });
 };
+
+const handleCopy = async () => {
+    copying.value = true;
+    await copyAgreement(agreementId).then(() => {
+        navigateTo("/agreements");
+    });
+}
 
 const loadTestData = () => {
     Object.keys(testData).forEach((k) => {

@@ -65,6 +65,7 @@ public class AgreementController {
             Agreement copy = Agreement.builder()
                     .type(agreement.getType())
                     .metadata(agreement.getMetadata())
+                    .recipients(Collections.emptyList())
                     .createdAt(LocalDateTime.now())
                     .build();
             agreementRepository.save(copy);

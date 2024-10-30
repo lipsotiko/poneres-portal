@@ -39,6 +39,12 @@ const getFileUrl = async (id) => {
   return $fetch(`/api/agreements/${id}/file-url`);
 };
 
+const copyAgreement = async (id) => {
+  return $fetch(`/api/agreements/${id}/copy`, {
+    method: 'POST'
+  });
+};
+
 const sendReminder = async (id) => {
   return $fetch(`/api/agreements/${id}/send-reminder`, {
     method: "POST",
@@ -104,6 +110,7 @@ export {
   sendReminder,
   getAgreementPath,
   isTestMode,
+  copyAgreement,
   errorTypes,
   fieldOptions,
   emailFieldOptions,
