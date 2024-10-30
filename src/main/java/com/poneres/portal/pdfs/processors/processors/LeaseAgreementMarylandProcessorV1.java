@@ -211,7 +211,7 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
     }
 
     private String moneyToWords(Money money) {
-        BigDecimal remainder = money.getAmount().remainder(BigDecimal.TWO);
+        BigDecimal remainder = money.getAmount().remainder(BigDecimal.ONE);
         BigDecimal cents = remainder.multiply(BigDecimal.valueOf(100L));
 
         String words = NumberToWords.convert(money.getAmount().longValue());
@@ -252,7 +252,7 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
                 fields.add(buildField(4, 90 + multiTenantInitialsGap, 244, i, "initials"));
                 fields.add(buildField(5, 90 + multiTenantInitialsGap, 619, i, "initials"));
                 fields.add(buildField(6, 90 + multiTenantInitialsGap, 777, i, "initials"));
-                fields.add(buildField(9, 90 + multiTenantInitialsGap, 70, i, "initials"));
+                fields.add(buildField(9, 90 + multiTenantInitialsGap, 84, i, "initials"));
                 fields.add(buildField(10, 122 + multiTenantInitialsGap, 101, i, "initials"));
                 fields.add(buildField(10, 90 + multiTenantInitialsGap, 623, i, "initials"));
                 multiTenantInitialsGap += 54;
