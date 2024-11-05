@@ -249,12 +249,12 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
                     fields.add(buildField(page, 36 + multiTenantInitialsGap, 1044, i, "initials"));
                 }
 
-                fields.add(buildField(4, 90 + multiTenantInitialsGap, 244, i, "initials"));
-                fields.add(buildField(5, 90 + multiTenantInitialsGap, 619, i, "initials"));
-                fields.add(buildField(6, 90 + multiTenantInitialsGap, 777, i, "initials"));
-                fields.add(buildField(9, 90 + multiTenantInitialsGap, 84, i, "initials"));
-                fields.add(buildField(10, 122 + multiTenantInitialsGap, 101, i, "initials"));
-                fields.add(buildField(10, 90 + multiTenantInitialsGap, 623, i, "initials"));
+                fields.add(buildField(4, 86 + multiTenantInitialsGap, 244, i, "initials"));
+                fields.add(buildField(5, 86 + multiTenantInitialsGap, 619, i, "initials"));
+                fields.add(buildField(6, 86 + multiTenantInitialsGap, 777, i, "initials"));
+                fields.add(buildField(9, 86 + multiTenantInitialsGap, 84, i, "initials"));
+                fields.add(buildField(10, 118 + multiTenantInitialsGap, 101, i, "initials"));
+                fields.add(buildField(10, 86 + multiTenantInitialsGap, 623, i, "initials"));
                 multiTenantInitialsGap += 54;
             }
 
