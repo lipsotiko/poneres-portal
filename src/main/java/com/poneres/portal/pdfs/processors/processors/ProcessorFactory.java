@@ -16,14 +16,18 @@ public class ProcessorFactory {
     @Autowired
     private LeadPaintDisclosureMarylandProcessorV1 leadPaintDisclosureMarylandProcessorV1;
 
+    @Autowired
+    private PropertyManagementProcessorV1 propertyManagementProcessorV1;
+
     public PdfProcessor get(PdfType type) {
         if (type.equals(PdfType.LEASE_AGREEMENT_MD_V1)) {
             return leaseAgreementMarylandProcessorV1;
         } else if (type.equals(PdfType.LEAD_PAINT_ADDENDUM_MD_V1)) {
             return leadPaintDisclosureMarylandProcessorV1;
+        } else if (type.equals(PdfType.PROPERTY_MANAGEMENT_AGREEMENT_V1)) {
+            return propertyManagementProcessorV1;
         } else {
             return defaultAgreementProcessor;
         }
     }
 }
-
