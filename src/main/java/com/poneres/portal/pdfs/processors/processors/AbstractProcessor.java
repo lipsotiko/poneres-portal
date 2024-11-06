@@ -37,10 +37,6 @@ abstract class AbstractProcessor implements PdfProcessor {
         return Collections.emptyList();
     }
 
-    public boolean runCheckBoxConfiguration() {
-        return false;
-    }
-
     protected PDDocument loadPdfDoc(PdfType type) throws IOException {
         // https://stackoverflow.com/questions/25869428/classpath-resource-not-found-when-running-as-jar
         File tmpFile = tmpFile();
@@ -134,7 +130,7 @@ abstract class AbstractProcessor implements PdfProcessor {
             if (field instanceof PDTextField) {
                 setField(doc, field.getPartialName(), field.getPartialName());
             } else if (field instanceof PDCheckBox) {
-                configureCheckbox(doc, (PDCheckBox) field);
+                applyCheckboxAppearance(doc, (PDCheckBox) field);
                 setField(doc, field.getPartialName(), "true");
             } else {
                 processField(field, "|--", field.getPartialName());
@@ -142,14 +138,14 @@ abstract class AbstractProcessor implements PdfProcessor {
         }
     }
 
-    protected void setField(PDDocument document, String name, String value) throws IOException {
-        PDDocumentCatalog docCatalog = document.getDocumentCatalog();
+    protected void setField(PDDocument doc, String name, String value) throws IOException {
+        PDDocumentCatalog docCatalog = doc.getDocumentCatalog();
         PDAcroForm acroForm = docCatalog.getAcroForm();
         PDField field = acroForm.getField(name);
         if (field != null) {
             if (field instanceof PDCheckBox checkbox) {
                 if (!value.isEmpty() & Boolean.parseBoolean(value)) {
-                    configureCheckbox(document, (PDCheckBox) field);
+                    applyCheckboxAppearance(doc, (PDCheckBox) field);
                     checkbox.check();
                 } else {
                     checkbox.unCheck();
@@ -165,12 +161,6 @@ abstract class AbstractProcessor implements PdfProcessor {
             }
         } else {
             System.err.println("No field found with name:" + name);
-        }
-    }
-
-    private void configureCheckbox(PDDocument document, PDCheckBox field) throws IOException {
-        if (runCheckBoxConfiguration()) {
-            applyCheckboxAppearance(document, field);
         }
     }
 

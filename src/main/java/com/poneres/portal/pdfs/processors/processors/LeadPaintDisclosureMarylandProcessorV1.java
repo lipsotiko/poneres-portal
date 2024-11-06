@@ -17,11 +17,6 @@ public class LeadPaintDisclosureMarylandProcessorV1 extends AbstractProcessor {
     }
 
     @Override
-    public boolean runCheckBoxConfiguration() {
-        return true;
-    }
-
-    @Override
     public List<Map<String, Object>> signatureFields(List<SignatureRecipient> recipients) {
         List<Map<String, Object>> fields = new ArrayList<>();
 

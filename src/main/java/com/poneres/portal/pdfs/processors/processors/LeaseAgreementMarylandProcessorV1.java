@@ -11,7 +11,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.TextStyle;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
@@ -221,11 +224,6 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
         }
 
         return words;
-    }
-
-    @Override
-    public boolean runCheckBoxConfiguration() {
-        return true;
     }
 
     @Override
