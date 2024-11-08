@@ -92,25 +92,32 @@
             <p class="lead">Employment</p>
           </IRow>
           <IRow>
-            <IColumn xs="12" lg="4">
+            <IColumn xs="12" lg="3">
               <IFormGroup required>
                 <IFormLabel for="currentEmployer">Current employer</IFormLabel>
                 <IInput id="currentEmployer" name="currentEmployer" autocomplete :error="errorTypes" />
                 <IFormError for="currentEmployer" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
-            <IColumn xs="12" lg="4">
+            <IColumn xs="12" lg="3">
               <IFormGroup required>
                 <IFormLabel for="positionTitle">Position / Title</IFormLabel>
                 <IInput id="positionTitle" name="positionTitle" autocomplete :error="errorTypes" />
                 <IFormError for="positionTitle" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
-            <IColumn xs="12" lg="4">
+            <IColumn xs="12" lg="3">
               <IFormGroup required>
-                <IFormLabel for="supervisor">Supervisor name & contact</IFormLabel>
-                <IInput id="supervisor" name="supervisor" autocomplete :error="errorTypes" />
-                <IFormError for="supervisor" :visible="errorTypes" />
+                <IFormLabel for="supervisorName">Supervisor name</IFormLabel>
+                <IInput id="supervisorName" name="supervisorName" autocomplete :error="errorTypes" />
+                <IFormError for="supervisorName" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="12" lg="3">
+              <IFormGroup required>
+                <IFormLabel for="supervisorPhone">Supervisor contact</IFormLabel>
+                <IInput id="supervisorPhone" name="supervisorPhone" autocomplete :error="errorTypes" />
+                <IFormError for="supervisorPhone" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
           </IRow>
@@ -141,7 +148,7 @@
             <p class="lead">Rental History</p>
           </IRow>
           <IRow>
-            <IColumn xs="12" lg="6">
+            <IColumn xs="12" lg="5">
               <IFormGroup required>
                 <IFormLabel for="previousAddress">Previous address</IFormLabel>
                 <IInput id="previousAddress" name="previousAddress" autocomplete :error="errorTypes" />
@@ -150,12 +157,19 @@
             </IColumn>
             <IColumn xs="12" lg="3">
               <IFormGroup required>
-                <IFormLabel for="previousLandlord">Landlord's name & contact</IFormLabel>
-                <IInput id="previousLandlord" name="previousLandlord" autocomplete :error="errorTypes" />
-                <IFormError for="previousLandlord" :visible="errorTypes" />
+                <IFormLabel for="previousLandlordName">Landlord's name</IFormLabel>
+                <IInput id="previousLandlordName" name="previousLandlordName" autocomplete :error="errorTypes" />
+                <IFormError for="previousLandlordName" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
-            <IColumn xs="12" lg="3">
+            <IColumn xs="12" lg="2">
+              <IFormGroup required>
+                <IFormLabel for="previousLandlordPhone">Landlord's phone</IFormLabel>
+                <IInput id="previousLandlordPhone" name="previousLandlordPhone" autocomplete :error="errorTypes" />
+                <IFormError for="previousLandlordPhone" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+            <IColumn xs="12" lg="2">
               <IFormGroup required>
                 <IFormLabel for="lengthOfResidence">Length of recidence</IFormLabel>
                 <IInput id="lengthOfResidence" name="lengthOfResidence" placeholder="Year(s) / Month(s)" autocomplete :error="errorTypes" />
@@ -304,13 +318,15 @@ const { schema, form } = useForm({
   reasonForLeaving: { validators: [{ name: "required" }] },
   currentEmployer: { validators: [{ name: "required" }] },
   positionTitle: { validators: [{ name: "required" }] },
-  supervisor: { validators: [{ name: "required" }] },
+  supervisorName: { validators: [{ name: "required" }] },
+  supervisorPhone: { validators: [{ name: "required" }] },
   employerAddress: { validators: [{ name: "required" }] },
   employmentLength: { validators: [{ name: "required" }] },
   employerAddress: { validators: [{ name: "required" }] },
   monthlyIncome: { validators: [{ name: "required" }] },
   previousAddress: { validators: [{ name: "required" }] },
-  previousLandlord: { validators: [{ name: "required" }] },
+  previousLandlordName: { validators: [{ name: "required" }] },
+  previousLandlordPhone: { validators: [{ name: "required" }] },
   lengthOfResidence: { validators: [{ name: "required" }] },
   reasonForMoving: { validators: [{ name: "required" }] },
   otherIncome: {},
