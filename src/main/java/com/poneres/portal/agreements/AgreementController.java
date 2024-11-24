@@ -89,8 +89,12 @@ public class AgreementController {
     public void sendAgreementToBeSigned(@PathVariable("id") String agreementId) {
         agreementRepository.findById(agreementId).ifPresent(agreement -> {
             String ssid = sendForSigning(agreement);
+            agreementRepository.findById(agreementId).ifPresent(unmodifiedAgreement -> {
+                unmodifiedAgreement.setSsdId(ssid);
+                agreementRepository.save(unmodifiedAgreement);
+            });
+
             agreement.setSsdId(ssid);
-            agreementRepository.save(agreement);
         });
     }
 
