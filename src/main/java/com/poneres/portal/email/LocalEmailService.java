@@ -13,20 +13,31 @@ public class LocalEmailService extends AbstractEmailService implements EmailServ
     @Override
     public void send(String to, String subject, String template) {
         String tokenizedTemplateHtml = replaceTokens(template);
-        printIt(to, subject, tokenizedTemplateHtml);
+        printIt(getPoneresNoReply(), to, subject, tokenizedTemplateHtml);
     }
 
     @Override
     public void send(String to, String subject, String template, Map<String, String> additionalTokens) {
         String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
-        printIt(to, subject, tokenizedTemplateHtml);
+        printIt(getPoneresNoReply(), to, subject, tokenizedTemplateHtml);
     }
 
-    private void printIt(String to, String subject, String tokenizedTemplateHtml) {
+    @Override
+    public void send(String from, String to, String subject, String template, Map<String, String> additionalTokens) {
+        String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
+        printIt(from, to, subject, tokenizedTemplateHtml);
+    }
+
+    private void printIt(String from, String to, String subject, String tokenizedTemplateHtml) {
         log.info("--------------------------------------------------------");
         log.info("Email sent!");
-        log.info("To: {}", to);
-        log.info("From: {}", getNoReplyEmail());
+
+        String[] toEmails = to.split(",");
+        for (String toEmail : toEmails) {
+            log.info("To: {}", toEmail);
+        }
+
+        log.info("From: {}", from);
         log.info("Subject: {}", subject);
         log.info("Content: {}", tokenizedTemplateHtml);
         log.info("--------------------------------------------------------");

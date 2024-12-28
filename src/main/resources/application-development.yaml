@@ -8,7 +8,9 @@ webapp:
 pdf:
   fields-preview: false
 email:
-  applications:
+  poneres:
     to: evangelos.poneres@gmail.com,poneres.c@gmail.com
+  xeniteas:
+    to: pontiangreeks@gmail.com,evangelos.poneres@gmail.com
 signwell:
   test-mode: false

@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 @Getter
 abstract class AbstractEmailService {
 
-    @Value("${email.no-reply}")
-    private String noReplyEmail;
+    @Value("${email.poneres.no-reply}")
+    private String poneresNoReply;
 
     @Value("${webapp.url}")
     private String webappUrl;

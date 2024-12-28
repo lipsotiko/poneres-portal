@@ -36,4 +36,9 @@ public class TestEmailService extends AbstractEmailService implements EmailServi
         sentTo = to;
         sentSubject = subject;
     }
+
+    @Override
+    public void send(String from, String to, String subject, String template, Map<String, String> additionalTokens) {
+
+    }
 }

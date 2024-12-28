@@ -23,9 +23,12 @@ s3:
   access-key: ${AWS_ACCESS_KEY}
   access-secret: ${AWS_ACCESS_SECRET}
 email:
-  no-reply: "hello@poneres.com"
-  applications:
-    to: evangelos.poneres@gmail.com
+  poneres:
+    no-reply: "no-reply@poneres.com"
+    to: evangelos.poneres@gmail.com,test@cool.io
+  xeniteas:
+    no-reply: "no-reply@pontiangreeks.org"
+    to: evangelos.poneres@gmail.com,test@cool.io
 auth0:
   administration:
     client-id: ${AUTH0_ADMIN_CLIENT_ID}
@@ -53,3 +56,11 @@ logging:
 #              MongoTemplate: DEBUG
 pdf:
   fields-preview: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env
+  endpoint:
+    env:
+      show-values: always

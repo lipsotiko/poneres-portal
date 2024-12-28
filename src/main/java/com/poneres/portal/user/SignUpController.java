@@ -18,8 +18,8 @@ import java.util.Map;
 @RequestMapping("/api/public/sign-up")
 public class SignUpController {
 
-    @Value("${email.applications.to}")
-    private String sendApplicationsTo;
+    @Value("${email.poneres.to}")
+    private String poneresTo;
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -31,7 +31,7 @@ public class SignUpController {
     private PaymentService paymentService;
 
     @PostMapping("/tenant")
-    public ResponseEntity<Void> signUpLandlord(@RequestBody SignUp signUp) {
+    public ResponseEntity<Void> tenant(@RequestBody SignUp signUp) {
 //        authenticationService.createUser(signUp, Role.TENANT);
 //        paymentService.createAccount(signUp);
 //        emailService.send(signUp.getEmail(), "Welcome to Poneres.com", "welcome-tenant.html");
@@ -39,7 +39,7 @@ public class SignUpController {
     }
 
     @PostMapping("/tenant/apply")
-    public ResponseEntity<Void> signUpLandlord(@RequestBody Map<String, Object> applicationContent) {
+    public ResponseEntity<Void> tenantApplication(@RequestBody Map<String, Object> applicationContent) {
         StringBuilder html = new StringBuilder();
         html.append("<table>");
         html.append("<thead><tr>");
@@ -61,10 +61,8 @@ public class SignUpController {
         Map<String, String> tokens = new HashMap<>();
         tokens.put("APPLICATION_CONTENT", html.toString());
 
-        String[] emails = sendApplicationsTo.split(",");
-        for (String email : emails) {
-            emailService.send(email, "A new application has been submitted", "new-application.html", tokens);
-        }
+
+        emailService.send(poneresTo, "A new application has been submitted", "new-application.html", tokens);
 
         return ResponseEntity.ok().build();
     }

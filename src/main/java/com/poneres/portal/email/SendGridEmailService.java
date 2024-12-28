@@ -33,22 +33,34 @@ public class SendGridEmailService extends AbstractEmailService implements EmailS
         fullSend(to, subject, tokenizedTemplateHtml);
     }
 
-    private void fullSend(String to, String subject, String tokenizedTemplateHtml) {
-        try {
+    @Override
+    public void send(String from, String to, String subject, String template, Map<String, String> additionalTokens) {
+        String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
+        fullSend(from, to, subject, tokenizedTemplateHtml);
+    }
 
-            Content content = new Content("text/html", tokenizedTemplateHtml);
+    private void fullSend(String from, String to, String subject, String tokenizedTemplateHtml) {
+        String[] toEmails = to.split(",");
+        for (String toEmail : toEmails) {
+            try {
+                Content content = new Content("text/html", tokenizedTemplateHtml);
 
-            Mail mail = new Mail(new Email(getNoReplyEmail()), subject, new Email(to), content);
+                Mail mail = new Mail(new Email(from), subject, new Email(toEmail), content);
 
-            Request request = new Request();
+                Request request = new Request();
 
-            request.setMethod(Method.POST);
-            request.setEndpoint("mail/send");
-            request.setBody(mail.build());
+                request.setMethod(Method.POST);
+                request.setEndpoint("mail/send");
+                request.setBody(mail.build());
 
-            sendGrid.api(request);
-        } catch (IOException ex) {
-            log.error("Add error occurred when attempting to send an email to: {}", to, ex);
+                sendGrid.api(request);
+            } catch (IOException ex) {
+                log.error("Add error occurred when attempting to send an email to: {}", toEmail, ex);
+            }
         }
+    }
+
+    private void fullSend(String to, String subject, String tokenizedTemplateHtml) {
+        fullSend(getPoneresNoReply(), to, subject, tokenizedTemplateHtml);
     }
 }
