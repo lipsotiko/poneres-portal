@@ -5,6 +5,10 @@
     :agreement-id="agreementId"
     :schema="metaDataSchema"
     :test-data="testData"
+    recipientName-1="Landlord name"
+    recipientEmail-1="Landlord email"
+    recipientName-2="Tenant name"
+    recipientEmail-2="Tenant email"
   >
     <IRow>
       <IColumn xs="2">

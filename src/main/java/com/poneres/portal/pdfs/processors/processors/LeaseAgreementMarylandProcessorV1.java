@@ -3,13 +3,10 @@ package com.poneres.portal.pdfs.processors.processors;
 import com.poneres.portal.agreements.SignatureRecipient;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
-import org.joda.money.format.MoneyFormatter;
-import org.joda.money.format.MoneyFormatterBuilder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,17 +75,6 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
         }
     }
 
-    private void putDollars(Map<String, Object> metadata, String dollarsKey, String putKey) {
-        if (metadata.containsKey(dollarsKey)) {
-            Double dueWithinDaysNumber = fromObj(metadata.get(dollarsKey));
-            if (dueWithinDaysNumber != null) {
-                Money lateFee = Money.of(CurrencyUnit.USD, dueWithinDaysNumber);
-                metadata.put(putKey, formatMoney(lateFee));
-            }
-            metadata.remove(dollarsKey);
-        }
-    }
-
     private Money securityDeposit(Map<String, Object> metadata) {
         if (metadata.containsKey("securityDepositInDollars")) {
             Double securityDeposit = fromObj(metadata.get("securityDepositInDollars"));
@@ -100,7 +86,7 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
         return null;
     }
 
-    private LocalDate setDateField(Map<String, Object> metadata, String dateField, String dayField, String monthYearField, Boolean endOfMonth) {
+    public LocalDate setDateField(Map<String, Object> metadata, String dateField, String dayField, String monthYearField, Boolean endOfMonth) {
         String field = (String) metadata.get(dateField);
 
         if (field != null) {
@@ -117,24 +103,6 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
             return date;
         }
         return null;
-    }
-
-    private void setLeaseTerm(Map<String, Object> metadata, LocalDate startDate, LocalDate endDate) {
-        if (startDate != null && endDate != null) {
-            int totalMonths = months(startDate, endDate);
-
-            int years = totalMonths / 12;
-            int months = totalMonths % 12;
-
-            String termLength = "";
-            termLength = (years > 0) ? years + " Year" : "";
-            termLength += (years > 1) ? "s" : "";
-
-            termLength += (months > 0) ? " " + months + " Month" : "";
-            termLength += (months > 1) ? "s" : "";
-
-            metadata.put("termLength", termLength.trim());
-        }
     }
 
     private Money setMonthlyRentInDollars(Map<String, Object> metadata) {
@@ -172,45 +140,11 @@ public class LeaseAgreementMarylandProcessorV1 extends AbstractProcessor {
         return null;
     }
 
-    private int months(LocalDate start, LocalDate end) {
-        Period period = Period.between(start, end);
-        return period.getYears() * 12 + period.getMonths() + ((period.getDays() > 0) ? 1 : 0);
-    }
-
     private Money getMoney(Map<String, Object> metadata, Double doubleDollars, String putKey, String deleteKey) {
         Money money = Money.of(CurrencyUnit.USD, doubleDollars);
         metadata.put(putKey, formatMoney(money));
         metadata.remove(deleteKey);
         return money;
-    }
-
-    private String formatMoney(Money money) {
-        MoneyFormatter formatter = new MoneyFormatterBuilder().appendAmount().toFormatter();
-        return formatter.print(money);
-    }
-
-    private Double fromObj(Object obj) {
-        if (obj instanceof Integer) {
-            return Double.parseDouble(Integer.toString((int) obj));
-        } else if (obj instanceof String) {
-            String s = String.valueOf(obj);
-            if (s.isEmpty()) {
-                return null;
-            }
-            return Double.parseDouble(s);
-        } else {
-            return null;
-        }
-    }
-
-    private String getOrdinalSuffix(int num) {
-        if (num > 3 && num < 21) return "th";
-        return switch (num % 10) {
-            case 1 -> "st";
-            case 2 -> "nd";
-            case 3 -> "rd";
-            default -> "th";
-        };
     }
 
     private String moneyToWords(Money money) {

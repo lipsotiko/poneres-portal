@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>PROPERTY MANAGEMENT AGREEMENT</title>
+  <title>PONERES PROPERTY MANAGEMENT LLC - AGREEMENT</title>
   <link rel="stylesheet" href="./defaults.css">
   <style>
     body {
@@ -35,18 +35,26 @@
     .tenant-signatures p {
       width: 100%;
     }
+
+    input[name="ownerAddress"] {
+      width: 358px;
+    }
+
+    input[name="managerAddress"] {
+      width: 358px;
+    }
   </style>
 </head>
 
 <body>
   <div class="header">
     <h3 style="text-align: center;">
-      PROPERTY MANAGEMENT AGREEMENT
+      PONERES PROPERTY MANAGEMENT LLC - AGREEMENT
     </h3>
   </div>
   <p>
     THIS PROPERTY MANAGEMENT AGREEMENT, hereinafter referred to as (the “Agreement”), is made and entered into as of
-    this day <input name="agreementDate" type="text" />, by and between the <input name="owner" type="text"
+    this day <input name="agreementDate" type="text" />, by and between <input name="owner" type="text"
       style="width: 260px" /> thereinafter referred to as (the “Owner”), and <input name="manager" type="text"
       style="width: 260px" /> hereinafter referred to as (the “Manager”).
   </p>
@@ -54,7 +62,8 @@
     <b>WITNESSETH:</b>
   </p>
   <p>
-    <b>WHERAS,</b> the Owner is the owner of real property located at <input name="propertyAddress" type="text" style="width: 422px;" /> on
+    <b>WHERAS,</b> the Owner is the owner of real property located at <input name="propertyAddress" type="text"
+      style="width: 422px;" /> on
     which properties, buildings, and other improvements now or hereafter located thereon shall hereinafter be
     collectively referred to as the “Project”; and
   </p>
@@ -133,10 +142,12 @@
             make all repairs and perform all maintenance on the buildings, appurtenance and grounds of the project as
             required to be made by the Owner and in accordance with standards acceptable to the Owner. For any
             individual item of repair or replacement, the non-budgeted expenses incurred shall not exceed the sum of
-            <input type="text" name="maxExpenses" /> unless specifically authorized in advance by the Owner, excepting,
-            however, that emergency repairs immediately necessary for the protection and safety of the Project or danger
-            to life or property may be made by the Manager without the prior approval of the Owner, provided, that
-            immediately after such emergency repairs, the Manager shall send the Owner a report of any repairs made.
+            $ <input type="text" name="maxExpensesNumber" /> dollars unless specifically authorized in advance by the
+            Owner, excepting, however, that emergency repairs immediately necessary for the protection and safety of
+            the Project or danger to life or property may be made by the Manager without the prior approval of the
+            Owner,
+            provided, that immediately after such emergency repairs, the Manager shall send the Owner a report of any
+            repairs made.
           </li>
           <li>
             <u>Equipment and Supplies.</u> Make all arrangements for the furnishing to the Project of utility,
@@ -201,8 +212,10 @@
       <b>TERM AND TERMINATION:</b>
       <ol type="a">
         <li>
-          <u>Term.</u> Manager and Owner shall have the right to terminate this Agreement anytime during the term of the
-          Agreement by serving the other with a <input type="text" name="noticeDays" /> day written notice to terminate.
+          <u>Term.</u> This Agreement shall be for a term of <input type="text" name="termLength" /> beginning on
+          <input type="text" name="termStartDate" /> and ending on <input type="text" name="termEndDate" />. Manager
+          and Owner shall have the right to terminate this Agreement anytime during the term of the Agreement by serving
+          the other with a <input type="text" name="noticeDays" /> days written notice to terminate.
         </li>
         <li>
           <u>Manager's Obligation After Termination.</u> Upon the termination of this Agreement as provided above, the
@@ -244,21 +257,19 @@
         </li>
         <li class="new-page">
           <u>Compensation for Brokerage Services.</u> In the event a lease is consummated between a tenant and Owner,
-          Owner shall pay to Manager a commission pursuant to the following schedule:
+          Owner shall pay to Manager one month of rent.
         </li>
-        <ol type="i">
-          <li>
-            <input type="text" name="totalPercentageOfRent" />% of the total aggregate rental due for the first <input
-              type="text" name="totalYearsOfRent" /> years of any lease term and <input type="text"
-              name="remainderPercentageOfRent" />% of the total aggregate rental due for the remainder of the term, or
-            any extension thereof.
-          </li>
-          <li>
-            In the event a lease extension if consummated between the Owner and an existing tenant, Owner shall pay to
-            Manager a commission of <input type="text" name="totalPercentageOfRentExt" />% of the total aggregate rent
-            or $<input type="text" name="totalDollarsOfRentExt" />, whichever is greater.
-          </li>
-        </ol>
+      </ol>
+    </li>
+    <li>
+      <b>NOTICES:</b>
+      <ol type="i">
+        <li>
+          Notices from Owner to Manager are to be delivered to <input type="text" name="managerAddress" />
+        </li>
+        <li>
+          Notices from Manager to Owner are to be delivered to <input type="text" name="ownerAddress" />
+        </li>
       </ol>
     </li>
   </ol>

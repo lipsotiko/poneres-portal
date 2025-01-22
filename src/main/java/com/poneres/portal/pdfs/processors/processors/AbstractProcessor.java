@@ -7,6 +7,10 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.interactive.form.*;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
+import org.joda.money.format.MoneyFormatter;
+import org.joda.money.format.MoneyFormatterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -15,6 +19,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 import static com.poneres.portal.helpers.Helpers.tmpFile;
@@ -53,21 +59,21 @@ abstract class AbstractProcessor implements PdfProcessor {
         }
     }
 
-    public byte[] process(PdfType type, Map<String, Object> metadata, List<SignatureRecipient> recipients) {
+    public byte[] process(PdfType type, Map<String, Object> metadata, List<SignatureRecipient> recipients, Boolean includeTestSignatures) {
         try (PDDocument doc = loadPdfDoc(type)) {
             removePages(doc, pagesToRemove());
             preProcess(metadata);
             assignValues(doc, metadata, fieldsPreview);
-            applySignatures(doc, recipients);
+            applySignatures(doc, recipients, includeTestSignatures);
             return docToBytes(doc);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    void applySignatures(PDDocument doc, List<SignatureRecipient> recipients) {
+    void applySignatures(PDDocument doc, List<SignatureRecipient> recipients, Boolean includeTestSignatures) {
         List<Map<String, Object>> signatureFields = signatureFields(recipients);
-        if (recipients.isEmpty()) {
+        if (recipients.isEmpty() || !includeTestSignatures) {
             return;
         }
 
@@ -187,4 +193,68 @@ abstract class AbstractProcessor implements PdfProcessor {
         field.put("recipient_id", recipientId);
         return field;
     }
+
+    public Double fromObj(Object obj) {
+        if (obj instanceof Integer) {
+            return Double.parseDouble(Integer.toString((int) obj));
+        } else if (obj instanceof String) {
+            String s = String.valueOf(obj);
+            if (s.isEmpty()) {
+                return null;
+            }
+            return Double.parseDouble(s);
+        } else {
+            return null;
+        }
+    }
+
+    public String formatMoney(Money money) {
+        MoneyFormatter formatter = new MoneyFormatterBuilder().appendAmount().toFormatter();
+        return formatter.print(money);
+    }
+
+    public void putDollars(Map<String, Object> metadata, String dollarsKey, String putKey) {
+        if (metadata.containsKey(dollarsKey)) {
+            Double dueWithinDaysNumber = fromObj(metadata.get(dollarsKey));
+            if (dueWithinDaysNumber != null) {
+                Money lateFee = Money.of(CurrencyUnit.USD, dueWithinDaysNumber);
+                metadata.put(putKey, formatMoney(lateFee));
+            }
+            metadata.remove(dollarsKey);
+        }
+    }
+
+    public String getOrdinalSuffix(int num) {
+        if (num > 3 && num < 21) return "th";
+        return switch (num % 10) {
+            case 1 -> "st";
+            case 2 -> "nd";
+            case 3 -> "rd";
+            default -> "th";
+        };
+    }
+
+    public void setLeaseTerm(Map<String, Object> metadata, LocalDate startDate, LocalDate endDate) {
+        if (startDate != null && endDate != null) {
+            int totalMonths = months(startDate, endDate);
+
+            int years = totalMonths / 12;
+            int months = totalMonths % 12;
+
+            String termLength = "";
+            termLength = (years > 0) ? years + " Year" : "";
+            termLength += (years > 1) ? "s" : "";
+
+            termLength += (months > 0) ? " " + months + " Month" : "";
+            termLength += (months > 1) ? "s" : "";
+
+            metadata.put("termLength", termLength.trim());
+        }
+    }
+
+    public int months(LocalDate start, LocalDate end) {
+        Period period = Period.between(start, end);
+        return period.getYears() * 12 + period.getMonths() + ((period.getDays() > 0) ? 1 : 0);
+    }
+
 }

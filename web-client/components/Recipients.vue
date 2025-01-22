@@ -7,8 +7,8 @@
       <IColumn xs="6">
         <IFormGroup required>
           <IFormLabel :for="`recipients.${index}.name`">
-            <span v-if="index === 0">Landlord name</span>
-            <span v-else>Tenant name {{ index }}</span>
+            <span v-if="index === 0">{{ recipientName1 }}</span>
+            <span v-else>{{ recipientName2 }} {{ index }}</span>
           </IFormLabel>
           <IInput :name="`recipients.${index}.name`" :error="errorTypes" />
           <IFormError :for="`recipients.${index}.name`" :visible="errorTypes" />
@@ -17,8 +17,8 @@
       <IColumn xs="6">
         <IFormGroup required>
           <IFormLabel :for="`recipients.${index}.email`">
-            <span v-if="index === 0">Landlord email</span>
-            <span v-else>Tenant email {{ index }}</span>
+            <span v-if="index === 0">{{ recipientEmail1 }}</span>
+            <span v-else>{{ recipientEmail2 }} {{ index }}</span>
           </IFormLabel>
           <IInput :name="`recipients.${index}.email`" :error="errorTypes">
             <template #append>
@@ -35,6 +35,7 @@
 </template>
 <script setup>
 const recipientsSchema = defineModel();
+const { recipientName1, recipientEmail1, recipientName2, recipientEmail2 } = defineProps(["recipientName-1", "recipientEmail-1", "recipientName-2", "recipientEmail-2"]);
 
 const removeRecipient = (index) => {
   if (recipientsSchema.value.recipients.length === 1) {

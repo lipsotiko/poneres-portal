@@ -9,4 +9,5 @@ import java.util.Map;
 public class AgreementPreview {
     private Map<String, Object> metadata;
     private List<SignatureRecipient> recipients;
+    private Boolean includeTestSignatures;
 }

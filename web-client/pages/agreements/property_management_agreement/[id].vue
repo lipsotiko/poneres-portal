@@ -5,6 +5,10 @@
         :agreement-id="agreementId"
         :schema="metaDataSchema"
         :test-data="testData"
+        recipientName-1="Manager name"
+        recipientEmail-1="Manager email"
+        recipientName-2="Owner name"
+        recipientEmail-2="Owner email"
         >
         <IRow>
           <IColumn xs="3">
@@ -16,9 +20,9 @@
           </IColumn>
           <IColumn xs="3">
             <IFormGroup required>
-              <IFormLabel for="maxExpenses">Max expenses ($)</IFormLabel>
-              <IInput id="maxExpenses" name="maxExpenses" type="number" :error="errorTypes" />
-              <IFormError for="maxExpenses" :visible="errorTypes" />
+              <IFormLabel for="maxExpensesInDollars">Max expenses ($)</IFormLabel>
+              <IInput id="maxExpensesInDollars" name="maxExpensesInDollars" type="number" :error="errorTypes" />
+              <IFormError for="maxExpensesInDollars" :visible="errorTypes" />
             </IFormGroup>
           </IColumn>
           <IColumn xs="3">
@@ -51,6 +55,36 @@
               <IFormError for="manager" :visible="errorTypes" />
             </IFormGroup>
           </IColumn>
+          <IColumn xs="3">
+            <IFormGroup required>
+              <IFormLabel for="termStartDate">Start date</IFormLabel>
+              <IInput id="termStartDate" name="termStartDate" type="month" :error="errorTypes" />
+              <IFormError for="termStartDate" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+          <IColumn xs="3">
+            <IFormGroup required>
+              <IFormLabel for="termEndDate">End date</IFormLabel>
+              <IInput id="termEndDate" name="termEndDate" type="month" :error="errorTypes" />
+              <IFormError for="termEndDate" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+        </IRow>
+        <IRow>
+          <IColumn>
+            <IFormGroup required>
+              <IFormLabel for="ownerAddress">Owner Notice Address</IFormLabel>
+              <IInput id="ownerAddress" name="ownerAddress" :error="errorTypes" />
+              <IFormError for="ownerAddress" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
+          <IColumn>
+            <IFormGroup required>
+              <IFormLabel for="managerAddress">Manager Notice Address</IFormLabel>
+              <IInput id="managerAddress" name="managerAddress" :error="errorTypes" />
+              <IFormError for="managerAddress" :visible="errorTypes" />
+            </IFormGroup>
+          </IColumn>
         </IRow>
         <IRow>
           <IColumn>
@@ -58,45 +92,6 @@
               <IFormLabel for="propertyAddress">Property address</IFormLabel>
               <IInput id="propertyAddress" name="propertyAddress" :error="errorTypes" />
               <IFormError for="propertyAddress" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-        </IRow>
-        <IRow>
-          <IColumn>
-            <IFormGroup required>
-              <IFormLabel for="totalPercentageOfRent">Initial Term Rent Compensation (%)</IFormLabel>
-              <IInput id="totalPercentageOfRent" name="totalPercentageOfRent" type="number" :error="errorTypes" />
-              <IFormError for="totalPercentageOfRent" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-          <IColumn>
-            <IFormGroup required>
-              <IFormLabel for="totalYearsOfRent">Rent compensation term years</IFormLabel>
-              <IInput id="totalYearsOfRent" name="totalYearsOfRent" type="number" :error="errorTypes" />
-              <IFormError for="totalYearsOfRent" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-          <IColumn>
-            <IFormGroup>
-              <IFormLabel for="remainderPercentageOfRent">Term Remainder Rent Compensation (%)</IFormLabel>
-              <IInput id="remainderPercentageOfRent" name="remainderPercentageOfRent" type="number" :error="errorTypes" />
-              <IFormError for="remainderPercentageOfRent" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-        </IRow>
-        <IRow>
-          <IColumn>
-            <IFormGroup>
-              <IFormLabel for="totalPercentageOfRentExt">Total percentage of extension (%)</IFormLabel>
-              <IInput id="totalPercentageOfRentExt" name="totalPercentageOfRentExt" type="number" :error="errorTypes" />
-              <IFormError for="totalPercentageOfRentExt" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-          <IColumn>
-            <IFormGroup>
-              <IFormLabel for="totalDollarsOfRentExt">Total dollars of extension ($)</IFormLabel>
-              <IInput id="totalDollarsOfRentExt" name="totalDollarsOfRentExt" type="number" :error="errorTypes" />
-              <IFormError for="totalDollarsOfRentExt" :visible="errorTypes" />
             </IFormGroup>
           </IColumn>
         </IRow>
@@ -122,29 +117,27 @@ const metaDataSchema = {
   owner: { ...fieldOptions },
   manager: { ...fieldOptions },
   propertyAddress: { ...fieldOptions },
-  maxExpenses: { ...fieldOptions },
+  maxExpensesInDollars: { ...fieldOptions },
   compensationPercentage: { ...fieldOptions },
   noticeDays: { ...fieldOptions },
-  totalPercentageOfRent: { ...fieldOptions, value: 10 },
-  totalYearsOfRent: { ...fieldOptions, value: 1 },
-  remainderPercentageOfRent: { value: 0 },
-  totalPercentageOfRentExt: { value: 0 },
-  totalDollarsOfRentExt: { value: 0 },
-  addendum: {}
+  addendum: {},
+  termStartDate: { ...fieldOptions },
+  termEndDate: { ...fieldOptions },
+  ownerAddress: { ...fieldOptions },
+  managerAddress: { ...fieldOptions },
 };
 
 const testData = {
   owner: "Hello",
   manager: "World",
   propertyAddress: "123 Cool Ln, Baltimore, MD 22111",
-  maxExpenses: 2000,
+  maxExpensesInDollars: 2000,
   compensationPercentage: 10,
   noticeDays: 60,
   addendum: "Test",
-  totalPercentageOfRent: 10,
-  totalYearsOfRent: 1,
-  remainderPercentageOfRent: 0,
-  totalPercentageOfRentExt: 0,
-  totalDollarsOfRentExt: 0,
+  termStartDate: dayjs().add(-2, "month").format("YYYY-MM"),
+  termEndDate: dayjs().add(2, "month").format("YYYY-MM"),
+  ownerAddress: "222 Cool Ln, Baltimore, MD 22111",
+  managerAddress: "333 Cool Ln, Baltimore, MD 22111"
 };
 </script>

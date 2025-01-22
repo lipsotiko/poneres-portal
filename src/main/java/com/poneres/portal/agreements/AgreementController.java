@@ -56,7 +56,8 @@ public class AgreementController {
                           @RequestBody AgreementPreview agreementPreview) {
         Map<String, Object> metadata = agreementPreview.getMetadata();
         List<SignatureRecipient> recipients = agreementPreview.getRecipients();
-        return processorFactory.get(type).process(type, metadata, recipients);
+        Boolean includeTestSignatures = agreementPreview.getIncludeTestSignatures();
+        return processorFactory.get(type).process(type, metadata, recipients, includeTestSignatures);
     }
 
     @PostMapping(value = "/{id}/copy", produces = MediaType.APPLICATION_PDF_VALUE)
@@ -134,7 +135,7 @@ public class AgreementController {
         List<SignatureRecipient> recipients = agreement.getRecipients();
 
         PdfProcessor pdfProcessor = processorFactory.get(type);
-        byte[] fileBytes = pdfProcessor.process(type, metadata, Collections.emptyList());
+        byte[] fileBytes = pdfProcessor.process(type, metadata, Collections.emptyList(), false);
         List<Map<String, Object>> signatureFields = pdfProcessor.signatureFields(recipients);
         String fileBase64 = bytesToBase64(fileBytes);
         return signatureService.create(fileName, fileBase64, recipients, signatureFields);

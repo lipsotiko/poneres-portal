@@ -1,5 +1,5 @@
 <template>
-    <PdfPreview :key="getKey()" :metadata="metadataForm" :recipients="recipientsForm.recipients" :type="pdfType" />
+    <PdfPreview :key="getKey()" :metadata="metadataForm" :recipients="recipientsForm.recipients" :type="pdfType" :includeTestSignatures="includeTestSignatures" />
     <IContainer>
         <PageTitle :title="`${title} - ${agreementId}`" backTo="/agreements" />
         <IRow>
@@ -10,16 +10,20 @@
                 <slot></slot>
             </IForm>
         </ClientOnly>
-        <Recipients v-model="recipientsSchema" />
+        <Recipients v-model="recipientsSchema" :recipientName-1="recipientName1" :recipientEmail-1="recipientEmail1"
+            :recipientName-2="recipientName2" :recipientEmail-2="recipientEmail2" />
         <IRow>
             <IColumn>
                 <div class="save">
                     <div class="_display:flex _justify-content:space-between">
                         <div class="left-buttons">
-                            <IButton @click="loadTestData()" v-if="$config.public.deploymentType === 'local'">Load Test Data</IButton>
+                            <IButton @click="loadTestData()" v-if="$config.public.deploymentType === 'local'">Load Test
+                                Data</IButton>
                             <IButton v-if="!isNew" @click="handleCopy()" :loading="copying">Copy</IButton>
-                            <IButton @click="addRecipient()" :disabled="recipientsForm.recipients.length === 3">Add recipient</IButton>
+                            <IButton @click="addRecipient()" :disabled="recipientsForm.recipients.length === 3">Add
+                                recipient</IButton>
                             <IButton @click="open = true">Preview</IButton>
+                            <ICheckbox v-model="includeTestSignatures">Include signatures</ICheckbox>
                         </div>
                         <div v-if="!loading" class="right-buttons">
                             <DeleteAgreementButton :id="agreementId" :isNew="isNew" />
@@ -34,12 +38,16 @@
 <script setup>
 import { inject } from "vue";
 import { useForm } from "@inkline/inkline/composables";
-const { pdfType, title, agreementId, schema, testData } = defineProps([
+const { pdfType, title, agreementId, schema, testData, recipientName1, recipientEmail1, recipientName2, recipientEmail2 } = defineProps([
     "pdfType",
     "title",
     "agreementId",
     "schema",
     "testData",
+    "recipientName-1",
+    "recipientEmail-1",
+    "recipientName-2",
+    "recipientEmail-2"
 ]);
 
 const isNew = agreementId === "New";
@@ -47,6 +55,8 @@ const sent = ref();
 const saving = ref(false);
 const loading = ref(false);
 const copying = ref(false);
+const includeTestSignatures = ref(true);
+
 const open = inject("sideBarOpen");
 
 const { schema: metaDataSchema, form: metadataForm, validate: metadataValidate } = useForm({ ...schema });
@@ -75,7 +85,7 @@ const addRecipient = () => {
     });
 };
 
-const getKey = () => JSON.stringify(metadataForm.value) + JSON.stringify(recipientsForm.value);
+const getKey = () => JSON.stringify(metadataForm.value) + JSON.stringify(recipientsForm.value) + JSON.stringify(includeTestSignatures.value);
 
 onMounted(async () => {
     if (isNew) {
@@ -144,15 +154,19 @@ const loadTestData = () => {
 </script>
 <style>
 .save {
-  margin-top: 18px;
-  text-align: center;
+    margin-top: 18px;
+    text-align: center;
+}
+
+.left-buttons {
+    display: flex;
 }
 
 .left-buttons button {
-  margin: 6px;
+    margin: 6px;
 }
 
 .right-buttons button {
-  margin: 6px;
+    margin: 6px;
 }
 </style>

@@ -34,6 +34,10 @@ public class Agreement {
             return metadata.get("tenant");
         }
 
+        if (type.equals(PdfType.PROPERTY_MANAGEMENT_AGREEMENT_V1)) {
+            return metadata.get("owner");
+        }
+
         return "-";
     }
 
