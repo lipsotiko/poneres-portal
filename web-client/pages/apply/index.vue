@@ -8,7 +8,7 @@
         <IRow>
           <IColumn>
             <div>
-              <h3 class="title">Tenant Application</h3>
+              <h3 class="title">Rental Application</h3>
             </div>
           </IColumn>
         </IRow>
