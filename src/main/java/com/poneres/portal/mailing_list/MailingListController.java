@@ -25,9 +25,6 @@ public class MailingListController {
     @Value("${email.xeniteas.no-reply}")
     private String xeniteasNoReply;
 
-    @Value("${email.poneres.to}")
-    private String poneresTo;
-
     @Value("${email.xeniteas.to}")
     private String xeniteasTo;
 
@@ -60,12 +57,6 @@ public class MailingListController {
                         xeniteasNoReply,
                         xeniteasTo,
                         "Xeniteas: Request to join mailing list",
-                        "request-to-join-mailing-list.html",
-                        tokens);
-        } else {
-                emailService.send(
-                        poneresTo,
-                        "Poneres.com: Request to join mailing list",
                         "request-to-join-mailing-list.html",
                         tokens);
         }
