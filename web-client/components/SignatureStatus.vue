@@ -5,10 +5,8 @@
   </div>
   <span v-else>
     <IBadge v-if="loading" color="warning">Loading...</IBadge>
-    <IBadge v-else>
-      {{ status }}
-    </IBadge>
-    <IButton
+    <div v-else>
+      <IButton
       v-if="status === 'Completed'"
       size="sm"
       color="secondary"
@@ -18,7 +16,7 @@
       Download</IButton
     >
     <IButton
-      v-else-if="status === 'Sent'"
+      v-else-if="status !== 'Completed'"
       size="sm"
       color="secondary"
       @click="handleSendReminder()"
@@ -26,7 +24,10 @@
     >
       Send Reminder</IButton
     >
-    <IButton v-else size="sm" @click="refreshStatus()" :loading="loading"> Refresh</IButton>
+    <IBadge v-else>
+      {{ status }}
+    </IBadge>
+    </div>
   </span>
 </template>
 <script setup>
@@ -73,12 +74,6 @@ const handleSendReminder = async () => {
   await sendReminder(id);
   onReminderSent();
   reminderLoading.value = false;
-};
-
-const refreshStatus = async () => {
-  loading.value = true;
-  status.value = await getSignatureStatus(id);
-  loading.value = false;
 };
 </script>
 <style scoped>
