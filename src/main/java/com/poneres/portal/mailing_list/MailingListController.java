@@ -28,6 +28,12 @@ public class MailingListController {
     @Value("${email.xeniteas.to}")
     private String xeniteasTo;
 
+    @Value("${email.poneres.no-reply}")
+    private String poneresNoReply;
+
+    @Value("${email.poneres.to}")
+    private String poneresTo;
+
     @Autowired
     private EmailService emailService;
 
@@ -59,6 +65,13 @@ public class MailingListController {
                         "Xeniteas: Request to join mailing list",
                         "request-to-join-mailing-list.html",
                         tokens);
+        } else if (organization.equals(Organization.PONERES)) {
+            emailService.send(
+                    poneresNoReply,
+                    poneresTo,
+                    "Poneres.com: Request to join mailing list",
+                    "request-to-join-mailing-list.html",
+                    tokens);
         }
 
         return ResponseEntity.ok().build();

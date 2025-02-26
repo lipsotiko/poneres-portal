@@ -25,10 +25,10 @@ s3:
 email:
   poneres:
     no-reply: "no-reply@poneres.com"
-    to: evangelos.poneres@gmail.com,test@cool.io
+    to: evangelos.poneres@gmail.com
   xeniteas:
     no-reply: "no-reply@pontiangreeks.org"
-    to: evangelos.poneres@gmail.com,test@cool.io
+    to: evangelos.poneres@gmail.com
 auth0:
   administration:
     client-id: ${AUTH0_ADMIN_CLIENT_ID}
