@@ -55,6 +55,13 @@ const isTestMode = async () => {
   return $fetch('/api/agreements/test-mode');
 }
 
+const saveMaintenanceRequest = async (data) => {
+  return $fetch("/api/maintenance", {
+    method: "POST",
+    body: data,
+  });
+};
+
 const agreementTypes = [
   {
     id: "/agreements/lease_agreement_md/",

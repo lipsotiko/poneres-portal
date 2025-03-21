@@ -12,9 +12,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaintenanceRequest {
+public class Maintenance {
     @Id
     private String id;
+    private String type;
+    private String priority;
     private String description;
+    private String createdBy;
     private LocalDateTime createdAt;
 }

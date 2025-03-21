@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Profile("local-no-auth")
 public class LocalAuthenticationService implements AuthenticationService {
@@ -37,7 +39,10 @@ public class LocalAuthenticationService implements AuthenticationService {
 
     @Override
     public UserProfile getUserProfile() {
-        return null;
+        return UserProfile.builder()
+                .id("3")
+                .roles(List.of(Role.ADMIN, Role.TENANT))
+                .build();
     }
 
     @Override
