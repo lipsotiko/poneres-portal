@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface UserAuthorized {
-    String value() default "";
+    String[] value() default "";
 
     int position() default 0;
 }

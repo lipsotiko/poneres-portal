@@ -99,7 +99,7 @@ const gridOptions = {
   },
 };
 
-const { pending, data, refresh } = await useAsyncData(
+const { pending, data, refresh } = await useLazyAsyncData(
   "agreements",
   () =>
     $fetch("/api/agreements", {

@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 
-import static com.poneres.portal.user.Role.ADMIN;
-import static com.poneres.portal.user.Role.PROPERTY_MANAGER;
+import static com.poneres.portal.user.Role.*;
 
 @Service
 public class AbstractPoneresPortalInit {
@@ -39,5 +39,17 @@ public class AbstractPoneresPortalInit {
                 .paymentProviderId("acct_1Q5VZYRebMKd18Dx")
                 .build();
         userProfileRepository.save(christos);
+
+        userProfileRepository.deleteByEmail("3");
+        UserProfile tenant = UserProfile.builder()
+                .id("3")
+                .roles(List.of(TENANT))
+                .email("tenant@hello.io")
+                .firstName("Tenant")
+                .lastName("DON'T DELETE")
+                .authProviderId("auth0|67dca7b9760d7cbe9aa8a46d")
+                .paymentProviderId(null)
+                .build();
+        userProfileRepository.save(tenant);
     }
 }

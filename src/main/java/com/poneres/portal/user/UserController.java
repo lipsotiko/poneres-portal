@@ -41,6 +41,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public void updateUser(@PathVariable("id") String id, @RequestBody UpdateUserRequest updateUserRequest) {
+        // TODO: Ensure the user may only update their own data...
         Optional<UserProfile> byId = userProfileRepository.findById(id);
         byId.ifPresent(userProfile -> {
             userProfile.setFirstName(updateUserRequest.getFirstName());

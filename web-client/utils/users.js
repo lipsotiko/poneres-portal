@@ -2,12 +2,14 @@ import { ref } from "vue";
 
 const useAuth = () => {
   const isAdmin = ref(false);
+  const isTenant = ref(false);
 
   useAsyncData(
     "user-role",
     async () => {
       const response = await $fetch("/api/user/profile");
       isAdmin.value = response.roles.includes("ADMIN");
+      isTenant.value = response.roles.includes("TENANT");
     },
     {
       server: false,
@@ -16,6 +18,7 @@ const useAuth = () => {
 
   return {
     isAdmin,
+    isTenant
   };
 };
 

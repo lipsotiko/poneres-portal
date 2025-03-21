@@ -3,6 +3,7 @@ package com.poneres.portal.agreements;
 import com.poneres.portal.pdfs.processors.PdfType;
 import com.poneres.portal.pdfs.processors.processors.PdfProcessor;
 import com.poneres.portal.pdfs.processors.processors.ProcessorFactory;
+import com.poneres.portal.security.auth0.UserAuthorized;
 import com.poneres.portal.signatures.SignatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,16 +35,19 @@ public class AgreementController {
     private SignatureService signatureService;
 
     @GetMapping
+    @UserAuthorized("isAdmin")
     public Page<Agreement> get(Pageable pageable) {
         return agreementRepository.findAll(pageable);
     }
 
     @GetMapping("/{id}")
+    @UserAuthorized("isAdmin")
     public Optional<Agreement> get(@PathVariable("id") String agreementId) {
         return agreementRepository.findById(agreementId);
     }
 
     @DeleteMapping("/{id}")
+    @UserAuthorized("isAdmin")
     public void delete(@PathVariable("id") String agreementId) {
         agreementRepository.findById(agreementId).ifPresent(agreement -> {
             signatureService.delete(agreement.getSsdId());
@@ -51,6 +55,7 @@ public class AgreementController {
         });
     }
 
+    @UserAuthorized("isAdmin")
     @PostMapping(value = "/preview", produces = MediaType.APPLICATION_PDF_VALUE)
     public byte[] preview(@RequestParam PdfType type,
                           @RequestBody AgreementPreview agreementPreview) {
@@ -60,6 +65,7 @@ public class AgreementController {
         return processorFactory.get(type).process(type, metadata, recipients, includeTestSignatures);
     }
 
+    @UserAuthorized("isAdmin")
     @PostMapping(value = "/{id}/copy", produces = MediaType.APPLICATION_PDF_VALUE)
     public void copy(@PathVariable("id") String agreementId) {
         agreementRepository.findById(agreementId).ifPresent(agreement -> {
@@ -73,6 +79,7 @@ public class AgreementController {
         });
     }
 
+    @UserAuthorized("isAdmin")
     @PostMapping
     public Agreement save(@RequestBody Agreement agreement) {
         if (agreement.getId() != null) {
@@ -86,6 +93,7 @@ public class AgreementController {
         return agreementRepository.save(agreement);
     }
 
+    @UserAuthorized("isAdmin")
     @PostMapping("/{id}/send")
     public void sendAgreementToBeSigned(@PathVariable("id") String agreementId) {
         agreementRepository.findById(agreementId).ifPresent(agreement -> {
@@ -99,6 +107,7 @@ public class AgreementController {
         });
     }
 
+    @UserAuthorized("isAdmin")
     @GetMapping("/{id}/status")
     public String status(@PathVariable("id") String agreementId) {
         return agreementRepository.findById(agreementId).map(agreement -> {
@@ -110,6 +119,7 @@ public class AgreementController {
         }).orElse(null);
     }
 
+    @UserAuthorized("isAdmin")
     @GetMapping("/{id}/file-url")
     public String fileUrl(@PathVariable("id") String agreementId) {
         return agreementRepository.findById(agreementId).map(agreement -> {
@@ -118,12 +128,14 @@ public class AgreementController {
         }).orElse(null);
     }
 
+    @UserAuthorized("isAdmin")
     @PostMapping("/{id}/send-reminder")
     public void sendReminder(@PathVariable("id") String agreementId) {
         agreementRepository.findById(agreementId).ifPresent(agreement -> signatureService.sendReminder(agreement.getSsdId()));
     }
 
     @GetMapping("/test-mode")
+    @UserAuthorized("isAdmin")
     public Boolean isTestMode() {
         return signatureService.isTestMode();
     }

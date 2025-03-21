@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 @Aspect
 @Configuration
@@ -27,10 +29,15 @@ public class UserAuthorizedAspect {
         Method method = signature.getMethod();
         UserAuthorized userAuthorized = method.getAnnotation(UserAuthorized.class);
 
-        String value = userAuthorized.value();
-        if (value.equals("isAdmin") && !authenticationService.hasRole(Role.ADMIN)) {
-            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
+        List<String> value = Arrays.asList(userAuthorized.value());
+        if (value.contains("isAdmin") && authenticationService.hasRole(Role.ADMIN)) {
+            return;
         }
 
+        if (value.contains("isTenant") && authenticationService.hasRole(Role.TENANT)) {
+            return;
+        }
+
+        throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
     }
 }
