@@ -19,7 +19,7 @@ public class AbstractPoneresPortalInit {
         userProfileRepository.deleteById("1");
         UserProfile evangelos = UserProfile.builder()
                 .id("1")
-                .roles(Arrays.asList(ADMIN, PROPERTY_MANAGER))
+                .roles(Arrays.asList(ADMIN, OWNER))
                 .email("evangelos@poneres.com")
                 .firstName("Evangelos")
                 .lastName("DON'T DELETE")
@@ -31,7 +31,7 @@ public class AbstractPoneresPortalInit {
         userProfileRepository.deleteByEmail("2");
         UserProfile christos = UserProfile.builder()
                 .id("2")
-                .roles(Arrays.asList(ADMIN, PROPERTY_MANAGER))
+                .roles(Arrays.asList(ADMIN, OWNER))
                 .email("poneres.c@gmail.com")
                 .firstName("Christos")
                 .lastName("DON'T DELETE")

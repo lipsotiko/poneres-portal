@@ -1,6 +1,5 @@
 package com.poneres.portal.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,26 +26,4 @@ public class UserProfile {
     private List<Role> roles;
     private String authProviderId;
     private String paymentProviderId;
-
-    public UserProfile(String email, String firstName, String lastName, List<Role> roles) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.roles = roles;
-    }
-
-    @JsonProperty
-    private boolean isAdmin() {
-        return roles.contains(Role.ADMIN);
-    }
-
-    @JsonProperty
-    private boolean isEntity() {
-        return roles.contains(Role.ENTITY);
-    }
-
-    @JsonProperty
-    private boolean isPropertyManager() {
-        return roles.contains(Role.PROPERTY_MANAGER);
-    }
 }

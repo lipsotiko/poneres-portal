@@ -28,7 +28,7 @@ public class LocalAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public UserProfile createUser(SignUp signUp, Role role) {
+    public UserProfile createUser(SignUp signUp) {
         return null;
     }
 

@@ -1,17 +1,12 @@
 <template>
   <IContainer>
-    <PageTitle title="Admin panel" backTo="/" />
-    <div class="_display:flex _justify-content:end admin-actions">
-      <IButton
-        outline
-        size="sm"
-        color="danger"
-        :disabled="selectedUserIds.length === 0"
-        :loading="deleteing"
-        @click="handleDelete()"
-        >Delete
+    <PageTitle title="Admin panel" backTo="/">
+      <IButton circle color="primary" to="/admin/users/new">
+        <template #icon>
+          <IIcon name="ink-plus" />
+        </template>
       </IButton>
-    </div>
+    </PageTitle>
     <ag-grid-vue
       :loading="pending"
       :rowData="data?.content"
@@ -22,7 +17,20 @@
       style="height: 888px"
       class="ag-theme-quartz"
     />
-    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+    <div class="_display:flex _justify-content:space-between">
+      <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+        <div class="admin-actions">
+          <IButton
+            outline
+            size="sm"
+            color="danger"
+            :disabled="selectedUserIds.length === 0"
+            :loading="deleteing"
+            @click="handleDelete()"
+            >Delete
+          </IButton>
+        </div>
+    </div>
   </IContainer>
 </template>
 <script setup>

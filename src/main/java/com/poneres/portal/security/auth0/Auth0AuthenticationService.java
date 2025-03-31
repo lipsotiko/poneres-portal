@@ -58,7 +58,7 @@ public class Auth0AuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public UserProfile createUser(SignUp signUp, Role role) {
+    public UserProfile createUser(SignUp signUp) {
         if (userProfileRepository.existsByEmail(signUp.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "You already have an account. Try signing in!");
         }
@@ -75,7 +75,7 @@ public class Auth0AuthenticationService implements AuthenticationService {
                 .firstName(signUp.getFirstName())
                 .lastName(signUp.getLastName())
                 .authProviderId(response.getUserId())
-                .roles(Collections.singletonList(role))
+                .roles(signUp.getRoles())
                 .build();
         return userProfileRepository.save(userProfile);
     }

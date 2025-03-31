@@ -4,12 +4,15 @@
       <p v-if="isAdmin" class="lead">
         Welcome to your management portal!
       </p>
-      <p v-if="isTenant" class="lead">
-        Welcome to your tenant portal!
+      <p v-if="isResident" class="lead">
+        Welcome to your resident portal!
+      </p>
+      <p v-if="isOwner" class="lead">
+        Welcome to your owner portal!
       </p>
     </div>
   </IContainer>
 </template>
 <script setup>
-const { isAdmin, isTenant } = useAuth();
+const { isAdmin, isResident, isOwner } = useAuth();
 </script>

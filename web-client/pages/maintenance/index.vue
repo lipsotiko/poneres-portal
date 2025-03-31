@@ -27,7 +27,7 @@ const sort = ref("createdAt,asc");
 const colDefs = ref([
   {
     field: "id",
-    width: 222
+    width: 228
   },
   {
     field: "type",

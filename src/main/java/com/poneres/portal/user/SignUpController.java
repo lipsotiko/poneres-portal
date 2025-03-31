@@ -30,11 +30,11 @@ public class SignUpController {
     @Autowired
     private PaymentService paymentService;
 
-    @PostMapping("/tenant")
+    @PostMapping()
     public ResponseEntity<Void> tenant(@RequestBody SignUp signUp) {
-//        authenticationService.createUser(signUp, Role.TENANT);
+        authenticationService.createUser(signUp);
 //        paymentService.createAccount(signUp);
-//        emailService.send(signUp.getEmail(), "Welcome to Poneres.com", "welcome-tenant.html");
+        emailService.send(signUp.getEmail(), "Welcome to Poneres.com", "welcome.html");
         return ResponseEntity.ok().build();
     }
 

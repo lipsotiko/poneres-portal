@@ -1,5 +1,5 @@
-const signUpTenant = async (data) => {
-  return $fetch("/api/public/sign-up/tenant", {
+const signUpUser = async (data) => {
+  return $fetch("/api/public/sign-up", {
     method: "POST",
     body: data,
   });
@@ -12,4 +12,4 @@ const tenantApplication = async (data) => {
   });
 };
 
-export { signUpTenant, tenantApplication };
+export { signUpUser, tenantApplication };

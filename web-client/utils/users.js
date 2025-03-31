@@ -9,7 +9,8 @@ const useAuth = () => {
     async () => {
       const response = await $fetch("/api/user/profile");
       isAdmin.value = response.roles.includes("ADMIN");
-      isTenant.value = response.roles.includes("TENANT");
+      isTenant.value = response.roles.includes("RESIDENT");
+      isOwner.value = response.roles.includes("OWNER");
     },
     {
       server: false,
@@ -61,7 +62,10 @@ const emailValidator = (email) => {
   return isEmail != null;
 };
 
+const loginPage = "https://poneres-portal-erg0gza3d2hwc6dh.eastus2-01.azurewebsites.net/oauth2/authorization/okta";
+
 export {
+  loginPage,
   useAuth,
   getUsers,
   getPrescribers,

@@ -12,7 +12,7 @@ public interface AuthenticationService {
 
     Boolean hasRole(Role role);
 
-    UserProfile createUser(SignUp signUp, Role role);
+    UserProfile createUser(SignUp signUp);
 
     boolean isVerified();
 
