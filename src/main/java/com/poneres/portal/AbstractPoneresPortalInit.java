@@ -43,7 +43,7 @@ public class AbstractPoneresPortalInit {
         userProfileRepository.deleteByEmail("3");
         UserProfile tenant = UserProfile.builder()
                 .id("3")
-                .roles(List.of(TENANT))
+                .roles(List.of(RESIDENT))
                 .email("tenant@hello.io")
                 .firstName("Tenant")
                 .lastName("DON'T DELETE")

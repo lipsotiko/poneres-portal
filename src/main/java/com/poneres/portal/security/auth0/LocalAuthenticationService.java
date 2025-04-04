@@ -41,7 +41,7 @@ public class LocalAuthenticationService implements AuthenticationService {
     public UserProfile getUserProfile() {
         return UserProfile.builder()
                 .id("3")
-                .roles(List.of(Role.ADMIN, Role.TENANT))
+                .roles(List.of(Role.ADMIN, Role.RESIDENT))
                 .build();
     }
 

@@ -29,7 +29,7 @@
           <INavbarCollapsible class="_justify-content:flex-end">
             <INav>
               <INavItem v-if="isAdmin" to="/agreements">Agreements</INavItem>
-              <INavItem v-if="isTenant" to="/maintenance">Maintenance</INavItem>
+              <INavItem v-if="isResident" to="/maintenance">Maintenance</INavItem>
             </INav>
           </INavbarCollapsible>
         </INavbar>
@@ -44,7 +44,7 @@
 <script setup>
 import { provide } from "vue";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
-const { isAdmin, isTenant } = useAuth();
+const { isAdmin, isResident } = useAuth();
 const errorMessage = ref();
 provide("errorMessage", errorMessage);
 const open = ref(false);

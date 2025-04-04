@@ -34,7 +34,7 @@ public class UserAuthorizedAspect {
             return;
         }
 
-        if (value.contains("isTenant") && authenticationService.hasRole(Role.TENANT)) {
+        if (value.contains("isTenant") && authenticationService.hasRole(Role.RESIDENT)) {
             return;
         }
 

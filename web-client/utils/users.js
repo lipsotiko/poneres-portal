@@ -2,14 +2,15 @@ import { ref } from "vue";
 
 const useAuth = () => {
   const isAdmin = ref(false);
-  const isTenant = ref(false);
+  const isResident = ref(false);
+  const isOwner = ref(false);
 
   useAsyncData(
     "user-role",
     async () => {
       const response = await $fetch("/api/user/profile");
       isAdmin.value = response.roles.includes("ADMIN");
-      isTenant.value = response.roles.includes("RESIDENT");
+      isResident.value = response.roles.includes("RESIDENT");
       isOwner.value = response.roles.includes("OWNER");
     },
     {
@@ -19,7 +20,8 @@ const useAuth = () => {
 
   return {
     isAdmin,
-    isTenant
+    isResident,
+    isOwner
   };
 };
 
