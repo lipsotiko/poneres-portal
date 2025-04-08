@@ -263,16 +263,6 @@
                 <IFormError for="haveYouBeenEvicted" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
-            <IColumn xs="12" sm="3">
-              <IFormGroup required>
-                <IFormLabel for="convictedOfFelony">Have you been convicted of a felony?</IFormLabel>
-                <IRadioGroup id="convictedOfFelony" name="convictedOfFelony" :options="[
-                  { id: 'yes', label: 'Yes' },
-                  { id: 'no', label: 'No' },
-                ]" />
-                <IFormError for="convictedOfFelony" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
           </IRow>
           <IRow>
             <IColumn>
@@ -336,7 +326,6 @@ const { schema, form } = useForm({
   doYouSmoke: { validators: [{ name: "required" }] },
   doYouHavePets: { validators: [{ name: "required" }] },
   haveYouBeenEvicted: { validators: [{ name: "required" }] },
-  convictedOfFelony: { validators: [{ name: "required" }] },
 });
 
 const errorTypes = ["touched", "invalid"];
