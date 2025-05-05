@@ -2,7 +2,7 @@
 
 # names of files (without extension)
 cd web-client/agreements
-files=$(ls *.html | sed -e 's/\.html$//')
+files=$(find *.html -type f -ctime 0 | sed -e 's/\.html$//')
 cd ../..
 
 # convert files
