@@ -25,10 +25,16 @@
     "@inkline/inkline": "^4.2.1",
     "@tailwindcss/vite": "^4.1.6",
     "ag-grid-vue3": "^32.2.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "file-saver": "^2.0.5",
+    "lucide-vue-next": "^0.509.0",
+    "reka-ui": "^2.2.1",
     "signature_pad": "^4.1.7",
+    "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.6",
-    "trim-canvas": "^0.1.2"
+    "trim-canvas": "^0.1.2",
+    "tw-animate-css": "^1.2.9"
   },
   "prettier": {
     "printWidth": 120

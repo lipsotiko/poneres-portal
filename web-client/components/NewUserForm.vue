@@ -19,14 +19,14 @@
           <IColumn xs="6">
             <IFormGroup required>
               <IFormLabel for="firstName">First name</IFormLabel>
-              <IInput v-model="firstName" id="firstName" name="firstName" autocomplete :error="errorTypes" />
+              <IInput id="firstName" name="firstName" autocomplete :error="errorTypes" />
               <IFormError for="firstName" :visible="errorTypes" />
             </IFormGroup>
           </IColumn>
           <IColumn xs="6">
             <IFormGroup required>
               <IFormLabel for="lastName">Last name</IFormLabel>
-              <IInput v-model="lastName" id="lastName" name="lastName" autocomplete :error="errorTypes" />
+              <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
               <IFormError for="lastName" :visible="errorTypes" />
             </IFormGroup>
           </IColumn>
@@ -35,7 +35,7 @@
           <IColumn>
             <IFormGroup required>
               <IFormLabel for="password">Set a password</IFormLabel>
-              <IInput v-model="password" id="password" name="password" type="password" autocomplete
+              <IInput id="password" name="password" type="password" autocomplete
                 :error="errorTypes" />
               <IFormError for="password" :visible="errorTypes" />
             </IFormGroup>
@@ -50,9 +50,11 @@
           <IColumn>
             <div class="text-center mt-4">
               <div>
-                <IButton color="primary" :loading="loading" @click="createAccount"
-                  :disabled="!schema.touched || schema.invalid">
-                  Create account</IButton>
+                <Button @click="createAccount"
+                  :disabled="!schema.touched || schema.invalid || loading">
+                  <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
+                  Create account
+                </Button>
               </div>
             </div>
           </IColumn>
@@ -67,27 +69,46 @@
             </div>
           </IColumn>
         </IRow>
+        <IRow>
+          <p class="text-sm font-thin">
+            By clicking “Create Account", I agree to Poneres Connect's <a href="#">Terms of Use</a>, <a href="#">Privacy
+              Policy</a> and to receive electronic communication about my accounts and services per Poneres Connect's
+            <a href="#">Electronic Communications Agreement.</a>
+          </p>
+        </IRow>
       </IForm>
+      <template #fallback>
+        <!-- this will be rendered on server side -->
+         <div class="flex justify-center">
+          <Loader2 class="w-6 h-6 animate-spin" />
+         </div>
+      </template>
     </ClientOnly>
   </IContainer>
 </template>
 <script setup>
 import { inject } from "vue";
 import { useForm } from "@inkline/inkline/composables";
+import { Button } from '@/components/ui/button'
+import { Loader2 } from 'lucide-vue-next'
 
-const route = useRoute()
+const route = useRoute();
 const roles = route.query.roles;
 const email = route.query.email;
+
+// Clear the query params after navigation
+const router = useRouter();
+router.replace({ 'query': null })
 
 const { showAdminRole } = defineProps(["showAdminRole"]);
 const emit = defineEmits(["afterSubmit"]);
 
 const roleOptions = ref([
-  { id: 'ADMIN', label: 'Admin' },
-  { id: 'OWNER', label: 'Owner' },
-  { id: 'RESIDENT', label: 'Resident' },
-  { id: 'PROVIDER', label: 'Provider' },
-  { id: 'FACILITY', label: 'Facility' },
+  { id: "ADMIN", label: "Admin" },
+  { id: "OWNER", label: "Owner" },
+  { id: "RESIDENT", label: "Resident" },
+  { id: "PROVIDER", label: "Provider" },
+  { id: "FACILITY", label: "Facility" },
 ]);
 
 if (!showAdminRole) {
@@ -96,7 +117,7 @@ if (!showAdminRole) {
 
 const { schema } = useForm({
   email: {
-    value: decodeURI(email) || '',
+    value: email ? decodeURI(email) : undefined,
     validators: [
       {
         name: "required",
@@ -134,7 +155,7 @@ const { schema } = useForm({
     ],
   },
   roles: {
-  }
+  },
 });
 
 const errorTypes = ["touched", "invalid"];

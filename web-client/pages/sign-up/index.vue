@@ -2,27 +2,33 @@
   <IToast v-if="successfulUserRegistration" color="success">
     <p>You successfully signed up!</p>
   </IToast>
-  <IContainer class="sign-up-container">
-    <div>
-      <h3 class="title">Sign up</h3>
-    </div>
-    <div v-if="successfulUserRegistration">
-      <IRow>
-        <IColumn>
-          <div class="have-an-account">
+  <div class="md:flex md:justify-center">
+    <Card class="max-w-full md:mt-18 md:w-[500px]">
+      <CardHeader>
+        <CardTitle class="text-center">Sign up</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div v-if="successfulUserRegistration">
+          <div class="text-center">
             <p class="lead">Log in to view your dashboard!</p>
-            <IButton block color="primary" :href="loginPage">Log in</IButton>
+            <Button @click="goToLoginPage">Log in</Button>
           </div>
-        </IColumn>
-      </IRow>
-    </div>
-    <NewUserForm v-else @afterSubmit="() => successfulUserRegistration = true" :showAdminRole="false" />
-  </IContainer>
+        </div>
+        <NewUserForm v-else @afterSubmit="() => (successfulUserRegistration = true)" :showAdminRole="false" />
+      </CardContent>
+    </Card>
+  </div>
 </template>
 <script setup>
-import { useRoute } from 'vue-router'
+import { useRoute } from "vue-router";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from '@/components/ui/button'
 
 const successfulUserRegistration = ref(false);
+
+const goToLoginPage = () => {
+  navigateTo(loginPage, { external: true });
+}
 
 definePageMeta({
   layout: "public",
@@ -33,18 +39,3 @@ export default {
   name: "Sign Up",
 };
 </script>
-<style>
-.sign-up-container {
-  padding-top: 62px;
-  max-width: 500px;
-
-  @media screen and (max-width: 768px) {
-    padding-top: 22px;
-    max-width: 100%;
-  }
-}
-
-.title {
-  text-align: center;
-}
-</style>

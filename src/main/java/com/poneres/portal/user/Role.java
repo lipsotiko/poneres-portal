@@ -1,5 +1,5 @@
 package com.poneres.portal.user;
 
 public enum Role {
-    ADMIN, PRESCRIBER, RESIDENT, OWNER
+    ADMIN, OWNER, RESIDENT, PROVIDER, FACILITY
 }
