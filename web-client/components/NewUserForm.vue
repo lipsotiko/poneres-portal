@@ -48,7 +48,7 @@
         </IRow>
         <IRow>
           <IColumn>
-            <div class="create-account">
+            <div class="text-center mt-4">
               <div>
                 <IButton color="primary" :loading="loading" @click="createAccount"
                   :disabled="!schema.touched || schema.invalid">
@@ -59,7 +59,7 @@
         </IRow>
         <IRow>
           <IColumn>
-            <div class="have-an-account">
+            <div class="text-center">
               <p class="lead">
                 Already have an account?
                 <a :href="loginPage"> Sign in </a>
@@ -77,6 +77,7 @@ import { useForm } from "@inkline/inkline/composables";
 
 const route = useRoute()
 const roles = route.query.roles;
+const email = route.query.email;
 
 const { showAdminRole } = defineProps(["showAdminRole"]);
 const emit = defineEmits(["afterSubmit"]);
@@ -85,6 +86,8 @@ const roleOptions = ref([
   { id: 'ADMIN', label: 'Admin' },
   { id: 'OWNER', label: 'Owner' },
   { id: 'RESIDENT', label: 'Resident' },
+  { id: 'PROVIDER', label: 'Provider' },
+  { id: 'FACILITY', label: 'Facility' },
 ]);
 
 if (!showAdminRole) {
@@ -93,6 +96,7 @@ if (!showAdminRole) {
 
 const { schema } = useForm({
   email: {
+    value: decodeURI(email) || '',
     validators: [
       {
         name: "required",
@@ -156,13 +160,3 @@ const createAccount = async () => {
   loading.value = false;
 };
 </script>
-<style scoped>
-.create-account {
-  margin-top: 18px;
-  text-align: center;
-}
-
-.have-an-account {
-  text-align: center;
-}
-</style>

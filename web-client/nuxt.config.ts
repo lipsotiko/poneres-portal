@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from "@tailwindcss/vite";
+
 export default defineNuxtConfig({
   modules: ["@inkline/plugin/nuxt", "dayjs-nuxt"],
   devtools: { enabled: true },
@@ -7,7 +9,11 @@ export default defineNuxtConfig({
       colorMode: "light",
     },
   },
+  css: ['~/assets/css/main.css'],
   vite: {
+    plugins: [
+      tailwindcss(),
+    ],
     server: {
       proxy: {
         "/api": {
