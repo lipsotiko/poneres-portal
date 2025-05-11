@@ -1,12 +1,24 @@
 <template>
-  <IContainer>
-    <PageTitle title="Maintenance" backTo="/">
-      <IButton circle color="primary" to="/maintenance/new">
-        <template #icon>
-          <IIcon name="ink-plus" />
-        </template>
-      </IButton>
-    </PageTitle>
+    <DefaultLayoutWrapper>
+    <template #breadcrumbs>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/"> Home </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Maintenance</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </template>
+  </DefaultLayoutWrapper>
+    <IButton circle color="primary" to="/maintenance/new">
+      <template #icon>
+        <IIcon name="ink-plus" />
+      </template>
+    </IButton>
     <ag-grid-vue
       :loading="pending"
       :rowData="data?.content"
@@ -16,11 +28,19 @@
       class="ag-theme-quartz"
     />
     <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
-  </IContainer>
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridVue } from "ag-grid-vue3";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
 const page = ref(1);
 const sort = ref("createdAt,asc");
 

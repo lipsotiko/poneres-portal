@@ -1,10 +1,13 @@
 import { ref } from "vue";
 
-const useAuth = () => {
-  const isAdmin = ref(false);
-  const isResident = ref(false);
-  const isOwner = ref(false);
+const isAdmin = ref(false);
+const isResident = ref(false);
+const isOwner = ref(false);
+const isProvider = ref(false);
+const isFacility = ref(false);
+const roles = ref(["ALL"]);
 
+const useAuth = () => {
   useAsyncData(
     "user-role",
     async () => {
@@ -12,16 +15,22 @@ const useAuth = () => {
       isAdmin.value = response.roles.includes("ADMIN");
       isResident.value = response.roles.includes("RESIDENT");
       isOwner.value = response.roles.includes("OWNER");
+      isProvider.value = response.roles.includes("PROVIDER");
+      isFacility.value = response.roles.includes("FACILITY");
+      roles.value = response.roles;
     },
     {
-      server: false,
+      server: false
     },
   );
 
   return {
     isAdmin,
     isResident,
-    isOwner
+    isOwner,
+    isProvider,
+    isFacility,
+    roles,
   };
 };
 

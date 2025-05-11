@@ -1,90 +1,88 @@
 <template>
-  <IContainer>
-    <ClientOnly>
-      <IForm v-model="schema">
-        <IRow>
-          <IColumn xs="12">
-            <IFormGroup required>
-              <IFormLabel for="email">Email address</IFormLabel>
-              <IInput v-model="email" id="email" name="email" autocomplete :error="errorTypes">
-                <template #append>
-                  <i class="fa-regular fa-envelope"></i>
-                </template>
-              </IInput>
-              <IFormError for="email" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-        </IRow>
-        <IRow>
-          <IColumn xs="6">
-            <IFormGroup required>
-              <IFormLabel for="firstName">First name</IFormLabel>
-              <IInput id="firstName" name="firstName" autocomplete :error="errorTypes" />
-              <IFormError for="firstName" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-          <IColumn xs="6">
-            <IFormGroup required>
-              <IFormLabel for="lastName">Last name</IFormLabel>
-              <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
-              <IFormError for="lastName" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-        </IRow>
-        <IRow>
-          <IColumn>
-            <IFormGroup required>
-              <IFormLabel for="password">Set a password</IFormLabel>
-              <IInput id="password" name="password" type="password" autocomplete
-                :error="errorTypes" />
-              <IFormError for="password" :visible="errorTypes" />
-            </IFormGroup>
-          </IColumn>
-        </IRow>
-        <IRow v-if="!roles">
-          <IColumn>
-            <ICheckboxGroup id="roles" name="roles" :options="roleOptions" />
-          </IColumn>
-        </IRow>
-        <IRow>
-          <IColumn>
-            <div class="text-center mt-4">
-              <div>
-                <Button @click="createAccount"
-                  :disabled="!schema.touched || schema.invalid || loading">
-                  <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
-                  Create account
-                </Button>
-              </div>
+  <ClientOnly>
+    <IForm v-model="schema">
+      <IRow>
+        <IColumn xs="12">
+          <IFormGroup required>
+            <IFormLabel for="email">Email address</IFormLabel>
+            <IInput v-model="email" id="email" name="email" autocomplete :error="errorTypes">
+              <template #append>
+                <i class="fa-regular fa-envelope"></i>
+              </template>
+            </IInput>
+            <IFormError for="email" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+      </IRow>
+      <IRow>
+        <IColumn xs="6">
+          <IFormGroup required>
+            <IFormLabel for="firstName">First name</IFormLabel>
+            <IInput id="firstName" name="firstName" autocomplete :error="errorTypes" />
+            <IFormError for="firstName" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+        <IColumn xs="6">
+          <IFormGroup required>
+            <IFormLabel for="lastName">Last name</IFormLabel>
+            <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
+            <IFormError for="lastName" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+      </IRow>
+      <IRow>
+        <IColumn>
+          <IFormGroup required>
+            <IFormLabel for="password">Set a password</IFormLabel>
+            <IInput id="password" name="password" type="password" autocomplete
+              :error="errorTypes" />
+            <IFormError for="password" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+      </IRow>
+      <IRow v-if="!roles">
+        <IColumn>
+          <ICheckboxGroup id="roles" name="roles" :options="roleOptions" />
+        </IColumn>
+      </IRow>
+      <IRow>
+        <IColumn>
+          <div class="text-center mt-4">
+            <div>
+              <Button @click="createAccount"
+                :disabled="!schema.touched || schema.invalid || loading">
+                <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
+                Create account
+              </Button>
             </div>
-          </IColumn>
-        </IRow>
-        <IRow>
-          <IColumn>
-            <div class="text-center">
-              <p class="lead">
-                Already have an account?
-                <a :href="loginPage"> Sign in </a>
-              </p>
-            </div>
-          </IColumn>
-        </IRow>
-        <IRow>
-          <p class="text-sm font-thin">
-            By clicking “Create Account", I agree to Poneres Connect's <a href="#">Terms of Use</a>, <a href="#">Privacy
-              Policy</a> and to receive electronic communication about my accounts and services per Poneres Connect's
-            <a href="#">Electronic Communications Agreement.</a>
-          </p>
-        </IRow>
-      </IForm>
-      <template #fallback>
-        <!-- this will be rendered on server side -->
-         <div class="flex justify-center">
-          <Loader2 class="w-6 h-6 animate-spin" />
-         </div>
-      </template>
-    </ClientOnly>
-  </IContainer>
+          </div>
+        </IColumn>
+      </IRow>
+      <IRow>
+        <IColumn>
+          <div class="text-center">
+            <p class="lead">
+              Already have an account?
+              <a :href="loginPage"> Sign in </a>
+            </p>
+          </div>
+        </IColumn>
+      </IRow>
+      <IRow>
+        <p class="text-sm font-thin">
+          By clicking “Create Account", I agree to Poneres Connect's <a href="#">Terms of Use</a>, <a href="#">Privacy
+            Policy</a> and to receive electronic communication about my accounts and services per Poneres Connect's
+          <a href="#">Electronic Communications Agreement.</a>
+        </p>
+      </IRow>
+    </IForm>
+    <template #fallback>
+      <!-- this will be rendered on server side -->
+        <div class="flex justify-center">
+        <Loader2 class="w-6 h-6 animate-spin" />
+        </div>
+    </template>
+  </ClientOnly>
 </template>
 <script setup>
 import { inject } from "vue";

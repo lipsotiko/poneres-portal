@@ -1,59 +1,92 @@
 <template>
-  <IContainer>
-    <PageTitle title="Profile" backTo="/" />
-    <IContainer class="user-profile-container">
-      <ClientOnly>
-        <IForm v-model="schema" :disabled="pendingUserInfo">
-          <IRow>
-            <IColumn xs="12">
-              <IFormGroup required>
-                <IFormLabel for="firstName">First name</IFormLabel>
-                <IInput id="firstName" name="firstName" autocomplete :error="errorTypes" />
-                <IFormError for="firstName" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-          </IRow>
-          <IRow>
-            <IColumn xs="12">
-              <IFormGroup required>
-                <IFormLabel for="lastName">Last name</IFormLabel>
-                <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
-                <IFormError for="lastName" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-          </IRow>
-          <IRow>
-            <IColumn xs="12">
-              <IFormGroup required>
-                <IFormLabel for="email">Email</IFormLabel>
-                <IInput id="email" name="email" autocomplete :error="errorTypes">
-                  <template #suffix v-if="!pendingUserInfo && !userInfo.verified">
-                    <IButton link size="sm" color="info" @click="verifyEmail">verify</IButton>
-                  </template>
-                </IInput>
-                <IFormError for="email" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-          </IRow>
-          <div class="save-profile">
-            <IButton block color="primary" :loading="loading" @click="saveProfile" :disabled="schema.invalid">
-              Save changes</IButton
-            >
-          </div>
-        </IForm>
-        <IToast v-if="verifyEmailBanner" v-model="verifyEmailBanner" color="info" dismissible>
-          <p>Please check your email for a verification link.</p>
-        </IToast>
-      </ClientOnly>
-    </IContainer>
-  </IContainer>
+  <DefaultLayoutWrapper>
+    <template #breadcrumbs>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/"> Home </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Profile</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </template>
+  </DefaultLayoutWrapper>
+
+  <ClientOnly>
+    <IForm v-model="schema" :disabled="pendingUserInfo" class="w-lg ml-8">
+      <IRow>
+        <IColumn xs="12">
+          <IFormGroup required>
+            <IFormLabel for="firstName">First name</IFormLabel>
+            <IInput id="firstName" name="firstName" autocomplete :error="errorTypes" />
+            <IFormError for="firstName" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+      </IRow>
+      <IRow>
+        <IColumn xs="12">
+          <IFormGroup required>
+            <IFormLabel for="lastName">Last name</IFormLabel>
+            <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
+            <IFormError for="lastName" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+      </IRow>
+      <IRow>
+        <IColumn xs="12">
+          <IFormGroup required>
+            <IFormLabel for="email">Email</IFormLabel>
+            <IInput id="email" name="email" autocomplete :error="errorTypes">
+              <template #suffix v-if="!pendingUserInfo && !userInfo.verified">
+                <IButton link size="sm" color="info" @click="verifyEmail">verify</IButton>
+              </template>
+            </IInput>
+            <IFormError for="email" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+      </IRow>
+      <div class="save-profile">
+        <Button block color="primary" @click="saveProfile" :disabled="schema.invalid || loading">
+          <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
+          Save changes</Button
+        >
+      </div>
+    </IForm>
+    <IToast v-if="verifyEmailBanner" v-model="verifyEmailBanner" color="info" dismissible>
+      <p>Please check your email for a verification link.</p>
+    </IToast>
+    <template #fallback>
+      <!-- this will be rendered on server side -->
+      <div class="flex justify-center">
+        <Loader2 class="w-6 h-6 animate-spin" />
+      </div>
+    </template>
+  </ClientOnly>
 </template>
 <script setup>
 import { useForm } from "@inkline/inkline/composables";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
 
-const { pending: pendingUserInfo, data: userInfo } = useFetch("/api/user/info", {
-  lazy: true,
+const { pending: pendingUserInfo, data: userInfo } = await useFetch("/api/user/info", {
+  // lazy: true,
   server: false,
+  onResponse({ request, response, options }) {
+    schema.value.firstName.value = response._data.userProfile.firstName;
+    schema.value.lastName.value = response._data.userProfile.lastName;
+    schema.value.email.value = response._data.userProfile.email;
+  },
 });
 
 const errorTypes = ["touched", "invalid"];
@@ -87,14 +120,6 @@ const { schema } = useForm({
       },
     ],
   },
-});
-
-watch(pendingUserInfo, () => {
-  if (!pendingUserInfo.value) {
-    schema.value.firstName.value = userInfo.value.userProfile.firstName;
-    schema.value.lastName.value = userInfo.value.userProfile.lastName;
-    schema.value.email.value = userInfo.value.userProfile.email;
-  }
 });
 
 const saveProfile = async () => {

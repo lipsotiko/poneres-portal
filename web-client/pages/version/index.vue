@@ -1,7 +1,5 @@
 <template>
-  <IContainer>
-    <p>Build Date: {{ $config.public.buildDate }}</p>
-  </IContainer>
+  <p>Build Date: {{ $config.public.buildDate }}</p>
 </template>
 <script>
 export default {

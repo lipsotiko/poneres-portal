@@ -1,41 +1,61 @@
 <template>
-  <IContainer>
-    <PageTitle title="Admin panel" backTo="/">
-      <IButton circle color="primary" to="/admin/users/new">
-        <template #icon>
-          <IIcon name="ink-plus" />
-        </template>
+  <DefaultLayoutWrapper>
+    <template #breadcrumbs>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/"> Home </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Admin</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </template>
+  </DefaultLayoutWrapper>
+  <IButton circle color="primary" to="/admin/users/new">
+    <template #icon>
+      <IIcon name="ink-plus" />
+    </template>
+  </IButton>
+  <ag-grid-vue
+    :loading="pending"
+    :rowData="data?.content"
+    :columnDefs="colDefs"
+    :gridOptions="gridOptions"
+    :rowSelection="rowSelection"
+    :getRowId="(params) => String(params.data.id)"
+    style="height: 888px"
+    class="ag-theme-quartz"
+  />
+  <div class="_display:flex _justify-content:space-between">
+    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+    <div class="admin-actions">
+      <IButton
+        outline
+        size="sm"
+        color="danger"
+        :disabled="selectedUserIds.length === 0"
+        :loading="deleteing"
+        @click="handleDelete()"
+        >Delete
       </IButton>
-    </PageTitle>
-    <ag-grid-vue
-      :loading="pending"
-      :rowData="data?.content"
-      :columnDefs="colDefs"
-      :gridOptions="gridOptions"
-      :rowSelection="rowSelection"
-      :getRowId="(params) => String(params.data.id)"
-      style="height: 888px"
-      class="ag-theme-quartz"
-    />
-    <div class="_display:flex _justify-content:space-between">
-      <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
-        <div class="admin-actions">
-          <IButton
-            outline
-            size="sm"
-            color="danger"
-            :disabled="selectedUserIds.length === 0"
-            :loading="deleteing"
-            @click="handleDelete()"
-            >Delete
-          </IButton>
-        </div>
     </div>
-  </IContainer>
+  </div>
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridVue } from "ag-grid-vue3";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
 const deleteing = ref(false);
 const page = ref(1);
 const sort = ref("firstName,asc");

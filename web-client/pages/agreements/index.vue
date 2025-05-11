@@ -2,14 +2,26 @@
   <IToast v-if="toastOpen" v-model="toastOpen" color="success" :duration="2500" dismissible>
     <p>{{ modalMessage }}</p>
   </IToast>
-  <IContainer>
-    <PageTitle title="Agreements" backTo="/">
-      <IButton circle color="primary" to="/agreements/new">
-        <template #icon>
-          <IIcon name="ink-plus" />
-        </template>
-      </IButton>
-    </PageTitle>
+  <DefaultLayoutWrapper>
+    <template #breadcrumbs>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/"> Home </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Agreements</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </template>
+  </DefaultLayoutWrapper>
+    <IButton circle color="primary" to="/agreements/new">
+      <template #icon>
+        <IIcon name="ink-plus" />
+      </template>
+    </IButton>
     <ag-grid-vue
       :loading="pending"
       :rowData="data?.content"
@@ -29,12 +41,19 @@
         </div>
       </template>
     </IModal>
-  </IContainer>
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { AgGridVue } from "ag-grid-vue3";
 import { ref } from "vue";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const toastOpen = ref(false);
 const modalMessage = ref();
