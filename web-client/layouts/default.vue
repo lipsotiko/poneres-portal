@@ -7,7 +7,7 @@
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem
-                v-for="item in items.filter((i) => i.showFor == 'ALL' || i.showFor.some((r) => auth.roles.includes(r)))"
+                v-for="item in items.filter((i) => i.showFor == 'ALL' || i.showFor.some((r) => auth?.roles.includes(r)))"
                 :key="item.title"
               >
                 <SidebarMenuButton asChild>

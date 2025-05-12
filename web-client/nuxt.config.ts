@@ -29,7 +29,15 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
+      crawlLinks: true,
+      failOnError: true,
       ignore: ["/logout"],
     },
+    // devProxy: {
+    //   '/api': {
+    //     target: "http://localhost:8080",
+    //     changeOrigin: true
+    //   }
+    // }
   },
 });

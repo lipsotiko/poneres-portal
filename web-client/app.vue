@@ -8,9 +8,14 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 
 const auth = useState("auth");
 
-await callOnce(async () => {
-  auth.value = await $fetch("http://localhost:8080/api/user/profile");
+const { data } = await useAsyncData("user-profile", () => $fetch("/api/user/profile"), {
+  server: false,
 });
+
+auth.value = data;
+
+// await callOnce(async () => {
+// }, { mode: 'navigation' });
 
 useHead({
   script: [
