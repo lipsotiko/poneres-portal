@@ -14,7 +14,6 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-
   <ClientOnly>
     <IForm v-model="schema" :disabled="pendingUserInfo" class="w-lg">
       <IRow>
@@ -80,7 +79,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-vue-next";
 
 const { pending: pendingUserInfo, data: userInfo } = await useFetch("/api/user/info", {
-  // lazy: true,
+  lazy: true,
   server: false,
   onResponse({ request, response, options }) {
     schema.value.firstName.value = response._data.userProfile.firstName;

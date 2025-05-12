@@ -6,17 +6,6 @@
 <script setup lang="ts">
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 
-const auth = useState("auth");
-
-const { data } = await useAsyncData("user-profile", () => $fetch("/api/user/profile"), {
-  server: false,
-});
-
-auth.value = data;
-
-// await callOnce(async () => {
-// }, { mode: 'navigation' });
-
 useHead({
   script: [
     {
