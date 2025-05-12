@@ -3,8 +3,14 @@
     <NuxtPage />
   </NuxtLayout>
 </template>
-<script setup>
+<script setup lang="ts">
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+
+const auth = useState('auth')
+
+await callOnce(async () => {
+  auth.value = await $fetch('http://localhost:8080/api/user/profile')
+})
 
 useHead({
   script: [

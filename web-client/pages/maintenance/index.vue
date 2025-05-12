@@ -1,5 +1,5 @@
 <template>
-    <DefaultLayoutWrapper>
+  <DefaultLayoutWrapper>
     <template #breadcrumbs>
       <Breadcrumb>
         <BreadcrumbList>
@@ -14,20 +14,22 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
+  <div class="flex justify-end m-4">
     <IButton circle color="primary" to="/maintenance/new">
       <template #icon>
         <IIcon name="ink-plus" />
       </template>
     </IButton>
-    <ag-grid-vue
-      :loading="pending"
-      :rowData="data?.content"
-      :columnDefs="colDefs"
-      :gridOptions="gridOptions"
-      style="height: 888px"
-      class="ag-theme-quartz"
-    />
-    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+  </div>
+  <ag-grid-vue
+    :loading="pending"
+    :rowData="data?.content"
+    :columnDefs="colDefs"
+    :gridOptions="gridOptions"
+    style="height: 888px"
+    class="ag-theme-quartz"
+  />
+  <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -47,23 +49,23 @@ const sort = ref("createdAt,asc");
 const colDefs = ref([
   {
     field: "id",
-    width: 228
+    width: 228,
   },
   {
     field: "type",
-    width: 108
+    width: 108,
   },
   {
     field: "priority",
-    width: 108
+    width: 108,
   },
   {
     field: "description",
-    flex: 1
+    flex: 1,
   },
   {
     field: "createdAt",
-    width: 222
+    width: 222,
   },
 ]);
 

@@ -2,7 +2,7 @@
   <IToast v-if="successfulSubmission" color="success">
     <p>You successfully submitted your application!</p>
   </IToast>
-  <IContainer class="sign-up-container">
+  <div>
     <ClientOnly>
       <IForm v-model="schema">
         <IRow>
@@ -278,7 +278,7 @@
         </div>
       </IForm>
     </ClientOnly>
-  </IContainer>
+  </div>
 </template>
 <script setup>
 import { useForm } from "@inkline/inkline/composables";

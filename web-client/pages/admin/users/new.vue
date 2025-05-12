@@ -18,7 +18,9 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <NewUserForm @afterSubmit="afterSubmit" :showAdminRole="true" />
+  <div class="w-lg">
+    <NewUserForm @afterSubmit="afterSubmit" :showAdminRole="true" />
+  </div>
 </template>
 <script setup>
 import {

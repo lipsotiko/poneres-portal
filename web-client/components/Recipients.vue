@@ -1,7 +1,4 @@
 <template>
-  <IRow>
-    <p class="lead">Recipients</p>
-  </IRow>
   <IForm v-model="recipientsSchema">
     <IRow v-for="(_, index) in recipientsSchema.recipients" :key="index">
       <IColumn xs="6">

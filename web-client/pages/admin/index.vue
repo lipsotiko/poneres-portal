@@ -14,11 +14,13 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <IButton circle color="primary" to="/admin/users/new">
+  <div class="flex justify-end m-4">
+    <IButton circle color="primary" to="/admin/users/new">
     <template #icon>
       <IIcon name="ink-plus" />
     </template>
   </IButton>
+  </div>
   <ag-grid-vue
     :loading="pending"
     :rowData="data?.content"

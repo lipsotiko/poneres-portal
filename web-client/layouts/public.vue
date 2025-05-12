@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <IToast v-if="errorMessage" color="warning" position="bottom" dismissible>
+  <div class="m-4">
+    <IToast v-if="errorMessage" color="warning" dismissible>
       <p>{{ errorMessage }}</p>
     </IToast>
     <slot />

@@ -16,7 +16,7 @@
   </DefaultLayoutWrapper>
 
   <ClientOnly>
-    <IForm v-model="schema" :disabled="pendingUserInfo" class="w-lg ml-8">
+    <IForm v-model="schema" :disabled="pendingUserInfo" class="w-lg">
       <IRow>
         <IColumn xs="12">
           <IFormGroup required>
@@ -55,7 +55,7 @@
         >
       </div>
     </IForm>
-    <IToast v-if="verifyEmailBanner" v-model="verifyEmailBanner" color="info" dismissible>
+    <IToast v-if="verifyEmailBanner" v-model="verifyEmailBanner" color="info" class="w-lg" dismissible>
       <p>Please check your email for a verification link.</p>
     </IToast>
     <template #fallback>

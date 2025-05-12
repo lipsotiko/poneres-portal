@@ -25,10 +25,7 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <IContainer>
-    <IRow>
-      <p class="lead">Agreement</p>
-    </IRow>
+  <div class="ml-6">
     <ClientOnly>
       <IForm v-model="metaDataSchema" :disabled="loading || sent">
         <slot></slot>
@@ -62,7 +59,7 @@
         </div>
       </IColumn>
     </IRow>
-  </IContainer>
+  </div>
 </template>
 <script setup>
 import { inject } from "vue";

@@ -11,19 +11,19 @@
     </template>
   </DefaultLayoutWrapper>
   <div class="top">
-    <p v-if="isResident" class="lead">
+    <p v-if="auth.roles.includes('RESIDENT')" class="lead">
       Welcome to your resident portal!
     </p>
-    <p v-else-if="isOwner" class="lead">
+    <p v-else-if="auth.roles.includes('OWNER')" class="lead">
       Welcome to your owner portal!
     </p>
-    <p v-else-if="isFacility" class="lead">
+    <p v-else-if="auth.roles.includes('FACILITY')" class="lead">
       Welcome to your facility portal!
     </p>
-    <p v-else-if="isProvider" class="lead">
+    <p v-else-if="auth.roles.includes('PROVIDER')" class="lead">
       Welcome to your provider portal!
     </p>
-    <p v-else-if="isAdmin" class="lead">
+    <p v-else-if="auth.roles.includes('ADMIN')" class="lead">
       Welcome to your admin portal!
     </p>
     <p v-else class="lead">
@@ -42,5 +42,5 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Loader2 } from 'lucide-vue-next'
 
-const { isAdmin, isResident, isOwner, isProvider, isFacility } = await useAuth();
+const auth = useState('auth')
 </script>

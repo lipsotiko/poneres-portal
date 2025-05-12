@@ -7,7 +7,7 @@
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem
-                v-for="item in items.filter((i) => i.showFor == 'ALL' || i.showFor.some((r) => roles.includes(r)))"
+                v-for="item in items.filter((i) => i.showFor == 'ALL' || i.showFor.some((r) => auth.roles.includes(r)))"
                 :key="item.title"
               >
                 <SidebarMenuButton asChild>
@@ -23,10 +23,12 @@
       </SidebarContent>
     </Sidebar>
     <main class="w-full">
-      <IToast v-if="errorMessage" color="warning" position="bottom" dismissible>
+      <IToast v-if="errorMessage" color="warning" dismissible>
         <p>{{ errorMessage }}</p>
       </IToast>
-      <slot />
+      <div class="m-4">
+        <slot />
+      </div>
     </main>
   </SidebarProvider>
 </template>
@@ -46,7 +48,7 @@ import {
 
 import { provide } from "vue";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
-const { roles } = useAuth();
+const auth = useState('auth')
 const errorMessage = ref();
 provide("errorMessage", errorMessage);
 const open = ref(false);

@@ -1,6 +1,6 @@
 <template>
-  <IToast v-if="toastOpen" v-model="toastOpen" color="success" :duration="2500" dismissible>
-    <p>{{ modalMessage }}</p>
+  <IToast v-if="toastOpen" v-model="toastOpen" class="float-right w-[328px]" color="success" :duration="2500" dismissible>
+    {{ modalMessage }}
   </IToast>
   <DefaultLayoutWrapper>
     <template #breadcrumbs>
@@ -17,30 +17,33 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
+
+  <div class="flex justify-end m-4">
     <IButton circle color="primary" to="/agreements/new">
       <template #icon>
         <IIcon name="ink-plus" />
       </template>
     </IButton>
-    <ag-grid-vue
-      :loading="pending"
-      :rowData="data?.content"
-      :columnDefs="colDefs"
-      :gridOptions="gridOptions"
-      style="height: 888px"
-      class="ag-theme-quartz"
-    />
-    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
-    <IModal v-model="sendAgreementModal">
-      <template #header>Send agreement?</template>
-      <span v-html="sendAgreementModalMessage"></span>
-      <template #footer>
-        <div style="display: flex; justify-content: space-between">
-          <IButton outline color="dark" @click="sendAgreementModal = false">No, don't</IButton>
-          <IButton color="success" :loading="sending" @click="handleSendForSigning">Yes, send it!</IButton>
-        </div>
-      </template>
-    </IModal>
+  </div>
+  <ag-grid-vue
+    :loading="pending"
+    :rowData="data?.content"
+    :columnDefs="colDefs"
+    :gridOptions="gridOptions"
+    style="height: 888px"
+    class="ag-theme-quartz"
+  />
+  <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+  <IModal v-model="sendAgreementModal">
+    <template #header>Send agreement?</template>
+    <span v-html="sendAgreementModalMessage"></span>
+    <template #footer>
+      <div style="display: flex; justify-content: space-between">
+        <IButton outline color="dark" @click="sendAgreementModal = false">No, don't</IButton>
+        <IButton color="success" :loading="sending" @click="handleSendForSigning">Yes, send it!</IButton>
+      </div>
+    </template>
+  </IModal>
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -59,7 +62,7 @@ const toastOpen = ref(false);
 const modalMessage = ref();
 const sending = ref(false);
 const sendAgreementModal = ref(false);
-const sendAgreementModalMessage = ref('Are you sure you want to send this agreement?');
+const sendAgreementModalMessage = ref("Are you sure you want to send this agreement?");
 const agreementToSendId = ref();
 const page = ref(1);
 const sort = ref("createdAt,asc");
@@ -81,14 +84,15 @@ const colDefs = ref([
         agreementToSendId.value = id;
         const testMode = await isTestMode();
         if (!testMode) {
-          sendAgreementModalMessage.value = 'System is NOT in test mode!<br>Are you sure you want to send this agreement?';
+          sendAgreementModalMessage.value =
+            "System is NOT in test mode!<br>Are you sure you want to send this agreement?";
         }
         sendAgreementModal.value = true;
       },
       onReminderSent: () => {
         modalMessage.value = "Reminder sent!";
         toastOpen.value = true;
-      }
+      },
     },
     cellRenderer: "SignatureStatus",
     headerName: "Status / Action",
@@ -104,7 +108,7 @@ const handleSendForSigning = async () => {
   sendAgreementModal.value = false;
   sending.value = false;
   refresh();
-}
+};
 
 const gridOptions = {
   enableCellTextSelection: true,

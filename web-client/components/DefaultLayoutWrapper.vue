@@ -1,5 +1,5 @@
 <template>
-  <div class="m-4 flex">
+  <div class="flex">
     <SidebarTrigger />
     <div class="mt-1">
       <slot name="breadcrumbs" />

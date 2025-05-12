@@ -58,7 +58,7 @@
           </div>
         </IColumn>
       </IRow>
-      <IRow>
+      <IRow v-if="!showAdminRole">
         <IColumn>
           <div class="text-center">
             <p class="lead">
@@ -68,8 +68,8 @@
           </div>
         </IColumn>
       </IRow>
-      <IRow>
-        <p class="text-sm font-thin">
+      <IRow v-if="!showAdminRole">
+        <p class="text-sm font-thin px-4">
           By clicking “Create Account", I agree to Poneres Connect's <a href="#">Terms of Use</a>, <a href="#">Privacy
             Policy</a> and to receive electronic communication about my accounts and services per Poneres Connect's
           <a href="#">Electronic Communications Agreement.</a>
