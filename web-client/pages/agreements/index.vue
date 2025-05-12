@@ -1,5 +1,12 @@
 <template>
-  <IToast v-if="toastOpen" v-model="toastOpen" class="float-right w-[328px]" color="success" :duration="2500" dismissible>
+  <IToast
+    v-if="toastOpen"
+    v-model="toastOpen"
+    class="float-right w-[328px]"
+    color="success"
+    :duration="2500"
+    dismissible
+  >
     {{ modalMessage }}
   </IToast>
   <DefaultLayoutWrapper>
@@ -78,7 +85,6 @@ const colDefs = ref([
   },
   {
     field: "ssdId",
-    headerName: "Signature",
     context: {
       onSend: async (id) => {
         agreementToSendId.value = id;

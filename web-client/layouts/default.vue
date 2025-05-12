@@ -48,7 +48,7 @@ import {
 
 import { provide } from "vue";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
-const auth = useState('auth')
+const auth = useState("auth");
 const errorMessage = ref();
 provide("errorMessage", errorMessage);
 const open = ref(false);

@@ -1,5 +1,5 @@
 <template>
-    <DefaultLayoutWrapper>
+  <DefaultLayoutWrapper>
     <template #breadcrumbs>
       <Breadcrumb>
         <BreadcrumbList>

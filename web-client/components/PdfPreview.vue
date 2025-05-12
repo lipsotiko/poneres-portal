@@ -10,7 +10,12 @@ import { inject } from "vue";
 const sideBarOpen = inject("sideBarOpen");
 const pdfPreview = ref();
 const loadingPreview = ref(false);
-const { type, metadata, recipients, includeTestSignatures } = defineProps(["type", "metadata", "recipients", "includeTestSignatures"]);
+const { type, metadata, recipients, includeTestSignatures } = defineProps([
+  "type",
+  "metadata",
+  "recipients",
+  "includeTestSignatures",
+]);
 
 onUpdated(async () => {
   if (sideBarOpen.value) {

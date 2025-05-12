@@ -64,12 +64,7 @@
         <IColumn>
           <IFormGroup required>
             <IFormLabel for="description">Description</IFormLabel>
-            <ITextarea
-              id="description"
-              name="description"
-              placeholder="Describe your request..."
-              :error="errorTypes"
-            />
+            <ITextarea id="description" name="description" placeholder="Describe your request..." :error="errorTypes" />
             <IFormError for="description" :visible="errorTypes" />
           </IFormGroup>
         </IColumn>

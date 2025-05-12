@@ -7,26 +7,26 @@
     <IBadge v-if="loading" color="warning">Loading...</IBadge>
     <div v-else>
       <IButton
-      v-if="status === 'Completed'"
-      size="sm"
-      color="secondary"
-      @click="handleGetCompletedFile()"
-      :loading="getFileLoading"
-    >
-      Download</IButton
-    >
-    <IButton
-      v-else-if="status !== 'Completed'"
-      size="sm"
-      color="secondary"
-      @click="handleSendReminder()"
-      :loading="reminderLoading"
-    >
-      Send Reminder</IButton
-    >
-    <IBadge v-else>
-      {{ status }}
-    </IBadge>
+        v-if="status === 'Completed'"
+        size="sm"
+        color="secondary"
+        @click="handleGetCompletedFile()"
+        :loading="getFileLoading"
+      >
+        Download</IButton
+      >
+      <IButton
+        v-else-if="status !== 'Completed'"
+        size="sm"
+        color="secondary"
+        @click="handleSendReminder()"
+        :loading="reminderLoading"
+      >
+        Send Reminder</IButton
+      >
+      <IBadge v-else>
+        {{ status }}
+      </IBadge>
     </div>
   </span>
 </template>

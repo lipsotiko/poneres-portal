@@ -74,7 +74,13 @@
             <IColumn xs="12" lg="3">
               <IFormGroup required>
                 <IFormLabel for="lengthAtCurrentAddress">Length of time</IFormLabel>
-                <IInput id="lengthAtCurrentAddress" name="lengthAtCurrentAddress" placeholder="Year(s) / Month(s)" autocomplete :error="errorTypes" />
+                <IInput
+                  id="lengthAtCurrentAddress"
+                  name="lengthAtCurrentAddress"
+                  placeholder="Year(s) / Month(s)"
+                  autocomplete
+                  :error="errorTypes"
+                />
                 <IFormError for="lengthAtCurrentAddress" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
@@ -172,7 +178,13 @@
             <IColumn xs="12" lg="2">
               <IFormGroup required>
                 <IFormLabel for="lengthOfResidence">Length of recidence</IFormLabel>
-                <IInput id="lengthOfResidence" name="lengthOfResidence" placeholder="Year(s) / Month(s)" autocomplete :error="errorTypes" />
+                <IInput
+                  id="lengthOfResidence"
+                  name="lengthOfResidence"
+                  placeholder="Year(s) / Month(s)"
+                  autocomplete
+                  :error="errorTypes"
+                />
                 <IFormError for="lengthOfResidence" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
@@ -192,7 +204,8 @@
           <IRow>
             <IColumn xs="12">
               <IFormGroup required>
-                <IFormLabel for="references">Please list any personal references and their contact information:
+                <IFormLabel for="references"
+                  >Please list any personal references and their contact information:
                 </IFormLabel>
                 <ITextarea id="references" name="references" autocomplete :error="errorTypes" />
                 <IFormError for="references" :visible="errorTypes" />
@@ -236,30 +249,42 @@
             <IColumn xs="12" sm="3">
               <IFormGroup required>
                 <IFormLabel for="doYouSmoke">Do you smoke?</IFormLabel>
-                <IRadioGroup id="doYouSmoke" name="doYouSmoke" :options="[
-                  { id: 'yes', label: 'Yes' },
-                  { id: 'no', label: 'No' },
-                ]" />
+                <IRadioGroup
+                  id="doYouSmoke"
+                  name="doYouSmoke"
+                  :options="[
+                    { id: 'yes', label: 'Yes' },
+                    { id: 'no', label: 'No' },
+                  ]"
+                />
                 <IFormError for="doYouSmoke" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
             <IColumn xs="12" sm="3">
               <IFormGroup required>
                 <IFormLabel for="doYouHavePets">Do you have pets?</IFormLabel>
-                <IRadioGroup id="doYouHavePets" name="doYouHavePets" :options="[
-                  { id: 'yes', label: 'Yes' },
-                  { id: 'no', label: 'No' },
-                ]" />
+                <IRadioGroup
+                  id="doYouHavePets"
+                  name="doYouHavePets"
+                  :options="[
+                    { id: 'yes', label: 'Yes' },
+                    { id: 'no', label: 'No' },
+                  ]"
+                />
                 <IFormError for="doYouHavePets" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
             <IColumn xs="12" sm="3">
               <IFormGroup required>
                 <IFormLabel for="haveYouBeenEvicted">Have you ever been evicted?</IFormLabel>
-                <IRadioGroup id="haveYouBeenEvicted" name="haveYouBeenEvicted" :options="[
-                  { id: 'yes', label: 'Yes' },
-                  { id: 'no', label: 'No' },
-                ]" />
+                <IRadioGroup
+                  id="haveYouBeenEvicted"
+                  name="haveYouBeenEvicted"
+                  :options="[
+                    { id: 'yes', label: 'Yes' },
+                    { id: 'no', label: 'No' },
+                  ]"
+                />
                 <IFormError for="haveYouBeenEvicted" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
@@ -268,9 +293,15 @@
             <IColumn>
               <div class="create-account">
                 <div>
-                  <IButton block color="primary" :loading="loading" @click="createAccount"
-                    :disabled="!schema.touched || schema.invalid">
-                    Apply</IButton>
+                  <IButton
+                    block
+                    color="primary"
+                    :loading="loading"
+                    @click="createAccount"
+                    :disabled="!schema.touched || schema.invalid"
+                  >
+                    Apply</IButton
+                  >
                 </div>
               </div>
             </IColumn>
@@ -312,7 +343,6 @@ const { schema, form } = useForm({
   supervisorPhone: { validators: [{ name: "required" }] },
   employerAddress: { validators: [{ name: "required" }] },
   employmentLength: { validators: [{ name: "required" }] },
-  employerAddress: { validators: [{ name: "required" }] },
   monthlyIncome: { validators: [{ name: "required" }] },
   previousAddress: { validators: [{ name: "required" }] },
   previousLandlordName: { validators: [{ name: "required" }] },
@@ -321,7 +351,7 @@ const { schema, form } = useForm({
   reasonForMoving: { validators: [{ name: "required" }] },
   otherIncome: {},
   references: { validators: [{ name: "required" }] },
-  numberOfOccupants: { validators: [{ name: "required" }]},
+  numberOfOccupants: { validators: [{ name: "required" }] },
   socialMedia: {},
   doYouSmoke: { validators: [{ name: "required" }] },
   doYouHavePets: { validators: [{ name: "required" }] },
@@ -334,10 +364,9 @@ const successfulSubmission = ref(false);
 
 const createAccount = async () => {
   loading.value = true;
-  await tenantApplication(form.value)
-    .then(() => {
-      successfulSubmission.value = true;
-    })
+  await tenantApplication(form.value).then(() => {
+    successfulSubmission.value = true;
+  });
 
   loading.value = false;
 };

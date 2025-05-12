@@ -41,7 +41,7 @@ const getFileUrl = async (id) => {
 
 const copyAgreement = async (id) => {
   return $fetch(`/api/agreements/${id}/copy`, {
-    method: 'POST'
+    method: "POST",
   });
 };
 
@@ -52,8 +52,8 @@ const sendReminder = async (id) => {
 };
 
 const isTestMode = async () => {
-  return $fetch('/api/agreements/test-mode');
-}
+  return $fetch("/api/agreements/test-mode");
+};
 
 const saveMaintenanceRequest = async (data) => {
   return $fetch("/api/maintenance", {
@@ -66,22 +66,22 @@ const agreementTypes = [
   {
     id: "/agreements/lease_agreement_md/",
     label: "Residential Dwelling Lease (Maryland)",
-    type: "LEASE_AGREEMENT_MD_V1"
+    type: "LEASE_AGREEMENT_MD_V1",
   },
   {
     id: "/agreements/lead_paint_disclosure_md/",
     label: "Lead Paint Disclosure (Maryland)",
-    type: "LEAD_PAINT_ADDENDUM_MD_V1"
+    type: "LEAD_PAINT_ADDENDUM_MD_V1",
   },
   {
     id: "/agreements/property_management_agreement/",
     label: "Property Management Agreement",
-    type: "PROPERTY_MANAGEMENT_AGREEMENT_V1"
-  }
+    type: "PROPERTY_MANAGEMENT_AGREEMENT_V1",
+  },
 ];
 
 const getAgreementPath = (type) => {
-  return agreementTypes.find(t => t.type === type).id
+  return agreementTypes.find((t) => t.type === type).id;
 };
 
 const errorTypes = ["touched", "invalid"];
@@ -121,5 +121,5 @@ export {
   errorTypes,
   fieldOptions,
   emailFieldOptions,
-  agreementTypes
+  agreementTypes,
 };

@@ -22,13 +22,13 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
 const successfulUserRegistration = ref(false);
 
 const goToLoginPage = () => {
   navigateTo(loginPage, { external: true });
-}
+};
 
 definePageMeta({
   layout: "public",

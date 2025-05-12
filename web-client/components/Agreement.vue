@@ -19,7 +19,7 @@
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{{`${title} - ${agreementId}`}}</BreadcrumbPage>
+            <BreadcrumbPage>{{ `${title} - ${agreementId}` }}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

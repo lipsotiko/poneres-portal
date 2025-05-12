@@ -32,7 +32,12 @@
 </template>
 <script setup>
 const recipientsSchema = defineModel();
-const { recipientName1, recipientEmail1, recipientName2, recipientEmail2 } = defineProps(["recipientName-1", "recipientEmail-1", "recipientName-2", "recipientEmail-2"]);
+const { recipientName1, recipientEmail1, recipientName2, recipientEmail2 } = defineProps([
+  "recipientName-1",
+  "recipientEmail-1",
+  "recipientName-2",
+  "recipientEmail-2",
+]);
 
 const removeRecipient = (index) => {
   if (recipientsSchema.value.recipients.length === 1) {

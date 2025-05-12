@@ -629,7 +629,6 @@ const metaDataSchema = {
   petDepositInDollars: {},
   numKeys: { ...fieldOptions },
   incl_1: { value: false },
-  incl_1: { value: false },
   incl_2: { value: false },
   incl_3: { value: false },
   incl_4: { value: false },

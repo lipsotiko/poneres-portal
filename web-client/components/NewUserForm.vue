@@ -34,8 +34,7 @@
         <IColumn>
           <IFormGroup required>
             <IFormLabel for="password">Set a password</IFormLabel>
-            <IInput id="password" name="password" type="password" autocomplete
-              :error="errorTypes" />
+            <IInput id="password" name="password" type="password" autocomplete :error="errorTypes" />
             <IFormError for="password" :visible="errorTypes" />
           </IFormGroup>
         </IColumn>
@@ -49,8 +48,7 @@
         <IColumn>
           <div class="text-center mt-4">
             <div>
-              <Button @click="createAccount"
-                :disabled="!schema.touched || schema.invalid || loading">
+              <Button @click="createAccount" :disabled="!schema.touched || schema.invalid || loading">
                 <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
                 Create account
               </Button>
@@ -70,25 +68,26 @@
       </IRow>
       <IRow v-if="!showAdminRole">
         <p class="text-sm font-thin px-4">
-          By clicking “Create Account", I agree to Poneres Connect's <a href="#">Terms of Use</a>, <a href="#">Privacy
-            Policy</a> and to receive electronic communication about my accounts and services per Poneres Connect's
+          By clicking “Create Account", I agree to Poneres Connect's <a href="#">Terms of Use</a>,
+          <a href="#">Privacy Policy</a> and to receive electronic communication about my accounts and services per
+          Poneres Connect's
           <a href="#">Electronic Communications Agreement.</a>
         </p>
       </IRow>
     </IForm>
     <template #fallback>
       <!-- this will be rendered on server side -->
-        <div class="flex justify-center">
+      <div class="flex justify-center">
         <Loader2 class="w-6 h-6 animate-spin" />
-        </div>
+      </div>
     </template>
   </ClientOnly>
 </template>
 <script setup>
 import { inject } from "vue";
 import { useForm } from "@inkline/inkline/composables";
-import { Button } from '@/components/ui/button'
-import { Loader2 } from 'lucide-vue-next'
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
 
 const route = useRoute();
 const roles = route.query.roles;
@@ -96,7 +95,7 @@ const email = route.query.email;
 
 // Clear the query params after navigation
 const router = useRouter();
-router.replace({ 'query': null })
+router.replace({ query: null });
 
 const { showAdminRole } = defineProps(["showAdminRole"]);
 const emit = defineEmits(["afterSubmit"]);
@@ -152,8 +151,7 @@ const { schema } = useForm({
       },
     ],
   },
-  roles: {
-  },
+  roles: {},
 });
 
 const errorTypes = ["touched", "invalid"];

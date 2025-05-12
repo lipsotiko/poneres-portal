@@ -9,11 +9,9 @@ export default defineNuxtConfig({
       colorMode: "light",
     },
   },
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   vite: {
-    plugins: [
-      tailwindcss(),
-    ],
+    plugins: [tailwindcss()],
     server: {
       proxy: {
         "/api": {
