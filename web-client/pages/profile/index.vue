@@ -15,7 +15,7 @@
     </template>
   </DefaultLayoutWrapper>
   <ClientOnly>
-    <IForm v-model="schema" :disabled="pendingUserInfo" class="w-lg">
+    <IForm v-model="schema" @update:modelValue="handleFormUpdate" :disabled="pendingUserInfo" class="w-lg">
       <IRow>
         <IColumn xs="12">
           <IFormGroup required>
@@ -31,6 +31,15 @@
             <IFormLabel for="lastName">Last name</IFormLabel>
             <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
             <IFormError for="lastName" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+      </IRow>
+      <IRow>
+        <IColumn xs="12">
+          <IFormGroup required>
+            <IFormLabel for="phoneNumber">Phone number</IFormLabel>
+            <IInput id="phoneNumber" name="phoneNumber" autocomplete :error="errorTypes" />
+            <IFormError for="phoneNumber" :visible="errorTypes" />
           </IFormGroup>
         </IColumn>
       </IRow>
@@ -77,6 +86,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-vue-next";
+import { AsYouType } from "libphonenumber-js";
 
 const { pending: pendingUserInfo, data: userInfo } = await useFetch("/api/user/info", {
   lazy: true,
@@ -84,6 +94,7 @@ const { pending: pendingUserInfo, data: userInfo } = await useFetch("/api/user/i
   onResponse({ request, response, options }) {
     schema.value.firstName.value = response._data.userProfile.firstName;
     schema.value.lastName.value = response._data.userProfile.lastName;
+    schema.value.phoneNumber.value = response._data.userProfile.phoneNumber || "";
     schema.value.email.value = response._data.userProfile.email;
   },
 });
@@ -107,6 +118,9 @@ const { schema } = useForm({
       },
     ],
   },
+  phoneNumber: {
+    // validators: [{ name: "required" }],
+  },
   email: {
     validators: [
       {
@@ -121,11 +135,20 @@ const { schema } = useForm({
   },
 });
 
+const handleFormUpdate = async (e) => {
+  if (!e.phoneNumber.value) {
+    return;
+  }
+  const formatted = new AsYouType("US").input(e.phoneNumber.value);
+  schema.value.phoneNumber.value = formatted;
+};
+
 const saveProfile = async () => {
   loading.value = true;
   await saveUserProfile(userInfo.value.userProfile.id, {
     firstName: schema.value.firstName.value,
     lastName: schema.value.lastName.value,
+    phoneNumber: schema.value.phoneNumber.value,
     email: schema.value.email.value,
   }).then(() => {
     loading.value = false;

@@ -31,7 +31,7 @@ public class SignUpController {
     private PaymentService paymentService;
 
     @PostMapping()
-    public ResponseEntity<Void> tenant(@RequestBody SignUp signUp) {
+    public ResponseEntity<Void> signUp(@RequestBody SignUp signUp) {
         authenticationService.createUser(signUp);
 //        paymentService.createAccount(signUp);
         emailService.send(signUp.getEmail(), "Welcome to Poneres.com", "welcome.html");

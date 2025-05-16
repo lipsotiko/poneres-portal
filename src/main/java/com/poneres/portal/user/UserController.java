@@ -46,6 +46,7 @@ public class UserController {
         byId.ifPresent(userProfile -> {
             userProfile.setFirstName(updateUserRequest.getFirstName());
             userProfile.setLastName(updateUserRequest.getLastName());
+            userProfile.setPhoneNumber(updateUserRequest.getPhoneNumber());
             userProfile.setEmail(updateUserRequest.getEmail());
             userProfileRepository.save(userProfile);
             authenticationService.update(userProfile);

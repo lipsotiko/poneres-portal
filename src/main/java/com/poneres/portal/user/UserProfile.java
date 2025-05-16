@@ -23,6 +23,7 @@ public class UserProfile {
     private String email;
     private String firstName;
     private String lastName;
+    private String phoneNumber;
     private List<Role> roles;
     private String authProviderId;
     private String paymentProviderId;

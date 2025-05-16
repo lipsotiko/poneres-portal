@@ -394,69 +394,71 @@
     <IRow>
       <IColumn>
         <table class="utilities">
-          <tr>
-            <td>a. Cable TV</td>
-            <td>
-              <ICheckbox name="furnishedByLandlord_1" label="Landlord" />
-            </td>
-            <td>
-              <ICheckbox name="furnishedByTenant_1" label="Tenant" />
-            </td>
-          </tr>
-          <tr>
-            <td>b. Cold Water/Sewer</td>
-            <td>
-              <ICheckbox name="furnishedByLandlord_2" label="Landlord" />
-            </td>
-            <td>
-              <ICheckbox name="furnishedByTenant_2" label="Tenant" />
-            </td>
-          </tr>
-          <tr>
-            <td>c. Cooking Fuel</td>
-            <td>
-              <ICheckbox name="furnishedByLandlord_3" label="Landlord" />
-            </td>
-            <td>
-              <ICheckbox name="furnishedByTenant_3" label="Tenant" />
-            </td>
-          </tr>
-          <tr>
-            <td>d. Electricity</td>
-            <td>
-              <ICheckbox name="furnishedByLandlord_4" label="Landlord" />
-            </td>
-            <td>
-              <ICheckbox name="furnishedByTenant_4" label="Tenant" />
-            </td>
-          </tr>
-          <tr>
-            <td>e. Heating Fuel</td>
-            <td>
-              <ICheckbox name="furnishedByLandlord_5" label="Landlord" />
-            </td>
-            <td>
-              <ICheckbox name="furnishedByTenant_5" label="Tenant" />
-            </td>
-          </tr>
-          <tr>
-            <td>f. Heating of Water</td>
-            <td>
-              <ICheckbox name="furnishedByLandlord_6" label="Landlord" />
-            </td>
-            <td>
-              <ICheckbox name="furnishedByTenant_6" label="Tenant" />
-            </td>
-          </tr>
-          <tr>
-            <td>g. Trash Removal</td>
-            <td>
-              <ICheckbox name="furnishedByLandlord_7" label="Landlord" />
-            </td>
-            <td>
-              <ICheckbox name="furnishedByTenant_7" label="Tenant" />
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>a. Cable TV</td>
+              <td>
+                <ICheckbox name="furnishedByLandlord_1" label="Landlord" />
+              </td>
+              <td>
+                <ICheckbox name="furnishedByTenant_1" label="Tenant" />
+              </td>
+            </tr>
+            <tr>
+              <td>b. Cold Water/Sewer</td>
+              <td>
+                <ICheckbox name="furnishedByLandlord_2" label="Landlord" />
+              </td>
+              <td>
+                <ICheckbox name="furnishedByTenant_2" label="Tenant" />
+              </td>
+            </tr>
+            <tr>
+              <td>c. Cooking Fuel</td>
+              <td>
+                <ICheckbox name="furnishedByLandlord_3" label="Landlord" />
+              </td>
+              <td>
+                <ICheckbox name="furnishedByTenant_3" label="Tenant" />
+              </td>
+            </tr>
+            <tr>
+              <td>d. Electricity</td>
+              <td>
+                <ICheckbox name="furnishedByLandlord_4" label="Landlord" />
+              </td>
+              <td>
+                <ICheckbox name="furnishedByTenant_4" label="Tenant" />
+              </td>
+            </tr>
+            <tr>
+              <td>e. Heating Fuel</td>
+              <td>
+                <ICheckbox name="furnishedByLandlord_5" label="Landlord" />
+              </td>
+              <td>
+                <ICheckbox name="furnishedByTenant_5" label="Tenant" />
+              </td>
+            </tr>
+            <tr>
+              <td>f. Heating of Water</td>
+              <td>
+                <ICheckbox name="furnishedByLandlord_6" label="Landlord" />
+              </td>
+              <td>
+                <ICheckbox name="furnishedByTenant_6" label="Tenant" />
+              </td>
+            </tr>
+            <tr>
+              <td>g. Trash Removal</td>
+              <td>
+                <ICheckbox name="furnishedByLandlord_7" label="Landlord" />
+              </td>
+              <td>
+                <ICheckbox name="furnishedByTenant_7" label="Tenant" />
+              </td>
+            </tr>
+          </tbody>
         </table>
       </IColumn>
       <IColumn>

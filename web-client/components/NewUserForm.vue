@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <IForm v-model="schema">
+    <IForm v-model="schema" @update:modelValue="handleFormUpdate">
       <IRow>
         <IColumn xs="12">
           <IFormGroup required>
@@ -27,6 +27,15 @@
             <IFormLabel for="lastName">Last name</IFormLabel>
             <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
             <IFormError for="lastName" :visible="errorTypes" />
+          </IFormGroup>
+        </IColumn>
+      </IRow>
+      <IRow>
+        <IColumn>
+          <IFormGroup required>
+            <IFormLabel for="phoneNumber">Phone number</IFormLabel>
+            <IInput id="phoneNumber" name="phoneNumber" autocomplete :error="errorTypes" />
+            <IFormError for="phoneNumber" :visible="errorTypes" />
           </IFormGroup>
         </IColumn>
       </IRow>
@@ -88,6 +97,7 @@ import { inject } from "vue";
 import { useForm } from "@inkline/inkline/composables";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-vue-next";
+import { AsYouType } from 'libphonenumber-js'
 
 const route = useRoute();
 const roles = route.query.roles;
@@ -132,6 +142,9 @@ const { schema } = useForm({
   lastName: {
     validators: [{ name: "required" }],
   },
+  phoneNumber: {
+    validators: [{ name: "required" }],
+  },
   password: {
     validators: [
       {
@@ -154,6 +167,14 @@ const { schema } = useForm({
   roles: {},
 });
 
+const handleFormUpdate = async (e) => {
+    if (!e.phoneNumber.value) {
+        return;
+    }
+    const formatted = new AsYouType('US').input(e.phoneNumber.value);
+    schema.value.phoneNumber.value = formatted
+}
+
 const errorTypes = ["touched", "invalid"];
 const loading = ref(false);
 const errorMessage = inject("errorMessage");
@@ -164,6 +185,7 @@ const createAccount = async () => {
     email: schema.value.email.value,
     firstName: schema.value.firstName.value,
     lastName: schema.value.lastName.value,
+    phoneNumber: schema.value.phoneNumber.value,
     password: schema.value.password.value,
     roles: schema.value.roles.value || roles.split(","),
   })
