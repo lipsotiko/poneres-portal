@@ -69,6 +69,11 @@ const { pending: pendingUserInfo } = await useFetch("/api/user/info", {
   lazy: true,
   server: false,
   onResponse({ request, response, options }) {
+    console.log(response._data.userProfile.roles)
+    if (response._data.userProfile.roles.includes('PROVIDER')) {
+      navigateTo("/onboarding");
+    }
+
     user.value = response._data.userProfile
   },
 });
@@ -141,23 +146,10 @@ const items = [
             <IDropdownDivider v-if="isAdmin" />
             <IDropdownItem v-if="isAdmin" to="/admin">Admin</IDropdownItem>
             <IDropdownDivider />
-            <IDropdownItem href="/logout">
-              <span class="_color:danger!">Sign out</span>
-            </IDropdownItem>
+
           </template>
         </IDropdown>
-        <INavbar>
-          <INavbarBrand to="/">
-            <strong>Poneres.com</strong>
-          </INavbarBrand>
-          <INavbarCollapsible class="_justify-content:flex-end">
-            <INav>
-              <INavItem v-if="isAdmin" to="/agreements">Agreements</INavItem>
-              <INavItem v-if="isResident" to="/maintenance">Maintenance</INavItem>
-            </INav>
-          </INavbarCollapsible>
-        </INavbar>
-      </ILayoutHeader>
+        
       <slot />
     </ILayout>
   </div>
