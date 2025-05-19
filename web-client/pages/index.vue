@@ -12,6 +12,7 @@
   </DefaultLayoutWrapper>
   <div class="m-8">
     <p>Welcome to your portal!</p>
+    <p>Click <NuxtLink to="/onboarding">here</NuxtLink> to complete your onboarding.</p>
   </div>
 </template>
 <script setup>

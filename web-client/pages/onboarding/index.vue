@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { Check, Circle, Dot } from "lucide-vue-next";
+import { Check, Circle, Dot, ChevronLeft } from "lucide-vue-next";
 import { h, ref } from "vue";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
   StepperTitle,
   StepperTrigger,
 } from "@/components/ui/stepper";
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster } from "@/components/ui/sonner";
 import { toast } from "vue-sonner";
 
 definePageMeta({
@@ -24,8 +24,12 @@ definePageMeta({
 
 const formSchema = [
   z.object({
-    fullName: z.string(),
-    email: z.string().email(),
+    firstName: z.string(),
+    middleName: z.string(),
+    lastName: z.string(),
+    dob: z.string(),
+    specialty: z.string(),
+    location: z.string(),
   }),
   z
     .object({
@@ -42,7 +46,7 @@ const formSchema = [
       },
     ),
   z.object({
-    favoriteDrink: z.union([z.literal("coffee"), z.literal("tea"), z.literal("soda")]),
+    employmentType: z.union([z.literal("full_time"), z.literal("part_time")]),
   }),
 ];
 
@@ -50,18 +54,18 @@ const stepIndex = ref(1);
 const steps = [
   {
     step: 1,
-    title: "Your details",
-    description: "Provide your name and email",
+    title: "Details",
+    description: "Provide your medical details",
   },
   {
     step: 2,
-    title: "Your password",
-    description: "Choose a password",
+    title: "Credentials",
+    description: "Provide your medical credentials",
   },
   {
     step: 3,
-    title: "Your Favorite Drink",
-    description: "Choose a drink",
+    title: "Scheduling",
+    description: "Tell us your availability",
   },
 ];
 
@@ -78,6 +82,10 @@ function onSubmit(values: any) {
 
 <template>
   <Toaster />
+  <NuxtLink to="/" class="flex p-2">
+    <ChevronLeft />
+    Back
+  </NuxtLink>
   <Form
     v-slot="{ meta, values, validate }"
     as=""
@@ -86,6 +94,7 @@ function onSubmit(values: any) {
   >
     <Stepper v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep }" v-model="stepIndex" class="block w-full">
       <form
+        class="p-4"
         @submit="
           (e) => {
             e.preventDefault();
@@ -140,28 +149,83 @@ function onSubmit(values: any) {
             </div>
           </StepperItem>
         </div>
-
         <div class="flex flex-col gap-4 mt-4">
           <template v-if="stepIndex === 1">
-            <FormField v-slot="{ componentField }" name="fullName">
-              <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl>
-                  <Input type="text" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <FormField v-slot="{ componentField }" name="firstName">
+                <FormItem>
+                  <FormLabel>First name</FormLabel>
+                  <FormControl>
+                    <Input type="firstName" v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+              <FormField v-slot="{ componentField }" name="middleName">
+                <FormItem>
+                  <FormLabel>Middle name</FormLabel>
+                  <FormControl>
+                    <Input type="middleName" v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+              <FormField v-slot="{ componentField }" name="lastName">
+                <FormItem>
+                  <FormLabel>Last name</FormLabel>
+                  <FormControl>
+                    <Input type="lastName" v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <FormField v-slot="{ componentField }" name="dob">
+                <FormItem>
+                  <FormLabel>Date of birth</FormLabel>
+                  <FormControl>
+                    <DatePicker v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+              <div class="col-span-2">
+                <FormField v-slot="{ componentField }" name="specialty">
+                  <FormItem>
+                    <FormLabel>Specialty</FormLabel>
+                    <Select v-bind="componentField">
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a specialty" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="anesthesiology"> Anesthesiology </SelectItem>
+                          <SelectItem value="crna"> Certified Registered Nurse Anesthetist (CRNA) </SelectItem>
+                          <SelectItem value="ems"> Emergency Medicine Specialists </SelectItem>
+                          <SelectItem value="rn"> Registered Nurse (RN) </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
 
-            <FormField v-slot="{ componentField }" name="email">
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email " v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+              <div class="col-start-4">
+                <FormField v-slot="{ componentField }" name="location">
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Input type="location" v-bind="componentField" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+            </div>
           </template>
 
           <template v-if="stepIndex === 2">
@@ -187,21 +251,20 @@ function onSubmit(values: any) {
           </template>
 
           <template v-if="stepIndex === 3">
-            <FormField v-slot="{ componentField }" name="favoriteDrink">
+            <FormField v-slot="{ componentField }" name="employmentType">
               <FormItem>
-                <FormLabel>Drink</FormLabel>
+                <FormLabel>Employment Type</FormLabel>
 
                 <Select v-bind="componentField">
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a drink" />
+                      <SelectValue placeholder="Select an employment type" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="coffee"> Coffe </SelectItem>
-                      <SelectItem value="tea"> Tea </SelectItem>
-                      <SelectItem value="soda"> Soda </SelectItem>
+                      <SelectItem value="full_time"> Full Time </SelectItem>
+                      <SelectItem value="part_time"> Part Time </SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>

@@ -1,6 +1,6 @@
 <template>
   <SidebarProvider>
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Poneres</SidebarGroupLabel>
@@ -8,7 +8,7 @@
             <div v-if="pendingUserInfo" class="flex justify-center mt-4">
               <Loader2 class="w-4 h-4 animate-spin" />
             </div>
-            <SidebarMenu v-else>
+            <SidebarMenu v-else class="pl-0!">
               <SidebarMenuItem
                 v-for="item in items.filter((i) => i.showFor == 'ALL' || i.showFor.some((r) => user?.roles.includes(r)))"
                 :key="item.title"
@@ -37,7 +37,7 @@
       <IToast v-if="errorMessage" color="warning" dismissible>
         <p>{{ errorMessage }}</p>
       </IToast>
-      <div class="m-4">
+      <div class="m-[10px]"> <!-- TODO: Remove margin once inkline in removed -->
         <slot />
       </div>
     </main>
@@ -45,7 +45,7 @@
 </template>
 <script setup>
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Calendar, Home, Inbox, Search, Settings, User, FilePenLine, Wrench, MonitorCog, LogOut } from "lucide-vue-next";
+import { Calendar, Home, Hospital, Inbox, Search, Settings, User, FilePenLine, Wrench, MonitorCog, LogOut } from "lucide-vue-next";
 import {
   Sidebar,
   SidebarContent,
@@ -59,6 +59,7 @@ import {
 import { Loader2 } from "lucide-vue-next";
 import { provide } from "vue";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+
 const user = ref();
 const errorMessage = ref();
 provide("errorMessage", errorMessage);
@@ -69,10 +70,9 @@ const { pending: pendingUserInfo } = await useFetch("/api/user/info", {
   lazy: true,
   server: false,
   onResponse({ request, response, options }) {
-    console.log(response._data.userProfile.roles)
-    if (response._data.userProfile.roles.includes('PROVIDER')) {
-      navigateTo("/onboarding");
-    }
+    // if (response._data.userProfile.roles.includes('PROVIDER')) {
+    //   navigateTo("/onboarding");
+    // }
 
     user.value = response._data.userProfile
   },
@@ -86,7 +86,13 @@ const items = [
     showFor: ["ALL"],
   },
   {
-    title: "Inbox",
+    title: "Shifts",
+    url: "/",
+    icon: Hospital,
+    showFor: ["ADMIN", "PROVIDER"],
+  },
+  {
+    title: "Messages",
     url: "#",
     icon: Inbox,
     showFor: ["ALL"],
@@ -110,15 +116,15 @@ const items = [
     showFor: ["ADMIN"],
   },
   {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-    showFor: ["ALL"],
-  },
-  {
     title: "Profile",
     url: "/profile",
     icon: User,
+    showFor: ["ALL"],
+  },
+  {
+    title: "Settings",
+    url: "#",
+    icon: Settings,
     showFor: ["ALL"],
   },
   {
@@ -129,28 +135,3 @@ const items = [
   }
 ];
 </script>
-
-<!-- <div>
-    <ILayout @keydown.esc="() => (open = false)">
-
-      <ILayoutHeader>
-        <IDropdown class="_display:flex _justify-content:flex-end">
-          <IButton circle size="md" class="profile">
-            <template #icon>
-              <i class="fa-regular fa-user"></i>
-            </template>
-          </IButton>
-          <template #body>
-            <IDropdownItem to="/profile">Profile</IDropdownItem>
-            <IDropdownItem to="/earnings">Earnings</IDropdownItem>
-            <IDropdownDivider v-if="isAdmin" />
-            <IDropdownItem v-if="isAdmin" to="/admin">Admin</IDropdownItem>
-            <IDropdownDivider />
-
-          </template>
-        </IDropdown>
-        
-      <slot />
-    </ILayout>
-  </div>
--->
