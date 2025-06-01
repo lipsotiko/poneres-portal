@@ -113,18 +113,12 @@ const items = [
     title: "Maintenance",
     url: "/maintenance",
     icon: Wrench,
-    showFor: ["ADMIN"],
+    showFor: ["ADMIN", "OWNER"],
   },
   {
     title: "Profile",
     url: "/profile",
     icon: User,
-    showFor: ["ALL"],
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
     showFor: ["ALL"],
   },
   {

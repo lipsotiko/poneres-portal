@@ -26,6 +26,7 @@
     :rowData="data?.content"
     :columnDefs="colDefs"
     :gridOptions="gridOptions"
+    @rowClicked="onRowClicked"
     style="height: 888px"
     class="ag-theme-quartz"
   />
@@ -48,8 +49,16 @@ const sort = ref("createdAt,asc");
 
 const colDefs = ref([
   {
-    field: "id",
-    width: 228,
+    field: "title",
+    width: 288,
+  },
+  {
+    field: "description",
+    flex: 1,
+  },
+  {
+    field: "status",
+    width: 128,
   },
   {
     field: "type",
@@ -60,8 +69,9 @@ const colDefs = ref([
     width: 108,
   },
   {
-    field: "description",
-    flex: 1,
+    field: "costEstimate",
+    width: 148,
+    valueGetter: (p) => `$${p.data.costEstimate}`,
   },
   {
     field: "createdAt",
@@ -80,6 +90,10 @@ const gridOptions = {
     }
   },
 };
+
+const onRowClicked = ({ data: { id } }) => {
+  navigateTo(`/maintenance/${id}`);
+}
 
 const { pending, data, refresh } = await useLazyAsyncData(
   "maintenance",

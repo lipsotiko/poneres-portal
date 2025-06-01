@@ -151,6 +151,15 @@
             </IColumn>
           </IRow>
           <IRow>
+            <IColumn>
+              <IFormGroup required>
+                <IFormLabel for="payStubs">Can you provide recent pay stubs, or a letter of employment?</IFormLabel>
+                <IInput id="payStubs" name="payStubs" autocomplete :error="errorTypes" />
+                <IFormError for="payStubs" :visible="errorTypes" />
+              </IFormGroup>
+            </IColumn>
+          </IRow>
+          <IRow>
             <p class="lead">Rental History</p>
           </IRow>
           <IRow>
@@ -239,16 +248,16 @@
           <IRow>
             <IColumn xs="12">
               <IFormGroup>
-                <IFormLabel for="socialMedia">Please list any social media accounts you may have:</IFormLabel>
-                <ITextarea id="socialMedia" name="socialMedia" autocomplete :error="errorTypes" />
-                <IFormError for="socialMedia" :visible="errorTypes" />
+                <IFormLabel for="doYouHavePets">Do you have any pets? If so, please provide the type, weight, and quantity.</IFormLabel>
+                <ITextarea id="doYouHavePets" name="doYouHavePets" autocomplete :error="errorTypes" />
+                <IFormError for="doYouHavePets" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
           </IRow>
           <IRow>
             <IColumn xs="12" sm="3">
               <IFormGroup required>
-                <IFormLabel for="doYouSmoke">Do you smoke?</IFormLabel>
+                <IFormLabel for="doYouSmoke">Do you smoke or vape?</IFormLabel>
                 <IRadioGroup
                   id="doYouSmoke"
                   name="doYouSmoke"
@@ -258,20 +267,6 @@
                   ]"
                 />
                 <IFormError for="doYouSmoke" :visible="errorTypes" />
-              </IFormGroup>
-            </IColumn>
-            <IColumn xs="12" sm="3">
-              <IFormGroup required>
-                <IFormLabel for="doYouHavePets">Do you have pets?</IFormLabel>
-                <IRadioGroup
-                  id="doYouHavePets"
-                  name="doYouHavePets"
-                  :options="[
-                    { id: 'yes', label: 'Yes' },
-                    { id: 'no', label: 'No' },
-                  ]"
-                />
-                <IFormError for="doYouHavePets" :visible="errorTypes" />
               </IFormGroup>
             </IColumn>
             <IColumn xs="12" sm="3">
@@ -352,7 +347,6 @@ const { schema, form } = useForm({
   otherIncome: {},
   references: { validators: [{ name: "required" }] },
   numberOfOccupants: { validators: [{ name: "required" }] },
-  socialMedia: {},
   doYouSmoke: { validators: [{ name: "required" }] },
   doYouHavePets: { validators: [{ name: "required" }] },
   haveYouBeenEvicted: { validators: [{ name: "required" }] },

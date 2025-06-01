@@ -12,15 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Maintenance {
+public class MaintenanceHistory {
     @Id
     private String id;
-    private String type;
-    private String priority;
-    private String title;
-    private String description;
-    private Double costEstimate;
-    private String createdBy;
+    private MaintenanceStatus fromStatus;
+    private MaintenanceStatus toStatus;
     private LocalDateTime createdAt;
-    private MaintenanceStatus status;
+    private String updatedBy;
 }
