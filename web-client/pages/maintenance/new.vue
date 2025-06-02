@@ -99,8 +99,8 @@
         <IColumn>
           <IFormGroup required>
             <IFormLabel for="description">Description</IFormLabel>
-            <Textarea id="description" name="description" placeholder="Describe your request..." :error="errorTypes" />
-            <!-- <ITextarea id="description" name="description" placeholder="Describe your request..." :error="errorTypes" /> -->
+            <!-- <Textarea /> -->
+            <ITextarea id="description" name="description" placeholder="Describe your request..." :error="errorTypes" />
             <IFormError for="description" :visible="errorTypes" />
           </IFormGroup>
         </IColumn>
@@ -115,6 +115,8 @@
   </div>
 </template>
 <script setup>
+import * as z from "zod";
+
 import { useForm } from "@inkline/inkline/composables";
 import {
   Breadcrumb,
@@ -129,6 +131,17 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-vue-next";
 
 const saving = ref(false);
+
+const formSchema = [
+  z.object({
+    title: z.string(),
+    description: z.string(),
+    status: z.string(),
+    type: z.string(),
+    priority: z.string(),
+    costEstimate: z.number(),
+  })
+];
 
 const { schema, form, validate } = useForm({
   status: { ...fieldOptions, value: 'REQUESTED' },
