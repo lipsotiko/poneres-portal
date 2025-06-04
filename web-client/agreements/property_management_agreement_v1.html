@@ -8,6 +8,7 @@
   <style>
     body {
       padding: 12px;
+      line-height: 1.80;
     }
 
     textarea {
@@ -28,12 +29,16 @@
       width: 100%;
     }
 
+    input[name="agreementDate"] {
+      width: 388px;
+    }
+
     input[name="ownerAddress"] {
-      width: 358px;
+      width: 658px;
     }
 
     input[name="managerAddress"] {
-      width: 358px;
+      width: 658px;
     }
   </style>
 </head>
@@ -47,15 +52,15 @@
   <p>
     THIS PROPERTY MANAGEMENT AGREEMENT, hereinafter referred to as (the “Agreement”), is made and entered into as of
     this day <input name="agreementDate" type="text" />, by and between <input name="owner" type="text"
-      style="width: 260px" /> hereinafter referred to as (the “Owner”), and <input name="manager" type="text"
-      style="width: 260px" /> hereinafter referred to as (the “Manager”).
+      style="width: 460px" /> hereinafter referred to as (the “Owner”), and <input name="manager" type="text"
+      style="width: 460px" /> hereinafter referred to as (the “Manager”).
   </p>
   <p>
     <b>WITNESSETH:</b>
   </p>
   <p>
     <b>WHEREAS,</b> the Owner is the owner of real property located at <input name="propertyAddress" type="text"
-      style="width: 422px;" /> on
+      style="width: 848px;" /> on
     which properties, buildings, and other improvements now or hereafter located thereon shall hereinafter be
     collectively referred to as the “Project”; and
   </p>
@@ -81,9 +86,8 @@
       <ol type="A">
         <li>
           <u>Orientation:</u> General The manager hereby acknowledges receipt of certain books and records with respect
-          to the
-          operation of the Project, personal property on the Project belonging to the Owner, and all service contracts,
-          relating to the maintenance and operation of the Project.
+          to the operation of the Project, personal property on the Project belonging to the Owner, and all service
+          contracts, relating to the maintenance and operation of the Project.
         </li>
         <li>
           <u>Management of the Project:</u> The Manager shall devote its reasonable best-efforts consonant with the
@@ -124,12 +128,6 @@
             said accounts.
           </li>
           <li>
-            <u>Assessments and Insurance.</u> Duly and punctually pay on behalf of the Owner all assessments and
-            insurance premiums payable in respect of the Project or any part thereof, such to be done prior to the time
-            that any insurance policy would lapse due to nonpayment of the premium and prior to the time any penalties
-            or interest would accrue upon any real estate taxes or assessments.
-          </li>
-          <li>
             <u>Repairs and Maintenance.</u> To the extent that monies are available from operation of the Project, to
             make all repairs and perform all maintenance on the buildings, appurtenances and grounds of the Project as
             required to be made by the Owner and in accordance with standards acceptable to the Owner. For any
@@ -143,9 +141,8 @@
           </li>
           <li>
             <u>Equipment and Supplies.</u> Make all arrangements for the furnishing to the Project of utility,
-            maintenance and
-            other services and for the acquisition of equipment and supplies as necessary for the management, operation,
-            maintenance and servicing of the Project as required by the Owner.
+            maintenance and other services and for the acquisition of equipment and supplies as necessary for the
+            management, operation, maintenance and servicing of the Project as required by the Owner.
           </li>
         </ol>
         <li>
@@ -159,7 +156,7 @@
         </li>
       </ol>
     </li>
-    <li>
+    <li class="new-page">
       <b>AUTHORITY OF MANAGER:</b>
       <ol type="a">
         <li>
@@ -188,15 +185,10 @@
       <b>ACCOUNTING, RECORDS, REPORTS:</b>
       <ol type="a">
         <li>
-          <u>Records.</u> The Manager shall maintain a comprehensive system of office records, books, and accounts which
-          shall belong to the Owner. The Owner and others designated by the Owner shall have, at all reasonable times,
-          access to such records, accounts and books and to all vouchers, files and other material pertaining to the
-          Project and this Agreement all of which the Manager agrees to keep safe, available and separate from any
-          records not having to do with the Project.
-        </li>
-        <li>
-          <u>Monthly Reports.</u> The Manager shall deliver to Owner monthly, a financial report in the same methodology
-          as is currently in effect with a copy to Owner's accountant.
+          <u>Records.</u> The Manager shall maintain comprehensive records which shall belong to the Owner. The Owner
+          and others designated by the Owner shall have, at all reasonable times, access to such records, accounts and
+          books and to all vouchers, files and other material pertaining to the Project and this Agreement all of which
+          the Manager agrees to keep safe, available and separate from any records not having to do with the Project.
         </li>
       </ol>
     </li>
@@ -237,7 +229,7 @@
           </li>
         </ol>
     </li>
-    <li>
+    <li class="new-page">
       <b>BROKERAGE SERVICES:</b>
       <ol type="a">
         <li>
@@ -247,7 +239,7 @@
           signs on the property, distributing brochures to local and regional brokers, and any other such practices that
           Manager deems effective.
         </li>
-        <li class="new-page">
+        <li>
           <u>Compensation for Brokerage Services.</u> In the event a lease is consummated between a tenant and Owner,
           Owner shall pay to Manager one month of rent.
         </li>
@@ -278,7 +270,7 @@
   </p>
   <div class="signature-block">
     <p class="signature">
-      <label style="width: 1300px;">
+      <label>
         <b>Managing Broker</b>
       </label>
       <label>
@@ -286,7 +278,7 @@
       </label>
     </p>
     <p class="signature">
-      <label style="width: 1300px;">
+      <label>
         <b>Manager</b>
       </label>
       <label>
@@ -294,12 +286,12 @@
       </label>
     </p>
     <p class="signature">
-      <label style="width: 1300px;">
+      <label>
         <b>Owner</b>
       </label>
-       <label>
-      <b>Date</b>
-    </label>
+      <label>
+        <b>Date</b>
+      </label>
     </p>
   </div>
 </body>
