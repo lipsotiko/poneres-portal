@@ -2,7 +2,7 @@
 import { toTypedSchema } from "@vee-validate/zod";
 import { Check, Circle, Dot, ChevronLeft } from "lucide-vue-next";
 import { h, ref } from "vue";
-import * as z from "zod";
+import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -19,10 +19,11 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "vue-sonner";
 
 definePageMeta({
+  ssr: false,
   layout: "onboarding",
 });
 
-const formSchema = [
+let formSchema = [
   z.object({
     firstName: z.string(),
     middleName: z.string(),
@@ -31,45 +32,57 @@ const formSchema = [
     specialty: z.string(),
     location: z.string(),
   }),
-  z
-    .object({
-      password: z.string().min(2).max(50),
-      confirmPassword: z.string(),
-    })
-    .refine(
-      (values) => {
-        return values.password === values.confirmPassword;
-      },
-      {
-        message: "Passwords must match!",
-        path: ["confirmPassword"],
-      },
-    ),
+  z.object({
+    resume: z.file().max(2_000_000).mime(["application/pdf"]),
+  }),
   z.object({
     employmentType: z.union([z.literal("full_time"), z.literal("part_time")]),
   }),
 ];
 
-const stepIndex = ref(1);
+const stepIndex = ref(2);
 const steps = [
   {
     step: 1,
     title: "Details",
-    description: "Provide your medical details",
   },
   {
     step: 2,
     title: "Credentials",
-    description: "Provide your medical credentials",
   },
   {
     step: 3,
     title: "Scheduling",
-    description: "Tell us your availability",
   },
 ];
 
+const resumeRef = ref();
+const resumeFileNameRef = ref();
+
+const handleResumeChange = (e) => {
+  const file = e.target.files[0];
+  resumeFileNameRef.value = e.target.files[0].name;
+
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    resumeRef.value = reader.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+const saveOnboarding = (data) => {
+  $fetch('/api/onboarding', {
+    method: "POST",
+    body: {
+      onboarding: data,
+      resumeDataURL: resumeRef.value,
+      resumeFileName: resumeFileNameRef.value,
+    }
+  });
+}
+
 function onSubmit(values: any) {
+  saveOnboarding(values);
   toast.success("Thank you!", {
     description: h(
       "pre",
@@ -101,6 +114,7 @@ function onSubmit(values: any) {
             validate();
 
             if (stepIndex === steps.length && meta.valid) {
+              values.resume = resumeRef;
               onSubmit(values);
             }
           }
@@ -229,21 +243,19 @@ function onSubmit(values: any) {
           </template>
 
           <template v-if="stepIndex === 2">
-            <FormField v-slot="{ componentField }" name="password">
+            <FormField v-slot="{ componentField }" name="resume">
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Resume (PDF)</FormLabel>
                 <FormControl>
-                  <Input type="password" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="confirmPassword">
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input type="password" v-bind="componentField" />
+                  <div>
+                    <input
+                      id="resume"
+                      type="file"
+                      v-bind="componentField"
+                      @change="handleResumeChange"
+                      class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white"
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

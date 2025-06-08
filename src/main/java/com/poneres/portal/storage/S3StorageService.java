@@ -23,14 +23,13 @@ public class S3StorageService implements StorageService {
     @Autowired
     private AmazonS3 s3Client;
 
-    public void save(String key, byte[] document, String fileName, String uploadedBy, String applicationId) {
+    public void save(String key, byte[] document, String fileName, String uploadedBy) {
         ObjectMetadata meta = new ObjectMetadata();
         meta.setContentLength(document.length);
 
         Map<String, String> userMeta = new HashMap<>();
         userMeta.put("file-name", fileName);
         userMeta.put("uploaded-by", uploadedBy);
-        userMeta.put("application-id", applicationId);
 
         meta.setUserMetadata(userMeta);
 

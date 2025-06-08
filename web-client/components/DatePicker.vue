@@ -12,10 +12,6 @@ const df = new DateFormatter("en-US", {
   dateStyle: "long",
 });
 
-const dfShort = new DateFormatter("en-US", {
-  dateStyle: "short",
-});
-
 const emit = defineEmits(["update:modelValue"]);
 
 const value = ref<DateValue>();
@@ -38,7 +34,7 @@ const value = ref<DateValue>();
         initial-focus
         @update:model-value="
           (v) => {
-            emit('update:modelValue', dfShort.format(value.toDate(getLocalTimeZone())));
+            emit('update:modelValue', value.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
           }
         "
       />
