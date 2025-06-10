@@ -6,6 +6,7 @@ import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Stepper,
@@ -30,7 +31,11 @@ let formSchema = [
     lastName: z.string(),
     dob: z.string(),
     specialty: z.string(),
-    location: z.string(),
+    stateLicense: z.string(),
+    uncomfortableProcedures: z.string(),
+    haveYouDoneLocumsBefore: z.string(),
+    activeCertifications: z.string(),
+    malpractice: z.string()
   }),
   z.object({
     resume: z.file().max(2_000_000).mime(["application/pdf"]),
@@ -40,7 +45,7 @@ let formSchema = [
   }),
 ];
 
-const stepIndex = ref(2);
+const stepIndex = ref(1);
 const steps = [
   {
     step: 1,
@@ -194,7 +199,7 @@ function onSubmit(values: any) {
                 </FormItem>
               </FormField>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
               <FormField v-slot="{ componentField }" name="dob">
                 <FormItem>
                   <FormLabel>Date of birth</FormLabel>
@@ -227,15 +232,54 @@ function onSubmit(values: any) {
                   </FormItem>
                 </FormField>
               </div>
-
-              <div class="col-start-4">
-                <FormField v-slot="{ componentField }" name="location">
+              <div  class="col-span-2">
+                <FormField v-slot="{ componentField }" name="stateLicense">
                   <FormItem>
-                    <FormLabel>Location</FormLabel>
+                    <FormLabel>What state do you have an active license?</FormLabel>
                     <FormControl>
-                      <Input type="location" v-bind="componentField" />
+                      <Input type="stateLicense" v-bind="componentField" />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-5">
+                <FormField v-slot="{ componentField }" name="uncomfortableProcedures">
+                  <FormItem>
+                    <FormLabel>Are there any procedures/cases you are uncomfortable seeing/doing?</FormLabel>
+                    <FormControl>
+                      <Textarea v-bind="componentField" />
+                    </FormControl>
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-5">
+                <FormField v-slot="{ componentField }" name="haveYouDoneLocumsBefore">
+                  <FormItem>
+                    <FormLabel>Have you ever done locums before? If so, when and where?</FormLabel>
+                    <FormControl>
+                      <Textarea v-bind="componentField" />
+                    </FormControl>
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-5">
+                <FormField v-slot="{ componentField }" name="activeCertifications">
+                  <FormItem>
+                    <FormLabel>Do you have any active certifications? (i.e. BLS, ACLS, NRP, etc.)</FormLabel>
+                    <FormControl>
+                      <Textarea v-bind="componentField" />
+                    </FormControl>
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-5">
+                <FormField v-slot="{ componentField }" name="malpractice">
+                  <FormItem>
+                    <FormLabel>Any dropped, pending or settled malpractice cases?</FormLabel>
+                    <FormControl>
+                      <Textarea v-bind="componentField" />
+                    </FormControl>
                   </FormItem>
                 </FormField>
               </div>

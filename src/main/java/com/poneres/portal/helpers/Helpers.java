@@ -43,6 +43,12 @@ public class Helpers {
         return tmpFile(parseBase64Binary(base64Image), ".png");
     }
 
+    public static byte[] base64ToBytes(String data) {
+        if (data == null) return null;
+        String base64Image = data.split(",")[1];
+        return parseBase64Binary(base64Image);
+    }
+
     public static String bytesToBase64(byte[] bytes) {
         byte[] encoded = Base64.getEncoder().encode(bytes);
         return new String(encoded);

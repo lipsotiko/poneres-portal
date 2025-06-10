@@ -45,7 +45,7 @@
 </template>
 <script setup>
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Calendar, Home, Hospital, Inbox, Search, Settings, User, FilePenLine, Wrench, MonitorCog, LogOut } from "lucide-vue-next";
+import { Calendar, Home, Hospital, Inbox, Search, Settings, User, FilePenLine, Wrench, MonitorCog, LogOut, View } from "lucide-vue-next";
 import {
   Sidebar,
   SidebarContent,
@@ -90,6 +90,12 @@ const items = [
     url: "/",
     icon: Hospital,
     showFor: ["ADMIN", "PROVIDER"],
+  },
+  {
+    title: "Onboarding",
+    url: "/onboarding-review",
+    icon: View,
+    showFor: ["ADMIN"],
   },
   {
     title: "Messages",

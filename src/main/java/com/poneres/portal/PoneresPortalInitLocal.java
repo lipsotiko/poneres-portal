@@ -1,7 +1,8 @@
 package com.poneres.portal;
 
 import com.poneres.portal.agreements.AgreementRepository;
-import com.poneres.portal.signatures.SignatureService;
+import com.poneres.portal.onboarding.OnboardingRepository;
+import com.poneres.portal.storage.StorageService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -15,14 +16,21 @@ public class PoneresPortalInitLocal extends AbstractPoneresPortalInit {
     private AgreementRepository agreementRepository;
 
     @Autowired
-    private SignatureService signatureService;
+    private OnboardingRepository onboardingRepository;
+
+    @Autowired
+    private StorageService storageService;
 
     @PostConstruct
     public void init() {
         super.init();
         agreementRepository.findAll().forEach(agreement -> {
-            signatureService.delete(agreement.getSsdId());
             agreementRepository.delete(agreement);
+        });
+
+        onboardingRepository.findAll().forEach(onboarding -> {
+            storageService.delete(onboarding.getResumeId());
+            onboardingRepository.delete(onboarding);
         });
     }
 }

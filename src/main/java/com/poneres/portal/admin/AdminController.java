@@ -31,7 +31,7 @@ public class AdminController {
     @UserAuthorized("isAdmin")
     public void deleteUsers(@RequestBody AdminDeleteUserRequest adminDeleteUserRequest) {
         List<String> idsToDelete = adminDeleteUserRequest.getUserIds().stream()
-                .filter(id -> !List.of("1", "2").contains(id)).collect(Collectors.toList());
+                .filter(id -> !List.of("1", "2", "3").contains(id)).collect(Collectors.toList());
         List<UserProfile> userProfiles = userProfileRepository.findAllById(idsToDelete);
         userProfiles.forEach(userProfile -> {
             paymentService.deleteAccount(userProfile);

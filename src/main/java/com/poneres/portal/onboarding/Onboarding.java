@@ -1,13 +1,10 @@
 package com.poneres.portal.onboarding;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,7 +21,11 @@ public class Onboarding {
     private String lastName;
     private LocalDate dob;
     private String specialty;
-    private String location;
+    private String stateLicense;
+    private String uncomfortableProcedures;
+    private String haveYouDoneLocumsBefore;
+    private String activeCertifications;
+    private String malpractice;
     private String resumeId;
     private String employmentType;
     private String createdBy;

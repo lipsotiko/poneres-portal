@@ -1,10 +1,7 @@
 package com.poneres.portal.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +23,10 @@ public class S3StorageService implements StorageService {
     public void save(String key, byte[] document, String fileName, String uploadedBy) {
         ObjectMetadata meta = new ObjectMetadata();
         meta.setContentLength(document.length);
+
+        if (fileName.endsWith(".pdf")) {
+            meta.setContentType("application/pdf");
+        }
 
         Map<String, String> userMeta = new HashMap<>();
         userMeta.put("file-name", fileName);
@@ -50,7 +51,7 @@ public class S3StorageService implements StorageService {
     }
 
     @Override
-    public void delete(String documentId) {
-
+    public void delete(String key) {
+        s3Client.deleteObject(new DeleteObjectRequest(bucket, key));
     }
 }

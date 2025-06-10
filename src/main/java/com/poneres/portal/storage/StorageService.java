@@ -5,5 +5,5 @@ public interface StorageService {
 
     StorageResponse get(String key);
 
-    void delete(String documentId);
+    void delete(String key);
 }

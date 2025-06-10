@@ -1,23 +1,31 @@
 <template>
-  <IButton color="primary" size="sm" @click="download(id)" :loading="downloading"> Download </IButton>
+  <Button variant="outline" @click="download(params.data.resumeId)" :disabled="downloading">
+    <Loader2 v-if="downloading" class="w-4 h-4 animate-spin" />
+    Download
+  </Button>
 </template>
-<script>
+<script setup>
 import FileSaver from "file-saver";
-export default {
-  props: ["id"],
-  data() {
-    return {
-      downloading: false,
-    };
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
+
+const props = defineProps(["params"]);
+const {
+  params: {
+    colDef: { context },
   },
-  methods: {
-    async download(id) {
-      this.downloading = true;
-      getPatientApplicationPdfPreview(id).then((blob) => {
-        FileSaver.saveAs(blob, "application.pdf");
-      });
-      this.downloading = false;
+} = props;
+
+const downloading = ref(false);
+const download = (key) => {
+  downloading.value = true;
+  $fetch(`/api/onboarding/resume/${key}`, {
+    headers: {
+      Accept: "application/pdf",
     },
-  },
-};
+  }).then((blob) => {
+    FileSaver.saveAs(blob, "resume.pdf");
+  });
+  downloading.value = false;
+}
 </script>

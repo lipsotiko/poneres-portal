@@ -1,16 +1,19 @@
 package com.poneres.portal.onboarding;
 
+import com.poneres.portal.admin.AdminDeleteUserRequest;
 import com.poneres.portal.security.auth0.AuthenticationService;
 import com.poneres.portal.security.auth0.UserAuthorized;
 import com.poneres.portal.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Optional;
 
+import static com.poneres.portal.helpers.Helpers.base64ToBytes;
 import static java.util.UUID.randomUUID;
 
 @RestController
@@ -27,12 +30,13 @@ public class OnboardingController {
     private StorageService storageService;
 
     @PostMapping
-    @UserAuthorized(value = { "isAdmin", "isTenant", "isProvider"})
+    @UserAuthorized(value = { "isAdmin", "isProvider"})
     public void save(@RequestBody OnboardingRequest request) {
         String createdBy = authenticationService.getUserProfile().getId();
 
         String resumeId = randomUUID().toString();
-        storageService.save(resumeId, new byte[0], request.getResumeFileName(), createdBy);
+        byte[] resume = base64ToBytes(request.getResumeDataURL());
+        storageService.save(resumeId, resume, request.getResumeFileName(), createdBy);
 
         Onboarding onboarding = request.getOnboarding();
         onboarding.setResumeId(resumeId);
@@ -41,10 +45,37 @@ public class OnboardingController {
         onboardingRepository.save(onboarding);
     }
 
+    @DeleteMapping("/{id}")
+    @UserAuthorized(value = { "isAdmin" })
+    public void delete(@PathVariable("id") String id) {
+        Optional<Onboarding> onboarding = onboardingRepository.findById(id);
+        onboarding.ifPresent(o -> {
+            storageService.delete(o.getResumeId());
+            onboardingRepository.delete(o);
+        });
+    }
+
+    @DeleteMapping("/multiple")
+    @UserAuthorized(value = { "isAdmin" })
+    public void delete(@RequestBody DeleteOnboardingRequest deleteOnboardingRequest) {
+        deleteOnboardingRequest.getOnboardingIds().forEach(id -> {
+            Optional<Onboarding> onboarding = onboardingRepository.findById(id);
+            onboarding.ifPresent(o -> {
+                storageService.delete(o.getResumeId());
+                onboardingRepository.delete(o);
+            });
+        });
+    }
+
     @GetMapping
-    @UserAuthorized(value = { "isAdmin", "isTenant"})
+    @UserAuthorized(value = { "isAdmin" })
     public Page<Onboarding> get(Pageable pageable) {
         return onboardingRepository.findAll(pageable);
     }
 
+    @GetMapping(value = "/resume/{key}", produces = MediaType.APPLICATION_PDF_VALUE)
+    @UserAuthorized(value = { "isAdmin" })
+    public byte[] getResume(@PathVariable("key") String key) {
+        return storageService.get(key).getContent();
+    }
 }
