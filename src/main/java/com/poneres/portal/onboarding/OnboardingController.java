@@ -32,16 +32,22 @@ public class OnboardingController {
     @PostMapping
     @UserAuthorized(value = { "isAdmin", "isProvider"})
     public void save(@RequestBody OnboardingRequest request) {
+        Onboarding onboarding = request.getOnboarding();
+
         String createdBy = authenticationService.getUserProfile().getId();
+        onboarding.setCreatedBy(createdBy);
 
         String resumeId = randomUUID().toString();
         byte[] resume = base64ToBytes(request.getResumeDataURL());
         storageService.save(resumeId, resume, request.getResumeFileName(), createdBy);
-
-        Onboarding onboarding = request.getOnboarding();
         onboarding.setResumeId(resumeId);
+
+        String licenseId = randomUUID().toString();
+        byte[] license = base64ToBytes(request.getLicenseDataURL());
+        storageService.save(licenseId, license, request.getLicenseFileName(), createdBy);
+        onboarding.setLicenseId(licenseId);
+
         onboarding.setCreatedAt(LocalDateTime.now());
-        onboarding.setCreatedBy(createdBy);
         onboardingRepository.save(onboarding);
     }
 
@@ -73,7 +79,7 @@ public class OnboardingController {
         return onboardingRepository.findAll(pageable);
     }
 
-    @GetMapping(value = "/resume/{key}", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "/download/{key}", produces = MediaType.APPLICATION_PDF_VALUE)
     @UserAuthorized(value = { "isAdmin" })
     public byte[] getResume(@PathVariable("key") String key) {
         return storageService.get(key).getContent();

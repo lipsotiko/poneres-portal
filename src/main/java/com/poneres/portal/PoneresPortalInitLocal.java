@@ -30,6 +30,7 @@ public class PoneresPortalInitLocal extends AbstractPoneresPortalInit {
 
         onboardingRepository.findAll().forEach(onboarding -> {
             storageService.delete(onboarding.getResumeId());
+            storageService.delete(onboarding.getLicenseId());
             onboardingRepository.delete(onboarding);
         });
     }

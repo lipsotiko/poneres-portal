@@ -21,12 +21,14 @@ public class Onboarding {
     private String lastName;
     private LocalDate dob;
     private String specialty;
-    private String stateLicense;
+    private String npi;
+    private String location;
     private String uncomfortableProcedures;
     private String haveYouDoneLocumsBefore;
     private String activeCertifications;
     private String malpractice;
     private String resumeId;
+    private String licenseId;
     private String employmentType;
     private String createdBy;
     private LocalDateTime createdAt;

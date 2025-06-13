@@ -14,27 +14,14 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <ag-grid-vue
-    :loading="pending"
-    :rowData="data?.content"
-    :columnDefs="colDefs"
-    :gridOptions="gridOptions"
-    :rowSelection="rowSelection"
-    :getRowId="(params) => String(params.data.id)"
-    style="height: 888px"
-    class="ag-theme-quartz"
-  />
+  <ag-grid-vue :loading="pending" :rowData="data?.content" :columnDefs="colDefs" :gridOptions="gridOptions"
+    :rowSelection="rowSelection" :getRowId="(params) => String(params.data.id)" style="height: 888px"
+    class="ag-theme-quartz" />
   <div class="_display:flex _justify-content:space-between">
     <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
     <div class="admin-actions">
-      <IButton
-        outline
-        size="sm"
-        color="danger"
-        :disabled="selectedOnboardingIds.length === 0"
-        :loading="deleteing"
-        @click="handleDelete()"
-        >Delete
+      <IButton outline size="sm" color="danger" :disabled="selectedOnboardingIds.length === 0" :loading="deleteing"
+        @click="handleDelete()">Delete
       </IButton>
     </div>
   </div>
@@ -64,11 +51,19 @@ const colDefs = ref([
     width: 288,
   },
   { field: "dob" },
-  { field: "location" },
   { field: "specialty" },
-  { headerName: "Resume",
-    cellRenderer: "DownloadPdf"
-   },
+  { field: "npi" },
+  { field: "stateLicense" },
+  {
+    headerName: "Resume",
+    cellRenderer: "DownloadPdf",
+    context: 'resume'
+  },
+  {
+    headerName: "License",
+    cellRenderer: "DownloadPdf",
+    context: 'license'
+  },
 ]);
 
 const rowSelection = {
@@ -112,7 +107,7 @@ const handleDelete = async () => {
   await $fetch("/api/onboarding/multiple", {
     method: "DELETE",
     body: {
-        onboardingIds: selectedOnboardingIds.value,
+      onboardingIds: selectedOnboardingIds.value,
     },
   });
   deleteing.value = false;
@@ -126,7 +121,7 @@ import { DownloadPdf } from "#components";
 export default {
   components: {
     LinkField,
-    DownloadPdf
+    DownloadPdf,
   },
 };
 </script>

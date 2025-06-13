@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { useForm } from 'vee-validate'
 import { toTypedSchema } from "@vee-validate/zod";
-import { Check, Circle, Dot, ChevronLeft } from "lucide-vue-next";
+import { Check, Circle, Dot, ChevronLeft, X } from "lucide-vue-next";
 import { h, ref } from "vue";
 import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormFieldArray } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -31,7 +32,8 @@ let formSchema = [
     lastName: z.string(),
     dob: z.string(),
     specialty: z.string(),
-    stateLicense: z.string(),
+    npi: z.string(),
+    location: z.string(),
     uncomfortableProcedures: z.string(),
     haveYouDoneLocumsBefore: z.string(),
     activeCertifications: z.string(),
@@ -39,11 +41,21 @@ let formSchema = [
   }),
   z.object({
     resume: z.file().max(2_000_000).mime(["application/pdf"]),
+    credentials: z.array(z.object({
+      state: z.string(),
+      licenseNumber: z.string(),
+      expirationDate: z.string(),
+      license: z.file().max(2_000_000).mime(["application/pdf"]),
+    }))
   }),
   z.object({
     employmentType: z.union([z.literal("full_time"), z.literal("part_time")]),
   }),
 ];
+
+const form = useForm({
+  validationSchema: formSchema,
+})
 
 const stepIndex = ref(1);
 const steps = [
@@ -63,17 +75,26 @@ const steps = [
 
 const resumeRef = ref();
 const resumeFileNameRef = ref();
-
 const handleResumeChange = (e) => {
+  handleFileSelection(resumeRef, resumeFileNameRef, e)
+};
+
+const licenseRef = ref();
+const licenseFileNameRef = ref();
+const handleLicenseChange = (e) => {
+  handleFileSelection(licenseRef, licenseFileNameRef, e)
+};
+
+const handleFileSelection = (fileRef, fileNameRef, e) => {
   const file = e.target.files[0];
-  resumeFileNameRef.value = e.target.files[0].name;
+  fileNameRef.value = e.target.files[0].name;
 
   const reader = new FileReader();
   reader.onloadend = () => {
-    resumeRef.value = reader.result;
+    fileRef.value = reader.result;
   };
   reader.readAsDataURL(file);
-};
+}
 
 const saveOnboarding = (data) => {
   $fetch('/api/onboarding', {
@@ -82,6 +103,8 @@ const saveOnboarding = (data) => {
       onboarding: data,
       resumeDataURL: resumeRef.value,
       resumeFileName: resumeFileNameRef.value,
+      licenseDataURL: licenseRef.value,
+      licenseFileName: licenseFileNameRef.value,
     }
   });
 }
@@ -96,6 +119,14 @@ function onSubmit(values: any) {
     ),
   });
 }
+
+const initialData = {
+  credentials: [{
+    state: undefined,
+    licenseNumber: undefined,
+    expirationDate: undefined
+  }]
+}
 </script>
 
 <template>
@@ -104,48 +135,32 @@ function onSubmit(values: any) {
     <ChevronLeft />
     Back
   </NuxtLink>
-  <Form
-    v-slot="{ meta, values, validate }"
-    as=""
-    keep-values
-    :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
-  >
+  <Form v-slot="{ meta, values, validate }" as="" keep-values :initial-values="initialData"
+    :validation-schema="toTypedSchema(formSchema[stepIndex - 1])">
     <Stepper v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep }" v-model="stepIndex" class="block w-full">
-      <form
-        class="p-4"
-        @submit="
-          (e) => {
-            e.preventDefault();
-            validate();
+      <form class="p-4" @submit="
+        (e) => {
+          e.preventDefault();
 
-            if (stepIndex === steps.length && meta.valid) {
-              values.resume = resumeRef;
-              onSubmit(values);
-            }
+          validate();
+
+          if (stepIndex === steps.length && meta.valid) {
+            values.resume = resumeRef;
+            onSubmit(values);
           }
-        "
-      >
+        }
+      ">
         <div class="flex w-full flex-start gap-2">
-          <StepperItem
-            v-for="step in steps"
-            :key="step.step"
-            v-slot="{ state }"
-            class="relative flex w-full flex-col items-center justify-center"
-            :step="step.step"
-          >
-            <StepperSeparator
-              v-if="step.step !== steps[steps.length - 1].step"
-              class="absolute left-[calc(50%+20px)] right-[calc(-50%+10px)] top-5 block h-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-primary"
-            />
+          <StepperItem v-for="step in steps" :key="step.step" v-slot="{ state }"
+            class="relative flex w-full flex-col items-center justify-center" :step="step.step">
+            <StepperSeparator v-if="step.step !== steps[steps.length - 1].step"
+              class="absolute left-[calc(50%+20px)] right-[calc(-50%+10px)] top-5 block h-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-primary" />
 
             <StepperTrigger as-child>
-              <Button
-                :variant="state === 'completed' || state === 'active' ? 'default' : 'outline'"
-                size="icon"
+              <Button :variant="state === 'completed' || state === 'active' ? 'default' : 'outline'" size="icon"
                 class="z-10 rounded-full shrink-0"
                 :class="[state === 'active' && 'ring-2 ring-ring ring-offset-2 ring-offset-background']"
-                :disabled="state !== 'completed' && !meta.valid"
-              >
+                :disabled="state !== 'completed' && !meta.valid">
                 <Check v-if="state === 'completed'" class="size-5" />
                 <Circle v-if="state === 'active'" />
                 <Dot v-if="state === 'inactive'" />
@@ -153,16 +168,12 @@ function onSubmit(values: any) {
             </StepperTrigger>
 
             <div class="mt-5 flex flex-col items-center text-center">
-              <StepperTitle
-                :class="[state === 'active' && 'text-primary']"
-                class="text-sm font-semibold transition lg:text-base"
-              >
+              <StepperTitle :class="[state === 'active' && 'text-primary']"
+                class="text-sm font-semibold transition lg:text-base">
                 {{ step.title }}
               </StepperTitle>
-              <StepperDescription
-                :class="[state === 'active' && 'text-primary']"
-                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm"
-              >
+              <StepperDescription :class="[state === 'active' && 'text-primary']"
+                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm">
                 {{ step.description }}
               </StepperDescription>
             </div>
@@ -175,7 +186,7 @@ function onSubmit(values: any) {
                 <FormItem>
                   <FormLabel>First name</FormLabel>
                   <FormControl>
-                    <Input type="firstName" v-bind="componentField" />
+                    <Input v-bind="componentField" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -184,7 +195,7 @@ function onSubmit(values: any) {
                 <FormItem>
                   <FormLabel>Middle name</FormLabel>
                   <FormControl>
-                    <Input type="middleName" v-bind="componentField" />
+                    <Input v-bind="componentField" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,7 +204,7 @@ function onSubmit(values: any) {
                 <FormItem>
                   <FormLabel>Last name</FormLabel>
                   <FormControl>
-                    <Input type="lastName" v-bind="componentField" />
+                    <Input v-bind="componentField" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -232,12 +243,34 @@ function onSubmit(values: any) {
                   </FormItem>
                 </FormField>
               </div>
-              <div  class="col-span-2">
-                <FormField v-slot="{ componentField }" name="stateLicense">
+              <div class="col-span-1">
+                <FormField v-slot="{ componentField }" name="npi">
                   <FormItem>
-                    <FormLabel>What state do you have an active license?</FormLabel>
+                    <FormLabel>NPI</FormLabel>
                     <FormControl>
-                      <Input type="stateLicense" v-bind="componentField" />
+                      <Input v-bind="componentField" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-1">
+                <FormField v-slot="{ componentField }" name="location">
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Select v-bind="componentField">
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a state" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem v-for="s in states" :value="s.id"> {{ s.label }} </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -291,21 +324,76 @@ function onSubmit(values: any) {
               <FormItem>
                 <FormLabel>Resume (PDF)</FormLabel>
                 <FormControl>
-                  <div>
-                    <input
-                      id="resume"
-                      type="file"
-                      v-bind="componentField"
-                      @change="handleResumeChange"
-                      class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white"
-                    />
-                  </div>
+                  <input id="resume" type="file" v-bind="componentField" @change="handleResumeChange"
+                    class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             </FormField>
-          </template>
 
+            <FormFieldArray name="credentials" v-slot="{ fields, push, remove }">
+              <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
+                <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+                  <FormField v-slot="{ componentField }" :name="`credentials[${idx}].state`">
+                    <FormItem>
+                      <FormLabel>State</FormLabel>
+                      <Select v-bind="componentField">
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a state" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem v-for="s in states" :value="s.id"> {{ s.label }} </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
+                  <FormField v-slot="{ componentField }" :name="`credentials[${idx}].licenseNumber`">
+                    <FormItem>
+                      <FormLabel>License #</FormLabel>
+                      <FormControl>
+                        <Input v-bind="componentField" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
+                  <FormField v-slot="{ componentField }" :name="`credentials[${idx}].expirationDate`">
+                    <FormItem>
+                      <FormLabel>Expiration Date</FormLabel>
+                      <FormControl>
+                        <DatePicker v-bind="componentField" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
+                  <div class="col-span-2 flex">
+                    <FormField v-slot="{ componentField }" :name="`credentials[${idx}].license`">
+                      <FormItem class="w-full">
+                        <FormLabel>License (PDF)</FormLabel>
+                        <FormControl>
+                          <input type="file" v-bind="componentField" @change="handleLicenseChange"
+                            class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    </FormField>
+                    <div v-if="idx != 0" class="mt-[21px] ml-3">
+                      <Button variant="outline" size="icon" @click="remove(idx)">
+                        <X class="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <Button type="button" variant="outline" @click="push({ state: '' })">
+                Add State +
+              </Button>
+            </FormFieldArray>
+          </template>
           <template v-if="stepIndex === 3">
             <FormField v-slot="{ componentField }" name="employmentType">
               <FormItem>
@@ -333,13 +421,8 @@ function onSubmit(values: any) {
         <div class="flex items-center justify-between mt-4">
           <Button :disabled="isPrevDisabled" variant="outline" size="sm" @click="prevStep()"> Back </Button>
           <div class="flex items-center gap-3">
-            <Button
-              v-if="stepIndex !== 3"
-              :type="meta.valid ? 'button' : 'submit'"
-              :disabled="isNextDisabled"
-              size="sm"
-              @click="meta.valid && nextStep()"
-            >
+            <Button v-if="stepIndex !== 3" :type="meta.valid ? 'button' : 'submit'" :disabled="isNextDisabled" size="sm"
+              @click="meta.valid && nextStep()">
               Next
             </Button>
             <Button v-if="stepIndex === 3" size="sm" type="submit"> Submit </Button>
