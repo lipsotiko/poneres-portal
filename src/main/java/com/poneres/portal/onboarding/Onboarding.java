@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -28,7 +29,7 @@ public class Onboarding {
     private String activeCertifications;
     private String malpractice;
     private String resumeId;
-    private String licenseId;
+    private List<OnboardingLicenseFile> licenseFiles;
     private String employmentType;
     private String createdBy;
     private LocalDateTime createdAt;

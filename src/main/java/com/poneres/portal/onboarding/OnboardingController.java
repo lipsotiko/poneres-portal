@@ -1,6 +1,5 @@
 package com.poneres.portal.onboarding;
 
-import com.poneres.portal.admin.AdminDeleteUserRequest;
 import com.poneres.portal.security.auth0.AuthenticationService;
 import com.poneres.portal.security.auth0.UserAuthorized;
 import com.poneres.portal.storage.StorageService;
@@ -42,10 +41,13 @@ public class OnboardingController {
         storageService.save(resumeId, resume, request.getResumeFileName(), createdBy);
         onboarding.setResumeId(resumeId);
 
-        String licenseId = randomUUID().toString();
-        byte[] license = base64ToBytes(request.getLicenseDataURL());
-        storageService.save(licenseId, license, request.getLicenseFileName(), createdBy);
-        onboarding.setLicenseId(licenseId);
+        for(int i = 0; i < request.getLicenseFiles().size(); i++) {
+            OnboardingLicenseFileRequest lf = request.getLicenseFiles().get(i);
+            String licenseId = randomUUID().toString();
+            byte[] license = base64ToBytes(lf.getDataURL());
+            storageService.save(licenseId, license, lf.getFileName(), createdBy);
+            onboarding.getLicenseFiles().get(i).setLicenseId(licenseId);
+        }
 
         onboarding.setCreatedAt(LocalDateTime.now());
         onboardingRepository.save(onboarding);

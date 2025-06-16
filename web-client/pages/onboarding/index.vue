@@ -5,6 +5,7 @@ import { Check, Circle, Dot, ChevronLeft, X } from "lucide-vue-next";
 import { h, ref } from "vue";
 import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormFieldArray } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,7 +42,7 @@ let formSchema = [
   }),
   z.object({
     resume: z.file().max(2_000_000).mime(["application/pdf"]),
-    credentials: z.array(z.object({
+    licenseFiles: z.array(z.object({
       state: z.string(),
       licenseNumber: z.string(),
       expirationDate: z.string(),
@@ -57,7 +58,7 @@ const form = useForm({
   validationSchema: formSchema,
 })
 
-const stepIndex = ref(1);
+const stepIndex = ref(2);
 const steps = [
   {
     step: 1,
@@ -73,55 +74,55 @@ const steps = [
   },
 ];
 
-const resumeRef = ref();
-const resumeFileNameRef = ref();
-const handleResumeChange = (e) => {
-  handleFileSelection(resumeRef, resumeFileNameRef, e)
-};
-
-const licenseRef = ref();
-const licenseFileNameRef = ref();
-const handleLicenseChange = (e) => {
-  handleFileSelection(licenseRef, licenseFileNameRef, e)
-};
-
-const handleFileSelection = (fileRef, fileNameRef, e) => {
-  const file = e.target.files[0];
-  fileNameRef.value = e.target.files[0].name;
-
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    fileRef.value = reader.result;
-  };
-  reader.readAsDataURL(file);
+const getFile = async (f) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve({
+        dataURL: reader.result,
+        fileName: f.name
+      });
+    };
+    reader.readAsDataURL(f);
+  });
 }
 
-const saveOnboarding = (data) => {
-  $fetch('/api/onboarding', {
+const saving = ref(false);
+const submitted = ref(false);
+
+const saveOnboarding = async (data) => {
+  saving.value = true;
+  const { fileName: resumeFileName, dataURL: resumeDataURL } = await getFile(data.resume)
+
+  const licenseFiles = await Promise.all(data.licenseFiles.map(l => getFile(l.license)))
+
+  await $fetch('/api/onboarding', {
     method: "POST",
     body: {
       onboarding: data,
-      resumeDataURL: resumeRef.value,
-      resumeFileName: resumeFileNameRef.value,
-      licenseDataURL: licenseRef.value,
-      licenseFileName: licenseFileNameRef.value,
+      resumeFileName,
+      resumeDataURL,
+      licenseFiles
     }
   });
 }
 
-function onSubmit(values: any) {
-  saveOnboarding(values);
+async function onSubmit(values: any) {
+  await saveOnboarding(values);
+  submitted.value = true;
   toast.success("Thank you!", {
-    description: h(
-      "pre",
-      { class: "mt-2 w-[340px] rounded-md p-4" },
-      h("code", { class: "text-white" }, JSON.stringify(values, null, 2)),
-    ),
-  });
+    description: h('div', [
+      h('div', 'Your onboarding has started.'),
+      h('div', 'You will be redirected shortly...')
+    ]),
+    onAutoClose: () => {
+      navigateTo("/")
+    }
+  })
 }
 
 const initialData = {
-  credentials: [{
+  licenseFiles: [{
     state: undefined,
     licenseNumber: undefined,
     expirationDate: undefined
@@ -324,17 +325,17 @@ const initialData = {
               <FormItem>
                 <FormLabel>Resume (PDF)</FormLabel>
                 <FormControl>
-                  <input id="resume" type="file" v-bind="componentField" @change="handleResumeChange"
+                  <input id="resume" type="file" v-bind="componentField"
                     class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             </FormField>
 
-            <FormFieldArray name="credentials" v-slot="{ fields, push, remove }">
+            <FormFieldArray name="licenseFiles" v-slot="{ fields, push, remove }">
               <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
                 <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-                  <FormField v-slot="{ componentField }" :name="`credentials[${idx}].state`">
+                  <FormField v-slot="{ componentField }" :name="`licenseFiles[${idx}].state`">
                     <FormItem>
                       <FormLabel>State</FormLabel>
                       <Select v-bind="componentField">
@@ -352,7 +353,7 @@ const initialData = {
                       <FormMessage />
                     </FormItem>
                   </FormField>
-                  <FormField v-slot="{ componentField }" :name="`credentials[${idx}].licenseNumber`">
+                  <FormField v-slot="{ componentField }" :name="`licenseFiles[${idx}].licenseNumber`">
                     <FormItem>
                       <FormLabel>License #</FormLabel>
                       <FormControl>
@@ -361,7 +362,7 @@ const initialData = {
                       <FormMessage />
                     </FormItem>
                   </FormField>
-                  <FormField v-slot="{ componentField }" :name="`credentials[${idx}].expirationDate`">
+                  <FormField v-slot="{ componentField }" :name="`licenseFiles[${idx}].expirationDate`">
                     <FormItem>
                       <FormLabel>Expiration Date</FormLabel>
                       <FormControl>
@@ -371,7 +372,7 @@ const initialData = {
                     </FormItem>
                   </FormField>
                   <div class="col-span-2 flex">
-                    <FormField v-slot="{ componentField }" :name="`credentials[${idx}].license`">
+                    <FormField v-slot="{ componentField }" :name="`licenseFiles[${idx}].license`">
                       <FormItem class="w-full">
                         <FormLabel>License (PDF)</FormLabel>
                         <FormControl>
@@ -425,7 +426,10 @@ const initialData = {
               @click="meta.valid && nextStep()">
               Next
             </Button>
-            <Button v-if="stepIndex === 3" size="sm" type="submit"> Submit </Button>
+            <Button v-if="stepIndex === 3" size="sm" type="submit" :disabled="saving || submitted">
+              <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
+              Submit
+            </Button>
           </div>
         </div>
       </form>
