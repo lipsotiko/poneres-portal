@@ -92,7 +92,7 @@ const items = [
     showFor: ["ADMIN", "PROVIDER"],
   },
   {
-    title: "Onboarding",
+    title: "Onboarding Review",
     url: "/onboarding-review",
     icon: View,
     showFor: ["ADMIN"],

@@ -53,6 +53,12 @@ public class OnboardingController {
         onboardingRepository.save(onboarding);
     }
 
+    @GetMapping("/{id}")
+    @UserAuthorized(value = { "isAdmin" })
+    public Optional<Onboarding> get(@PathVariable("id") String id) {
+        return onboardingRepository.findById(id);
+    }
+
     @DeleteMapping("/{id}")
     @UserAuthorized(value = { "isAdmin" })
     public void delete(@PathVariable("id") String id) {

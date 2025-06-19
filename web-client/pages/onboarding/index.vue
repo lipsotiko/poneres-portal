@@ -58,7 +58,7 @@ const form = useForm({
   validationSchema: formSchema,
 })
 
-const stepIndex = ref(2);
+const stepIndex = ref(1);
 const steps = [
   {
     step: 1,
@@ -398,7 +398,7 @@ const initialData = {
           <template v-if="stepIndex === 3">
             <FormField v-slot="{ componentField }" name="employmentType">
               <FormItem>
-                <FormLabel>Employment Type</FormLabel>
+                <FormLabel>Employment</FormLabel>
 
                 <Select v-bind="componentField">
                   <FormControl>

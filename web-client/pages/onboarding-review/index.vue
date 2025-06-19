@@ -8,7 +8,7 @@
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Onboarding</BreadcrumbPage>
+            <BreadcrumbPage>Onboarding Review</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -46,24 +46,14 @@ const colDefs = ref([
     colId: "name",
     headerName: "Name",
     valueGetter: (p) => `${p.data.firstName} ${p.data.middleName} ${p.data.lastName}`,
-    context: "/onboarding",
+    context: "/onboarding-review",
     cellRenderer: "LinkField",
-    width: 288,
+    width: 268,
   },
+  { field: "location", width: 100 },
   { field: "dob" },
   { field: "specialty" },
-  { field: "npi" },
-  { field: "stateLicense" },
-  {
-    headerName: "Resume",
-    cellRenderer: "DownloadPdf",
-    context: 'resume'
-  },
-  {
-    headerName: "License",
-    cellRenderer: "DownloadPdf",
-    context: 'license'
-  },
+  { field: "npi" }
 ]);
 
 const rowSelection = {
@@ -116,12 +106,10 @@ const handleDelete = async () => {
 </script>
 <script>
 import { LinkField } from "#components";
-import { DownloadPdf } from "#components";
 
 export default {
   components: {
     LinkField,
-    DownloadPdf,
   },
 };
 </script>
