@@ -15,6 +15,7 @@ public class TestEmailService extends AbstractEmailService implements EmailServi
     private String sentTemplate;
     private String sentTo;
     private String sentSubject;
+    private String sentAttachmentName;
 
     private Map<String, String> defaultTokens = new HashMap<>() {
         {
@@ -28,6 +29,14 @@ public class TestEmailService extends AbstractEmailService implements EmailServi
         sentTemplate = replaceTokens(template);
         sentTo = to;
         sentSubject = subject;
+    }
+
+    @Override
+    public void send(String to, String subject, String template, String attachmentName, byte[] attachment) {
+        sentTemplate = replaceTokens(template);
+        sentTo = to;
+        sentSubject = subject;
+        sentAttachmentName = attachmentName;
     }
 
     @Override

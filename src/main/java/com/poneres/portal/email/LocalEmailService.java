@@ -17,6 +17,13 @@ public class LocalEmailService extends AbstractEmailService implements EmailServ
     }
 
     @Override
+    public void send(String to, String subject, String template, String attachmentName, byte[] attachment) {
+        String tokenizedTemplateHtml = replaceTokens(template);
+        printIt(getPoneresNoReply(), to, subject, tokenizedTemplateHtml);
+        log.info("Attachment Name: {}", attachmentName);
+    }
+
+    @Override
     public void send(String to, String subject, String template, Map<String, String> additionalTokens) {
         String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
         printIt(getPoneresNoReply(), to, subject, tokenizedTemplateHtml);
