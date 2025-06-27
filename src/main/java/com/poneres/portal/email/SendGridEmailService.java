@@ -2,6 +2,7 @@ package com.poneres.portal.email;
 
 import com.sendgrid.Method;
 import com.sendgrid.Request;
+import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Attachments;
@@ -56,14 +57,8 @@ public class SendGridEmailService extends AbstractEmailService implements EmailS
                 Mail mail = new Mail(new Email(from), subject, new Email(toEmail), content);
 
                 if (attachment != null && attachmentName != null) {
-                    String attachmentContent = Base64.getMimeEncoder().encodeToString(attachment);
-
-                    Attachments attachments = new Attachments();
-                    attachments.setFilename(attachmentName);
-                    attachments.setType("application/pdf");
-                    attachments.setDisposition("attachment");
-                    attachments.setContent(attachmentContent);
-                    mail.addAttachments(attachments);
+                    String attachmentContent = Base64.getEncoder().encodeToString(attachment);
+                    addAttachment(mail, attachmentName, attachmentContent);
                 }
 
                 Request request = new Request();
@@ -77,6 +72,14 @@ public class SendGridEmailService extends AbstractEmailService implements EmailS
                 log.error("Add error occurred when attempting to send an email to: {}", toEmail, ex);
             }
         }
+    }
+
+    void addAttachment(Mail mail, String attachmentName, String attachmentContent) {
+        final Attachments attachments = new Attachments
+                .Builder(attachmentName, attachmentContent)
+                .withType("application/pdf")
+                .build();
+        mail.addAttachments(attachments);
     }
 
     private void fullSend(String to, String subject, String tokenizedTemplateHtml) {

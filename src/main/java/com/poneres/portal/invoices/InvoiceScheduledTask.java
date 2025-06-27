@@ -26,7 +26,7 @@ public class InvoiceScheduledTask {
     @Autowired
     private EmailService emailService;
 
-    @Scheduled(cron = "0 0 * * * *")
+//    @Scheduled(cron = "0 0 * * * *")
     public void sendInvoice() {
         log.info("Sending test email");
 
@@ -46,6 +46,6 @@ public class InvoiceScheduledTask {
         invoiceFields.put("commission", "$188.65");
 
         byte[] invoice = pdfProcessor.process(PdfType.KW_COMMISSION_INVOICE, invoiceFields, Collections.emptyList(), false);
-        emailService.send("evangelos.poneres@gmail.com", String.format("Invoice for Property Management Services - %s %s", month, year), "kw_commission_invoice.html", "invoice.pdf", invoice);
+        emailService.send("evangelos.poneres@gmail.com", String.format("Invoice for Property Management Services - %s %s", month, year), "kw-commission-invoice.html", "invoice.pdf", invoice);
     }
 }
