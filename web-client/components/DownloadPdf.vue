@@ -27,7 +27,7 @@ const download = () => {
   const key = context === 'resume' ? resumeId : licenseId;
   const fileName = context === 'resume' ? 'resume.pdf' : 'license.pdf';
 
-  $fetch(`/api/onboarding/download/${key}`, {
+  $fetch(`/api/storage/download/${key}`, {
     headers: {
       Accept: "application/pdf",
     },

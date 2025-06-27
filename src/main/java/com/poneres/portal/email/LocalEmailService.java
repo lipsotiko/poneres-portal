@@ -13,29 +13,28 @@ public class LocalEmailService extends AbstractEmailService implements EmailServ
     @Override
     public void send(String to, String subject, String template) {
         String tokenizedTemplateHtml = replaceTokens(template);
-        printIt(getPoneresNoReply(), to, subject, tokenizedTemplateHtml);
+        printIt(getPoneresNoReply(), to, null, subject, tokenizedTemplateHtml, null);
     }
 
     @Override
-    public void send(String to, String subject, String template, String attachmentName, byte[] attachment) {
-        String tokenizedTemplateHtml = replaceTokens(template);
-        printIt(getPoneresNoReply(), to, subject, tokenizedTemplateHtml);
-        log.info("Attachment Name: {}", attachmentName);
+    public void send(String to, String cc, String subject, String template, String attachmentName, byte[] attachment, Map<String, String> additionalTokens) {
+        String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
+        printIt(getPoneresNoReply(), to, cc, subject, tokenizedTemplateHtml, attachmentName);
     }
 
     @Override
     public void send(String to, String subject, String template, Map<String, String> additionalTokens) {
         String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
-        printIt(getPoneresNoReply(), to, subject, tokenizedTemplateHtml);
+        printIt(getPoneresNoReply(), to, null, subject, tokenizedTemplateHtml, null);
     }
 
     @Override
     public void send(String from, String to, String subject, String template, Map<String, String> additionalTokens) {
         String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
-        printIt(from, to, subject, tokenizedTemplateHtml);
+        printIt(from, to, null, subject, tokenizedTemplateHtml, null);
     }
 
-    private void printIt(String from, String to, String subject, String tokenizedTemplateHtml) {
+    private void printIt(String from, String to, String cc, String subject, String tokenizedTemplateHtml, String attachmentName) {
         log.info("--------------------------------------------------------");
         log.info("Email sent!");
 
@@ -44,9 +43,17 @@ public class LocalEmailService extends AbstractEmailService implements EmailServ
             log.info("To: {}", toEmail);
         }
 
+        if (cc != null) {
+            log.info("CC: {}", cc);
+        }
         log.info("From: {}", from);
         log.info("Subject: {}", subject);
         log.info("Content: {}", tokenizedTemplateHtml);
+
+        if (attachmentName != null) {
+            log.info("Attachment Name: {}", attachmentName);
+        }
+
         log.info("--------------------------------------------------------");
     }
 

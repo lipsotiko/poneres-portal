@@ -1,6 +1,7 @@
 package com.poneres.portal;
 
 import com.poneres.portal.agreements.AgreementRepository;
+import com.poneres.portal.invoices.InvoiceRepository;
 import com.poneres.portal.onboarding.OnboardingRepository;
 import com.poneres.portal.storage.StorageService;
 import jakarta.annotation.PostConstruct;
@@ -19,6 +20,9 @@ public class PoneresPortalInitLocal extends AbstractPoneresPortalInit {
     private OnboardingRepository onboardingRepository;
 
     @Autowired
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
     private StorageService storageService;
 
     @PostConstruct
@@ -32,6 +36,11 @@ public class PoneresPortalInitLocal extends AbstractPoneresPortalInit {
             storageService.delete(onboarding.getResumeId());
             onboarding.getLicenseFiles().forEach(l -> storageService.delete(l.getLicenseId()));
             onboardingRepository.delete(onboarding);
+        });
+
+        invoiceRepository.findAll().forEach(invoice -> {
+            storageService.delete(invoice.getId());
+            invoiceRepository.delete(invoice);
         });
     }
 }

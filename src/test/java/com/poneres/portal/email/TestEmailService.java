@@ -13,7 +13,9 @@ import java.util.Map;
 public class TestEmailService extends AbstractEmailService implements EmailService {
 
     private String sentTemplate;
+    private String sentFrom;
     private String sentTo;
+    private String sentCc;
     private String sentSubject;
     private String sentAttachmentName;
 
@@ -32,9 +34,10 @@ public class TestEmailService extends AbstractEmailService implements EmailServi
     }
 
     @Override
-    public void send(String to, String subject, String template, String attachmentName, byte[] attachment) {
-        sentTemplate = replaceTokens(template);
+    public void send(String to, String cc, String subject, String template, String attachmentName, byte[] attachment, Map<String, String> additionalTokens) {
+        sentTemplate = replaceTokens(template, additionalTokens);
         sentTo = to;
+        sentCc = cc;
         sentSubject = subject;
         sentAttachmentName = attachmentName;
     }
@@ -48,6 +51,9 @@ public class TestEmailService extends AbstractEmailService implements EmailServi
 
     @Override
     public void send(String from, String to, String subject, String template, Map<String, String> additionalTokens) {
-
+        sentTemplate = replaceTokens(template, additionalTokens);
+        sentFrom = from;
+        sentTo = to;
+        sentSubject = subject;
     }
 }

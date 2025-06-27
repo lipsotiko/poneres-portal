@@ -1,11 +1,15 @@
 package com.poneres.portal;
 
+import com.poneres.portal.invoices.InvoiceJob;
+import com.poneres.portal.invoices.InvoiceJobRepository;
+import com.poneres.portal.pdfs.processors.PdfType;
 import com.poneres.portal.user.UserProfile;
 import com.poneres.portal.user.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.poneres.portal.user.Role.*;
@@ -14,6 +18,9 @@ import static com.poneres.portal.user.Role.*;
 public class AbstractPoneresPortalInit {
     @Autowired
     private UserProfileRepository userProfileRepository;
+
+    @Autowired
+    private InvoiceJobRepository invoiceJobRepository;
 
     public void init() {
         userProfileRepository.deleteById("1");
@@ -51,5 +58,52 @@ public class AbstractPoneresPortalInit {
                 .paymentProviderId(null)
                 .build();
         userProfileRepository.save(tenant);
+
+        invoiceJobRepository.deleteAll();
+        invoiceJobRepository.save(InvoiceJob.builder()
+                        .type(PdfType.KW_COMMISSION_INVOICE)
+                        .jobMetadata(new HashMap<>(){{
+                            put("to", "evangelos.poneres@gmail.com");
+                            put("cc", "evangelos@poneres.com");
+                            put("services", "Property Management");
+                        }})
+                        .pdfMetadata(new HashMap<>(){{
+                            put("client", "Sara Garlisch");
+                            put("address", "1761 W. Morse Ave #3N, Chicago, IL 60626");
+                            put("services", "Property Management");
+                            put("commission", "$188.65");
+                        }})
+                        .scheduleEnabled(true)
+                .build());
+        invoiceJobRepository.save(InvoiceJob.builder()
+                .type(PdfType.KW_COMMISSION_INVOICE)
+                .jobMetadata(new HashMap<>(){{
+                    put("to", "evangelos.poneres@gmail.com");
+                    put("cc", "evangelos@poneres.com");
+                    put("services", "Tenant Placement");
+                }})
+                .pdfMetadata(new HashMap<>(){{
+                    put("client", "Veer Visaria");
+                    put("address", "1761 W. Morse Ave #GS, Chicago, IL 60626");
+                    put("services", "Tenant Placement");
+                    put("commission", "$2895.00");
+                }})
+                .scheduleEnabled(false)
+                .build());
+        invoiceJobRepository.save(InvoiceJob.builder()
+                .type(PdfType.KW_COMMISSION_INVOICE)
+                .jobMetadata(new HashMap<>(){{
+                    put("to", "evangelos.poneres@gmail.com");
+                    put("cc", "evangelos@poneres.com");
+                    put("services", "Property Management");
+                }})
+                .pdfMetadata(new HashMap<>(){{
+                    put("client", "Veer Visaria");
+                    put("address", "1761 W. Morse Ave #GS, Chicago, IL 60626");
+                    put("services", "Property Management");
+                    put("commission", "$231.60");
+                }})
+                .scheduleEnabled(false)
+                .build());
     }
 }

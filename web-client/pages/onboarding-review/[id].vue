@@ -109,7 +109,7 @@ const { pending, data, refresh } = await useAsyncData(
 
 
 const downloadFile = (key) => {
-    navigateTo(`/api/onboarding/download/${key}`, {
+    navigateTo(`/api/storage/download/${key}`, {
         external: true,
         open: {
         target: "_blank",

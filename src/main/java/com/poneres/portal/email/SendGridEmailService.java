@@ -8,6 +8,7 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Attachments;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import com.sendgrid.helpers.mail.objects.Personalization;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -31,9 +32,9 @@ public class SendGridEmailService extends AbstractEmailService implements EmailS
     }
 
     @Override
-    public void send(String to, String subject, String template, String attachmentName, byte[] attachment) {
-        String tokenizedTemplateHtml = replaceTokens(template);
-        fullSend(getPoneresNoReply(), to, subject, tokenizedTemplateHtml, attachmentName, attachment);
+    public void send(String to, String cc, String subject, String template, String attachmentName, byte[] attachment, Map<String, String> additionalTokens) {
+        String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
+        fullSend(getPoneresNoReply(), to, cc, subject, tokenizedTemplateHtml, attachmentName, attachment);
     }
 
     @Override
@@ -45,16 +46,22 @@ public class SendGridEmailService extends AbstractEmailService implements EmailS
     @Override
     public void send(String from, String to, String subject, String template, Map<String, String> additionalTokens) {
         String tokenizedTemplateHtml = replaceTokens(template, additionalTokens);
-        fullSend(from, to, subject, tokenizedTemplateHtml, null, null);
+        fullSend(from, to, null, subject, tokenizedTemplateHtml, null, null);
     }
 
-    private void fullSend(String from, String to, String subject, String tokenizedTemplateHtml, String attachmentName, byte[] attachment) {
+    private void fullSend(String from, String to, String cc, String subject, String tokenizedTemplateHtml, String attachmentName, byte[] attachment) {
         String[] toEmails = to.split(",");
         for (String toEmail : toEmails) {
             try {
                 Content content = new Content("text/html", tokenizedTemplateHtml);
 
                 Mail mail = new Mail(new Email(from), subject, new Email(toEmail), content);
+
+                if (cc != null) {
+                    Personalization personalization = new Personalization();
+                    personalization.addTo(new Email(cc));
+                    mail.addPersonalization(personalization);
+                }
 
                 if (attachment != null && attachmentName != null) {
                     String attachmentContent = Base64.getEncoder().encodeToString(attachment);
@@ -83,6 +90,6 @@ public class SendGridEmailService extends AbstractEmailService implements EmailS
     }
 
     private void fullSend(String to, String subject, String tokenizedTemplateHtml) {
-        fullSend(getPoneresNoReply(), to, subject, tokenizedTemplateHtml, null, null);
+        fullSend(getPoneresNoReply(), to, null, subject, tokenizedTemplateHtml, null, null);
     }
 }

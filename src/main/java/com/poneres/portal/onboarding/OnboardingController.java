@@ -87,9 +87,4 @@ public class OnboardingController {
         return onboardingRepository.findAll(pageable);
     }
 
-    @GetMapping(value = "/download/{key}", produces = MediaType.APPLICATION_PDF_VALUE)
-    @UserAuthorized(value = { "isAdmin" })
-    public byte[] getResume(@PathVariable("key") String key) {
-        return storageService.get(key).getContent();
-    }
 }
