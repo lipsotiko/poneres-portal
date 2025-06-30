@@ -5,10 +5,12 @@ import com.poneres.portal.invoices.InvoiceRepository;
 import com.poneres.portal.onboarding.OnboardingRepository;
 import com.poneres.portal.storage.StorageService;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @Profile({"local", "local-no-auth"})
 public class PoneresPortalInitLocal extends AbstractPoneresPortalInit {
@@ -28,6 +30,8 @@ public class PoneresPortalInitLocal extends AbstractPoneresPortalInit {
     @PostConstruct
     public void init() {
         super.init();
+
+        log.info("Local Poneres Portal Initialization");
         agreementRepository.findAll().forEach(agreement -> {
             agreementRepository.delete(agreement);
         });

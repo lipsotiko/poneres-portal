@@ -5,6 +5,7 @@ import com.poneres.portal.invoices.InvoiceJobRepository;
 import com.poneres.portal.pdfs.processors.PdfType;
 import com.poneres.portal.user.UserProfile;
 import com.poneres.portal.user.UserProfileRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static com.poneres.portal.user.Role.*;
 
+@Slf4j
 @Service
 public class AbstractPoneresPortalInit {
     @Autowired
@@ -23,6 +25,7 @@ public class AbstractPoneresPortalInit {
     private InvoiceJobRepository invoiceJobRepository;
 
     public void init() {
+        log.info("Default Poneres Portal Initialization");
         userProfileRepository.deleteById("1");
         UserProfile evangelos = UserProfile.builder()
                 .id("1")
@@ -61,10 +64,12 @@ public class AbstractPoneresPortalInit {
 
         invoiceJobRepository.deleteAll();
         invoiceJobRepository.save(InvoiceJob.builder()
+                        .id("1")
                         .type(PdfType.KW_COMMISSION_INVOICE)
                         .jobMetadata(new HashMap<>(){{
-                            put("to", "evangelos.poneres@gmail.com");
-                            put("cc", "evangelos@poneres.com");
+                            put("client", "Sara");
+                            put("to", "sara.garlisch@gmail.com");
+                            put("cc", "eponeres@kw.com");
                             put("services", "Property Management");
                         }})
                         .pdfMetadata(new HashMap<>(){{
@@ -76,10 +81,12 @@ public class AbstractPoneresPortalInit {
                         .scheduleEnabled(true)
                 .build());
         invoiceJobRepository.save(InvoiceJob.builder()
+                .id("2")
                 .type(PdfType.KW_COMMISSION_INVOICE)
                 .jobMetadata(new HashMap<>(){{
-                    put("to", "evangelos.poneres@gmail.com");
-                    put("cc", "evangelos@poneres.com");
+                    put("client", "Veer");
+                    put("to", "veervisaria1@gmail.com");
+                    put("cc", "eponeres@kw.com");
                     put("services", "Tenant Placement");
                 }})
                 .pdfMetadata(new HashMap<>(){{
@@ -91,10 +98,12 @@ public class AbstractPoneresPortalInit {
                 .scheduleEnabled(false)
                 .build());
         invoiceJobRepository.save(InvoiceJob.builder()
+                .id("3")
                 .type(PdfType.KW_COMMISSION_INVOICE)
                 .jobMetadata(new HashMap<>(){{
-                    put("to", "evangelos.poneres@gmail.com");
-                    put("cc", "evangelos@poneres.com");
+                    put("client", "Veer");
+                    put("to", "veervisaria1@gmail.com");
+                    put("cc", "eponeres@kw.com");
                     put("services", "Property Management");
                 }})
                 .pdfMetadata(new HashMap<>(){{

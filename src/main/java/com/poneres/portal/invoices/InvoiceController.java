@@ -4,6 +4,8 @@ import com.poneres.portal.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/invoices")
 public class InvoiceController {
@@ -14,9 +16,14 @@ public class InvoiceController {
     @Autowired
     private StorageService storageService;
 
-    @PostMapping("/trigger")
-    public void trigger() {
-        invoiceScheduledTask.sendInvoice();
+    @GetMapping("/")
+    public List<Invoice> invoiceList() {
+        return invoiceScheduledTask.invoiceList();
+    }
+
+    @GetMapping("/jobs")
+    public List<InvoiceJob> invoiceJobList() {
+        return invoiceScheduledTask.invoiceJobsList();
     }
 
     @PostMapping("/trigger/resend-existing/{invoiceId}")

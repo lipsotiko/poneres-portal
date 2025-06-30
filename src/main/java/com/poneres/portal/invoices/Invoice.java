@@ -17,6 +17,7 @@ public class Invoice {
     @Id
     private String id;
     private PdfType type;
+    private String client;
     private String to;
     private String cc;
     private String services;

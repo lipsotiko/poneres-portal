@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile({"local", "local-no-auth"})
+@Profile({"local", "local-no-auth", "development"})
 public class PoneresPortalInitDevelop extends AbstractPoneresPortalInit {
 
     @PostConstruct

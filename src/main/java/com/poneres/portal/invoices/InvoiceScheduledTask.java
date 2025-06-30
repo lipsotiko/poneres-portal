@@ -8,6 +8,7 @@ import com.poneres.portal.storage.StorageResponse;
 import com.poneres.portal.storage.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ public class InvoiceScheduledTask {
     @Autowired
     private EmailService emailService;
 
-//    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 4 1 * *")
 //    @Scheduled(fixedRate = 60000) // every 15 seconds
     public void sendInvoice() {
         invoiceJobRepository.findAll().stream()
@@ -46,13 +47,9 @@ public class InvoiceScheduledTask {
             log.info("Resending existing invoice");
             Optional<Invoice> existingInvoice = invoiceRepository.findById(invoiceId);
             existingInvoice.ifPresent(invoice -> {
-
-                String to = invoice.getTo();
-                String cc = invoice.getCc();
-                String services = invoice.getServices();
                 StorageResponse storageResponse = storageService.get(invoiceId);
                 byte[] invoicePdf = storageResponse.getContent();
-                sendEmail(to, cc, services, invoice.getCreatedAt(), invoicePdf);
+                sendEmail(invoice, invoicePdf);
             });
         }
     }
@@ -66,12 +63,14 @@ public class InvoiceScheduledTask {
         LocalDateTime now = LocalDateTime.now();
 
         Map<String, String> jobMetadata = invoiceJob.getJobMetadata();
+        String client = jobMetadata.get("client");
         String to = jobMetadata.get("to");
         String cc = jobMetadata.get("cc");
         String services = jobMetadata.get("services");
 
         Invoice savedInvoice = invoiceRepository.save(Invoice.builder()
                 .type(PdfType.KW_COMMISSION_INVOICE)
+                .client(client)
                 .to(to)
                 .cc(cc)
                 .services(services)
@@ -79,28 +78,33 @@ public class InvoiceScheduledTask {
                 .build());
 
         Map<String, Object> pdfMetadata = invoiceJob.getPdfMetadata();
-        pdfMetadata.put("invoice_id", savedInvoice.getId().substring(0, 7));
+        pdfMetadata.put("invoice_id", fmtInvoiceId(savedInvoice));
         pdfMetadata.put("invoice_due", dueDate(now));
         pdfMetadata.put("invoice_date", now.toLocalDate().toString());
 
         PdfProcessor pdfProcessor = processorFactory.get(PdfType.KW_COMMISSION_INVOICE);
         byte[] invoicePdf = pdfProcessor.process(PdfType.KW_COMMISSION_INVOICE, pdfMetadata, Collections.emptyList(), false);
-        storageService.save(savedInvoice.getId(), invoicePdf,  "invoice.pdf", "system");
+        storageService.save(savedInvoice.getId(), invoicePdf, "invoice.pdf", "system");
 
-        sendEmail(to, cc, services, now, invoicePdf);
+        sendEmail(savedInvoice, invoicePdf);
 
         return savedInvoice.getId();
     }
 
-    private void sendEmail(String to, String cc, String services, LocalDateTime invoiceDate, byte[] invoicePdf) {
+    private void sendEmail(Invoice invoice, byte[] invoicePdf) {
+        String to = invoice.getTo();
+        String cc = invoice.getCc();
+        LocalDateTime invoiceDate = invoice.getCreatedAt();
         String month = invoiceDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
         Integer year = invoiceDate.getYear();
 
-        String subject = String.format("Invoice for %s Services - %s %s", services, month, year);
+        String subject = String.format("Your Invoice for %s Services is Ready - %s %s", invoice.getServices(), month, year);
 
-        Map<String, String> tokens = new HashMap<>(){{
-            put("SERVICES", services);
+        Map<String, String> tokens = new HashMap<>() {{
+            put("CLIENT", invoice.getClient());
+            put("SERVICES", invoice.getServices());
             put("DUE_DATE", dueDate(invoiceDate));
+            put("INVOICE_NUMBER", fmtInvoiceId(invoice));
         }};
 
         emailService.send(to, cc, subject, "kw-commission-invoice.html", "invoice.pdf", invoicePdf, tokens);
@@ -108,5 +112,17 @@ public class InvoiceScheduledTask {
 
     private String dueDate(LocalDateTime invoiceDate) {
         return invoiceDate.toLocalDate().plusDays(7).toString();
+    }
+
+    private String fmtInvoiceId(Invoice invoice) {
+        return invoice.getId().substring(0, 7);
+    }
+
+    public List<InvoiceJob> invoiceJobsList() {
+        return invoiceJobRepository.findAll();
+    }
+
+    public List<Invoice> invoiceList() {
+        return invoiceRepository.findAll();
     }
 }
