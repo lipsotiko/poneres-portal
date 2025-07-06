@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/shifts")
-public class ShiftController {
+@RequestMapping("/api/public/shifts")
+public class PublicShiftController {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -25,8 +26,13 @@ public class ShiftController {
     @Autowired
     private ShiftRepository shiftRepository;
 
-    @GetMapping
-    public Page<Shift> getPage(@Param("location") String location, @Param("specialty") String specialty, @Param("duration") String duration, Pageable pageable) {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public Page<Shift> getPage(
+            @Param("location") String location,
+            @Param("specialty") String specialty,
+            @Param("duration") String duration,
+            @Param("search") String search,
+            Pageable pageable) {
         Query query = new Query().with(pageable);
 
         List<Criteria> criteriaList = new ArrayList<>();
@@ -42,6 +48,10 @@ public class ShiftController {
         if (duration != null) {
             ShiftDuration shiftDuration = ShiftDuration.valueOf(duration);
             criteriaList.add(Criteria.where("duration").is(shiftDuration));
+        }
+
+        if (search != null) {
+            criteriaList.add(Criteria.where("facility").regex(search));
         }
 
         if (criteriaList.isEmpty()) {
