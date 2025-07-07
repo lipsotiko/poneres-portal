@@ -1,3 +1,74 @@
+<script setup>
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toTypedSchema } from "@vee-validate/zod";
+import { z } from "zod/v4";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Loader2 } from "lucide-vue-next";
+import { AsYouType } from "libphonenumber-js";
+import { toast } from "vue-sonner";
+
+// definePageMeta({
+//   ssr: false,
+// });
+
+const profileForm = ref();
+
+let formSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  phoneNumber: z.string(),
+  email: z.email(),
+});
+
+const { pending: pendingUserInfo, data: userInfo } = await useFetch("/api/user/info", {
+  lazy: true,
+  server: false,
+  onResponse({ request, response, options }) {
+    profileForm.value.setValues({
+      firstName: response._data.userProfile.firstName,
+      lastName: response._data.userProfile.lastName,
+      phoneNumber: response._data.userProfile.phoneNumber,
+      email: response._data.userProfile.email,
+    });
+  },
+});
+
+let initialData = ref({
+  firstName: undefined,
+  lastName: undefined,
+  phoneNumber: undefined,
+  email: undefined,
+});
+
+const saving = ref(false);
+
+const handlePhoneNumber = async (phoneNumber) => {
+  const formatted = new AsYouType("US").input(phoneNumber);
+  profileForm.value.setFieldValue("phoneNumber", formatted);
+};
+
+async function onSubmit(data) {
+  saving.value = true;
+  await saveUserProfile(userInfo.value.userProfile.id, data).then(() => {
+    saving.value = false;
+  });
+  toast.success("Profile saved!");
+}
+
+const verifyEmail = () => {
+  sendVerificationEmail();
+  toast("Please check your email for a verification link.");
+};
+</script>
 <template>
   <DefaultLayoutWrapper>
     <template #breadcrumbs>
@@ -14,159 +85,82 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <ClientOnly>
-    <IForm v-model="schema" @update:modelValue="handleFormUpdate" :disabled="pendingUserInfo" class="w-lg">
-      <IRow>
-        <IColumn xs="12">
-          <IFormGroup required>
-            <IFormLabel for="firstName">First name</IFormLabel>
-            <IInput id="firstName" name="firstName" autocomplete :error="errorTypes" />
-            <IFormError for="firstName" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn xs="12">
-          <IFormGroup required>
-            <IFormLabel for="lastName">Last name</IFormLabel>
-            <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
-            <IFormError for="lastName" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn xs="12">
-          <IFormGroup required>
-            <IFormLabel for="phoneNumber">Phone number</IFormLabel>
-            <IInput id="phoneNumber" name="phoneNumber" autocomplete :error="errorTypes" />
-            <IFormError for="phoneNumber" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn xs="12">
-          <IFormGroup required>
-            <IFormLabel for="email">Email</IFormLabel>
-            <IInput id="email" name="email" autocomplete :error="errorTypes">
-              <template #suffix v-if="!pendingUserInfo && !userInfo.verified">
-                <IButton link size="sm" color="info" @click="verifyEmail">verify</IButton>
-              </template>
-            </IInput>
-            <IFormError for="email" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <div class="save-profile">
-        <Button block color="primary" @click="saveProfile" :disabled="schema.invalid || loading">
-          <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
-          Save changes</Button
-        >
+  <Form
+    v-slot="{ meta, values, validate }"
+    ref="profileForm"
+    as=""
+    keep-values
+    :initial-values="initialData"
+    :validation-schema="toTypedSchema(formSchema)"
+  >
+    <form
+      class="max-w-lg"
+      @submit="
+        (e) => {
+          e.preventDefault();
+          validate();
+          if (meta.valid) {
+            onSubmit(values);
+          }
+        }
+      "
+    >
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="firstName">
+          <FormItem>
+            <FormLabel>First name</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
       </div>
-    </IForm>
-    <IToast v-if="verifyEmailBanner" v-model="verifyEmailBanner" color="info" class="w-lg" dismissible>
-      <p>Please check your email for a verification link.</p>
-    </IToast>
-    <template #fallback>
-      <!-- this will be rendered on server side -->
-      <div class="flex justify-center">
-        <Loader2 class="w-6 h-6 animate-spin" />
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="lastName">
+          <FormItem>
+            <FormLabel>Last name</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
       </div>
-    </template>
-  </ClientOnly>
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="phoneNumber">
+          <FormItem>
+            <FormLabel>Phone number</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" @update:modelValue="handlePhoneNumber" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="email">
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <div class="flex">
+                <Input v-bind="componentField" />
+                <Button v-if="!userInfo?.verified" variant="link" :disabled="pendingUserInfo" @click="verifyEmail">
+                  <Loader2 v-if="pendingUserInfo" class="w-4 h-4 animate-spin" />
+                  <span v-else>Verify</span>
+                </Button>
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="flex justify-center m-4">
+        <Button block color="primary" type="submit" :disabled="saving || pendingUserInfo">
+          <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
+          Save changes
+        </Button>
+      </div>
+    </form>
+  </Form>
 </template>
-<script setup>
-import { useForm } from "@inkline/inkline/composables";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-vue-next";
-import { AsYouType } from "libphonenumber-js";
-
-const { pending: pendingUserInfo, data: userInfo } = await useFetch("/api/user/info", {
-  lazy: true,
-  server: false,
-  onResponse({ request, response, options }) {
-    schema.value.firstName.value = response._data.userProfile.firstName;
-    schema.value.lastName.value = response._data.userProfile.lastName;
-    schema.value.phoneNumber.value = response._data.userProfile.phoneNumber || "";
-    schema.value.email.value = response._data.userProfile.email;
-  },
-});
-
-const errorTypes = ["touched", "invalid"];
-const loading = ref(false);
-const verifyEmailBanner = ref(false);
-
-const { schema } = useForm({
-  firstName: {
-    validators: [
-      {
-        name: "required",
-      },
-    ],
-  },
-  lastName: {
-    validators: [
-      {
-        name: "required",
-      },
-    ],
-  },
-  phoneNumber: {
-    // validators: [{ name: "required" }],
-  },
-  email: {
-    validators: [
-      {
-        name: "required",
-      },
-      {
-        name: "custom",
-        message: "Please enter a valid email address.",
-        validator: emailValidator,
-      },
-    ],
-  },
-});
-
-const handleFormUpdate = async (e) => {
-  if (!e.phoneNumber.value) {
-    return;
-  }
-  const formatted = new AsYouType("US").input(e.phoneNumber.value);
-  schema.value.phoneNumber.value = formatted;
-};
-
-const saveProfile = async () => {
-  loading.value = true;
-  await saveUserProfile(userInfo.value.userProfile.id, {
-    firstName: schema.value.firstName.value,
-    lastName: schema.value.lastName.value,
-    phoneNumber: schema.value.phoneNumber.value,
-    email: schema.value.email.value,
-  }).then(() => {
-    loading.value = false;
-  });
-};
-
-const verifyEmail = () => {
-  verifyEmailBanner.value = true;
-  sendVerificationEmail();
-};
-</script>
-<style scoped>
-.user-profile-container {
-  max-width: 500px;
-}
-
-.save-profile {
-  margin: 18px 0;
-  text-align: center;
-}
-</style>

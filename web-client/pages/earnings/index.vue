@@ -14,18 +14,14 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <IButton link color="dark" to="/earnings/payout-method">
+  <Button variant="link" @click="() => navigateTo('/earnings/payout-method')">
+    <i class="fa-solid fa-building-columns"></i>
     Payout method
-    <template #icon>
-      <i class="fa-solid fa-building-columns"></i>
-    </template>
-  </IButton>
-  <IButton link color="dark" to="/earnings/payout-history">
+  </Button>
+  <Button variant="link" @click="() => navigateTo('/earnings/payout-history')">
+    <i class="fa-solid fa-clock-rotate-left"></i>
     Payout history
-    <template #icon>
-      <i class="fa-solid fa-clock-rotate-left"></i>
-    </template>
-  </IButton>
+  </Button>
 </template>
 <script setup>
 import {
@@ -36,4 +32,5 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 </script>

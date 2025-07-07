@@ -20,7 +20,10 @@
   </DefaultLayoutWrapper>
   <img src="/stripe-label.svg" />
   <i class="fa-solid fa-arrow-right"></i>
-  <IButton color="primary" :loading="loading" @click="goToPayoutSetup"> Go through setup </IButton>
+  <Button @click="goToPayoutSetup" :disabled="loading">
+    <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
+    Go through setup
+  </Button>
 </template>
 <script setup>
 import {
@@ -31,6 +34,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
+
 const loading = ref(false);
 const goToPayoutSetup = async () => {
   loading.value = true;

@@ -1,7 +1,4 @@
 <template>
-  <IToast v-if="successfulUserRegistration" color="success">
-    <p>You successfully signed up!</p>
-  </IToast>
   <div class="md:flex md:justify-center">
     <Card class="max-w-full md:mt-18 md:w-[500px]">
       <CardHeader>
@@ -14,7 +11,16 @@
             <Button @click="goToLoginPage">Log in</Button>
           </div>
         </div>
-        <NewUserForm v-else @afterSubmit="() => (successfulUserRegistration = true)" :showAdminRole="false" />
+        <NewUserForm
+          v-else
+          @afterSubmit="
+            () => {
+              successfulUserRegistration = true;
+              toast.success('You successfully signed up!');
+            }
+          "
+          :showAdminRole="false"
+        />
       </CardContent>
     </Card>
   </div>
@@ -23,6 +29,7 @@
 import { useRoute } from "vue-router";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "vue-sonner";
 
 const successfulUserRegistration = ref(false);
 

@@ -5,129 +5,191 @@
     :agreement-id="agreementId"
     :schema="metaDataSchema"
     :test-data="testData"
-    recipientName-1="Manager name"
-    recipientEmail-1="Manager email"
-    recipientName-2="Owner name"
-    recipientEmail-2="Owner email"
   >
-    <IRow>
-      <IColumn xs="3">
-        <IFormGroup required>
-          <IFormLabel for="agreementDate">Agreement date</IFormLabel>
-          <IInput id="agreementDate" name="agreementDate" type="date" :error="errorTypes" />
-          <IFormError for="agreementDate" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn xs="3">
-        <IFormGroup required>
-          <IFormLabel for="maxExpensesInDollars">Max expenses ($)</IFormLabel>
-          <IInput id="maxExpensesInDollars" name="maxExpensesInDollars" type="number" :error="errorTypes" />
-          <IFormError for="maxExpensesInDollars" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn xs="3">
-        <IFormGroup required>
-          <IFormLabel for="compensationPercentage">Compensation (%)</IFormLabel>
-          <IInput id="compensationPercentage" name="compensationPercentage" type="number" :error="errorTypes" />
-          <IFormError for="compensationPercentage" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn xs="3">
-        <IFormGroup required>
-          <IFormLabel for="noticeDays">Termination notice days</IFormLabel>
-          <IInput id="noticeDays" name="noticeDays" type="number" :error="errorTypes" />
-          <IFormError for="noticeDays" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
-    <IRow>
-      <IColumn>
-        <IFormGroup required>
-          <IFormLabel for="owner">Owner</IFormLabel>
-          <IInput id="owner" name="owner" :error="errorTypes" />
-          <IFormError for="owner" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn>
-        <IFormGroup required>
-          <IFormLabel for="manager">Manager</IFormLabel>
-          <IInput id="manager" name="manager" :error="errorTypes" />
-          <IFormError for="manager" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn xs="3">
-        <IFormGroup required>
-          <IFormLabel for="termStartDate">Start date</IFormLabel>
-          <IInput id="termStartDate" name="termStartDate" type="month" :error="errorTypes" />
-          <IFormError for="termStartDate" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn xs="3">
-        <IFormGroup required>
-          <IFormLabel for="termEndDate">End date</IFormLabel>
-          <IInput id="termEndDate" name="termEndDate" type="month" :error="errorTypes" />
-          <IFormError for="termEndDate" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
-    <IRow>
-      <IColumn>
-        <IFormGroup required>
-          <IFormLabel for="ownerAddress">Owner Notice Address</IFormLabel>
-          <IInput id="ownerAddress" name="ownerAddress" :error="errorTypes" />
-          <IFormError for="ownerAddress" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn>
-        <IFormGroup required>
-          <IFormLabel for="managerAddress">Manager Notice Address</IFormLabel>
-          <IInput id="managerAddress" name="managerAddress" :error="errorTypes" />
-          <IFormError for="managerAddress" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
-    <IRow>
-      <IColumn>
-        <IFormGroup required>
-          <IFormLabel for="propertyAddress">Property address</IFormLabel>
-          <IInput id="propertyAddress" name="propertyAddress" :error="errorTypes" />
-          <IFormError for="propertyAddress" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
-    <IRow>
-      <IColumn>
-        <IFormGroup required>
-          <IFormLabel for="addendum">Addendum</IFormLabel>
-          <ITextarea id="addendum" name="addendum" :error="errorTypes" />
-          <IFormError for="addendum" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
+    <div class="grid grid-cols-4 gap-4 py-2">
+      <div>
+        <FormField v-slot="{ componentField }" name="agreementDate">
+          <FormItem>
+            <FormLabel>Agreement date</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" type="date" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div>
+        <FormField v-slot="{ componentField }" name="maxExpensesInDollars">
+          <FormItem>
+            <FormLabel>Max expenses ($)</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" type="number" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div>
+        <FormField v-slot="{ componentField }" name="compensationPercentage">
+          <FormItem>
+            <FormLabel>Compensation (%)</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" type="number" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div>
+        <FormField v-slot="{ componentField }" name="noticeDays">
+          <FormItem>
+            <FormLabel>Termination notice days</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" type="number" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <div class="grid grid-cols-4 gap-4 py-2">
+      <div>
+        <FormField v-slot="{ componentField }" name="owner">
+          <FormItem>
+            <FormLabel>Owner</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div>
+        <FormField v-slot="{ componentField }" name="manager">
+          <FormItem>
+            <FormLabel>Manager</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div>
+        <FormField v-slot="{ componentField }" name="termStartDate">
+          <FormItem>
+            <FormLabel>Start date</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" type="month" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div>
+        <FormField v-slot="{ componentField }" name="termEndDate">
+          <FormItem>
+            <FormLabel>End date</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" type="month" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4 py-2">
+      <div>
+        <FormField v-slot="{ componentField }" name="ownerAddress">
+          <FormItem>
+            <FormLabel>Owner Notice Address</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div>
+        <FormField v-slot="{ componentField }" name="managerAddress">
+          <FormItem>
+            <FormLabel>Manager Notice Address</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <div class="py-2">
+      <div>
+        <FormField v-slot="{ componentField }" name="propertyAddress">
+          <FormItem>
+            <FormLabel>Property address</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <div class="py-2">
+      <div>
+        <FormField v-slot="{ componentField }" name="addendum">
+          <FormItem>
+            <FormLabel>Addendum</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <Recipients
+      recipientName-1="Manager name"
+      recipientEmail-1="Manager email"
+      recipientName-2="Owner name"
+      recipientEmail-2="Owner email"
+    />
   </Agreement>
 </template>
 <script setup>
+import { z } from "zod/v4";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+
 const {
   params: { id: agreementId },
 } = useRoute();
 const dayjs = useDayjs();
 
-const metaDataSchema = {
-  agreementDate: { ...fieldOptions, value: dayjs().format("YYYY-MM-DD") },
-  owner: { ...fieldOptions },
-  manager: { ...fieldOptions },
-  propertyAddress: { ...fieldOptions },
-  maxExpensesInDollars: { ...fieldOptions },
-  compensationPercentage: { ...fieldOptions },
-  noticeDays: { ...fieldOptions },
-  addendum: {},
-  termStartDate: { ...fieldOptions },
-  termEndDate: { ...fieldOptions },
-  ownerAddress: { ...fieldOptions },
-  managerAddress: { ...fieldOptions },
-};
+const metaDataSchema = z.object({
+  agreementDate: z.string(),
+  owner: z.string(),
+  manager: z.string(),
+  propertyAddress: z.string(),
+  maxExpensesInDollars: z.number(),
+  compensationPercentage: z.number(),
+  noticeDays: z.number(),
+  addendum: z.string(),
+  termStartDate: z.string(),
+  termEndDate: z.string(),
+  ownerAddress: z.string(),
+  managerAddress: z.string(),
+  recipients: z.array(
+    z.object({
+      name: z.string(),
+      email: z.email(),
+    }),
+  ).min(2),
+});
 
 const testData = {
+  agreementDate: dayjs().format("YYYY-MM-DD"),
   owner: "Hello",
   manager: "World",
   propertyAddress: "123 Cool Ln, Baltimore, MD 22111",

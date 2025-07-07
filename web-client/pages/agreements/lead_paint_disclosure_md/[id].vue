@@ -5,103 +5,154 @@
     :agreement-id="agreementId"
     :schema="metaDataSchema"
     :test-data="testData"
-    recipientName-1="Landlord name"
-    recipientEmail-1="Landlord email"
-    recipientName-2="Tenant name"
-    recipientEmail-2="Tenant email"
   >
-    <IRow>
-      <IColumn xs="6">
-        <IFormGroup required>
-          <IFormLabel for="landlord">Landlord</IFormLabel>
-          <IInput id="landlord" name="landlord" :error="errorTypes" />
-          <IFormError for="landlord" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn xs="6">
-        <IFormGroup required>
-          <IFormLabel for="tenant">Tenant</IFormLabel>
-          <IInput id="tenant" name="tenant" :error="errorTypes" />
-          <IFormError for="tenant" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
-    <IRow>
-      <IColumn xs="12">
-        <IFormGroup required>
-          <IFormLabel for="leasedAddress">Leased address</IFormLabel>
-          <IInput id="leasedAddress" name="leasedAddress" :error="errorTypes" />
-          <IFormError for="leasedAddress" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
-    <IRow>
-      <IColumn xs="4">
-        <IFormGroup required>
-          <IFormLabel for="leadKnown">Presence of lead paint?</IFormLabel>
-          <IRadioGroup
-            id="leadKnown"
-            name="leadKnown"
-            :options="[
-              { id: 'yes', label: 'Yes' },
-              { id: 'no', label: 'No' },
-            ]"
-          />
-          <IFormError for="leadKnown" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn>
-        <IFormGroup>
-          <IFormLabel for="explain1"
-            >Known lead-based paint and/or lead-based paint hazards are present in the housing (explain)</IFormLabel
-          >
-          <ITextarea id="explain1" name="explain1" :error="errorTypes" />
-          <IFormError for="explain1" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
-    <IRow>
-      <IColumn xs="4">
-        <IFormGroup required>
-          <IFormLabel for="documentsProvided">Records available to the lessor?</IFormLabel>
-          <IRadioGroup
-            id="documentsProvided"
-            name="documentsProvided"
-            :options="[
-              { id: 'yes', label: 'Yes' },
-              { id: 'no', label: 'No' },
-            ]"
-          />
-          <IFormError for="leadKnown" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-      <IColumn>
-        <IFormGroup>
-          <IFormLabel for="explain2"
-            >Lessor has provided the lessee with all available records and reports pertaining to lead-based paint and/or
-            lead-based paint hazards in the housing</IFormLabel
-          >
-          <ITextarea id="explain2" name="explain2" :error="errorTypes" />
-          <IFormError for="explain2" :visible="errorTypes" />
-        </IFormGroup>
-      </IColumn>
-    </IRow>
+    <div class="grid grid-cols-2 gap-4 py-2">
+      <div>
+        <FormField v-slot="{ componentField }" name="landlord">
+          <FormItem>
+            <FormLabel>Landlord</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div>
+        <FormField v-slot="{ componentField }" name="tenant">
+          <FormItem>
+            <FormLabel>Tenant</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <div class="py-2">
+      <div>
+        <FormField v-slot="{ componentField }" name="leasedAddress">
+          <FormItem>
+            <FormLabel>Leased address</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <div class="grid grid-cols-6 gap-4 py-2">
+      <div class="col-span-1">
+        <FormField v-slot="{ componentField }" name="leadKnown">
+          <FormItem>
+            <FormLabel>Presence of lead paint?</FormLabel>
+            <FormControl>
+              <RadioGroup v-bind="componentField">
+                <div
+                  v-for="o in [
+                    { id: 'yes', label: 'Yes' },
+                    { id: 'no', label: 'No' },
+                  ]"
+                  class="flex items-center space-x-2"
+                >
+                  <RadioGroupItem :id="o.id" :value="o.id" />
+                  <Label :for="o.id">{{ o.label }}</Label>
+                </div>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="col-span-5">
+        <FormField v-slot="{ componentField }" name="explain1">
+          <FormItem>
+            <FormLabel
+              >Known lead-based paint and/or lead-based paint hazards are present in the housing (explain)</FormLabel
+            >
+            <FormControl>
+              <Textarea v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <div class="grid grid-cols-6 gap-4 py-2">
+      <div class="col-span-1">
+        <FormField v-slot="{ componentField }" name="documentsProvided">
+          <FormItem>
+            <FormLabel>Records available to the lessor?</FormLabel>
+            <FormControl>
+              <RadioGroup v-bind="componentField">
+                <div
+                  v-for="o in [
+                    { id: 'yes', label: 'Yes' },
+                    { id: 'no', label: 'No' },
+                  ]"
+                  class="flex items-center space-x-2"
+                >
+                  <RadioGroupItem :id="o.id" :value="o.id" />
+                  <Label :for="o.id">{{ o.label }}</Label>
+                </div>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="col-span-5">
+        <FormField v-slot="{ componentField }" name="explain2">
+          <FormItem>
+            <FormLabel>
+              Lessor has provided the lessee with all available records and reports pertaining to lead-based paint
+              and/or lead-based paint hazards in the housing
+            </FormLabel>
+            <FormControl>
+              <Textarea v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+    </div>
+    <Recipients
+      recipientName-1="Landlord name"
+      recipientEmail-1="Landlord email"
+      recipientName-2="Tenant name"
+      recipientEmail-2="Tenant email"
+    />
   </Agreement>
 </template>
 <script setup>
+import { z } from "zod/v4";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+
 const {
   params: { id: agreementId },
 } = useRoute();
 
-const metaDataSchema = {
-  landlord: { ...fieldOptions },
-  tenant: { ...fieldOptions },
-  leasedAddress: { ...fieldOptions },
-  leadKnown: {},
-  explain1: {},
-  documentsProvided: {},
-  explain2: {},
-};
+let metaDataSchema = z.object({
+  landlord: z.string(),
+  tenant: z.string(),
+  leasedAddress: z.string(),
+  leadKnown: z.string(),
+  explain1: z.string().optional(),
+  documentsProvided: z.string(),
+  explain2: z.string().optional(),
+  recipients: z.array(
+    z.object({
+      name: z.string(),
+      email: z.email(),
+    }),
+  ).min(2),
+});
 
 const testData = {
   landlord: "Evangelos Poneres",

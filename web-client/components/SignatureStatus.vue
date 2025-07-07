@@ -1,36 +1,44 @@
 <template>
   <div v-if="ssdId == null">
-    <IBadge>Draft</IBadge>
-    <IButton size="sm" color="primary" @click="send(id)" :loading="loading"> Send for signing </IButton>
+    <Badge variant="secondary" class="mx-2">Draft</Badge>
+    <Button class="h-6" @click="send(id)" :disabled="loading">
+      <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
+      Send for signing
+    </Button>
   </div>
   <span v-else>
-    <IBadge v-if="loading" color="warning">Loading...</IBadge>
+    <Badge v-if="loading" color="warning">Loading...</Badge>
     <div v-else>
-      <IButton
+      <Button
         v-if="status === 'Completed'"
-        size="sm"
-        color="secondary"
+        class="h-6"
+        variant="secondary"
         @click="handleGetCompletedFile()"
-        :loading="getFileLoading"
+        :disabled="getFileLoading"
       >
-        Download</IButton
-      >
-      <IButton
+        <Loader2 v-if="getFileLoading" class="w-4 h-4 animate-spin" />
+        Download
+      </Button>
+      <Button
         v-else-if="status !== 'Completed'"
-        size="sm"
-        color="secondary"
+        class="h-6 bg-blue-500"
         @click="handleSendReminder()"
-        :loading="reminderLoading"
+        :disabled="reminderLoading"
       >
-        Send Reminder</IButton
-      >
-      <IBadge v-else>
+        <Loader2 v-if="reminderLoading" class="w-4 h-4 animate-spin" />
+        Send Reminder
+      </Button>
+      <Badge v-else>
         {{ status }}
-      </IBadge>
+      </Badge>
     </div>
   </span>
 </template>
 <script setup>
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
+
 const props = defineProps(["params"]);
 const loading = ref(false);
 const getFileLoading = ref(false);

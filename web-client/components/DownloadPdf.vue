@@ -12,10 +12,7 @@ import { Loader2 } from "lucide-vue-next";
 const props = defineProps(["params"]);
 const {
   params: {
-    data: {
-      resumeId,
-      licenseId
-    },
+    data: { resumeId, licenseId },
     colDef: { context },
   },
 } = props;
@@ -24,8 +21,8 @@ const downloading = ref(false);
 const download = () => {
   downloading.value = true;
 
-  const key = context === 'resume' ? resumeId : licenseId;
-  const fileName = context === 'resume' ? 'resume.pdf' : 'license.pdf';
+  const key = context === "resume" ? resumeId : licenseId;
+  const fileName = context === "resume" ? "resume.pdf" : "license.pdf";
 
   $fetch(`/api/storage/download/${key}`, {
     headers: {
@@ -35,5 +32,5 @@ const download = () => {
     FileSaver.saveAs(blob, fileName);
   });
   downloading.value = false;
-}
+};
 </script>
