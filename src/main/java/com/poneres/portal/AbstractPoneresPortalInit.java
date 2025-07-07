@@ -33,6 +33,7 @@ public class AbstractPoneresPortalInit {
                 .email("evangelos@poneres.com")
                 .firstName("Evangelos")
                 .lastName("DON'T DELETE")
+                .phoneNumber("(443) 555-1234")
                 .authProviderId("auth0|66fec30d5c7496d1c5f4a2da")
                 .paymentProviderId("acct_1Q5rgHDCtswgh7ou")
                 .build();
@@ -45,6 +46,7 @@ public class AbstractPoneresPortalInit {
                 .email("poneres.c@gmail.com")
                 .firstName("Christos")
                 .lastName("DON'T DELETE")
+                .phoneNumber("(443) 555-1234")
                 .authProviderId("auth0|66de56e37571c397a84dc9e3")
                 .paymentProviderId("acct_1Q5VZYRebMKd18Dx")
                 .build();
@@ -57,6 +59,7 @@ public class AbstractPoneresPortalInit {
                 .email("tenant@hello.io")
                 .firstName("Tenant")
                 .lastName("DON'T DELETE")
+                .phoneNumber("(443) 301-9719")
                 .authProviderId("auth0|67dca7b9760d7cbe9aa8a46d")
                 .paymentProviderId(null)
                 .build();

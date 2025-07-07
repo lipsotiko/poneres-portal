@@ -62,7 +62,17 @@ public class AgreementController {
         Map<String, Object> metadata = agreementPreview.getMetadata();
         List<SignatureRecipient> recipients = agreementPreview.getRecipients();
         Boolean includeTestSignatures = agreementPreview.getIncludeTestSignatures();
-        return processorFactory.get(type).process(type, metadata, recipients, includeTestSignatures);
+        return processorFactory.get(type).process(type, metadata, recipients, includeTestSignatures, false);
+    }
+
+    @UserAuthorized("isAdmin")
+    @PostMapping(value = "/preview/with-field-names", produces = MediaType.APPLICATION_PDF_VALUE)
+    public byte[] previewWithFieldNames(@RequestParam PdfType type,
+                          @RequestBody AgreementPreview agreementPreview) {
+        Map<String, Object> metadata = agreementPreview.getMetadata();
+        List<SignatureRecipient> recipients = agreementPreview.getRecipients();
+        Boolean includeTestSignatures = agreementPreview.getIncludeTestSignatures();
+        return processorFactory.get(type).process(type, metadata, recipients, includeTestSignatures, true);
     }
 
     @UserAuthorized("isAdmin")
@@ -147,7 +157,7 @@ public class AgreementController {
         List<SignatureRecipient> recipients = agreement.getRecipients();
 
         PdfProcessor pdfProcessor = processorFactory.get(type);
-        byte[] fileBytes = pdfProcessor.process(type, metadata, Collections.emptyList(), false);
+        byte[] fileBytes = pdfProcessor.process(type, metadata, Collections.emptyList(), false, false);
         List<Map<String, Object>> signatureFields = pdfProcessor.signatureFields(recipients);
         String fileBase64 = bytesToBase64(fileBytes);
         return signatureService.create(fileName, fileBase64, recipients, signatureFields);

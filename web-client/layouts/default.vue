@@ -10,7 +10,9 @@
             </div>
             <SidebarMenu v-else class="pl-0!">
               <SidebarMenuItem
-                v-for="item in items.filter((i) => i.showFor == 'ALL' || i.showFor.some((r) => user?.roles.includes(r)))"
+                v-for="item in items.filter(
+                  (i) => i.showFor == 'ALL' || i.showFor.some((r) => user?.roles.includes(r)),
+                )"
                 :key="item.title"
               >
                 <SidebarMenuButton asChild>
@@ -34,10 +36,8 @@
       </SidebarContent>
     </Sidebar>
     <main class="w-full">
-      <IToast v-if="errorMessage" color="warning" dismissible>
-        <p>{{ errorMessage }}</p>
-      </IToast>
-      <div class="m-[10px]"> <!-- TODO: Remove margin once inkline in removed -->
+      <div class="m-[10px]">
+        <!-- TODO: Remove margin once inkline in removed -->
         <slot />
       </div>
     </main>
@@ -45,7 +45,20 @@
 </template>
 <script setup>
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Calendar, Home, Hospital, Inbox, Search, Settings, User, FilePenLine, Wrench, MonitorCog, LogOut, View } from "lucide-vue-next";
+import {
+  Calendar,
+  Home,
+  Hospital,
+  Inbox,
+  Search,
+  Settings,
+  User,
+  FilePenLine,
+  Wrench,
+  MonitorCog,
+  LogOut,
+  View,
+} from "lucide-vue-next";
 import {
   Sidebar,
   SidebarContent,
@@ -57,14 +70,10 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Loader2 } from "lucide-vue-next";
-import { provide } from "vue";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 
 const user = ref();
-const errorMessage = ref();
-provide("errorMessage", errorMessage);
 const open = ref(false);
-provide("sideBarOpen", open);
 
 const { pending: pendingUserInfo } = await useFetch("/api/user/info", {
   lazy: true,
@@ -74,7 +83,7 @@ const { pending: pendingUserInfo } = await useFetch("/api/user/info", {
     //   navigateTo("/onboarding");
     // }
 
-    user.value = response._data.userProfile
+    user.value = response._data.userProfile;
   },
 });
 
@@ -132,6 +141,6 @@ const items = [
     url: "/admin",
     icon: MonitorCog,
     showFor: ["ADMIN"],
-  }
+  },
 ];
 </script>

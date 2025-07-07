@@ -1,107 +1,16 @@
-<template>
-  <ClientOnly>
-    <IForm v-model="schema" @update:modelValue="handleFormUpdate">
-      <IRow>
-        <IColumn xs="12">
-          <IFormGroup required>
-            <IFormLabel for="email">Email address</IFormLabel>
-            <IInput v-model="email" id="email" name="email" autocomplete :error="errorTypes">
-              <template #append>
-                <i class="fa-regular fa-envelope"></i>
-              </template>
-            </IInput>
-            <IFormError for="email" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn xs="6">
-          <IFormGroup required>
-            <IFormLabel for="firstName">First name</IFormLabel>
-            <IInput id="firstName" name="firstName" autocomplete :error="errorTypes" />
-            <IFormError for="firstName" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-        <IColumn xs="6">
-          <IFormGroup required>
-            <IFormLabel for="lastName">Last name</IFormLabel>
-            <IInput id="lastName" name="lastName" autocomplete :error="errorTypes" />
-            <IFormError for="lastName" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn>
-          <IFormGroup required>
-            <IFormLabel for="phoneNumber">Phone number</IFormLabel>
-            <IInput id="phoneNumber" name="phoneNumber" autocomplete :error="errorTypes" />
-            <IFormError for="phoneNumber" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn>
-          <IFormGroup required>
-            <IFormLabel for="password">Set a password</IFormLabel>
-            <IInput id="password" name="password" type="password" autocomplete :error="errorTypes" />
-            <IFormError for="password" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow v-if="!roles">
-        <IColumn>
-          <ICheckboxGroup id="roles" name="roles" :options="roleOptions" />
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn>
-          <div class="text-center mt-4">
-            <div>
-              <Button @click="createAccount" :disabled="!schema.touched || schema.invalid || loading">
-                <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
-                Create account
-              </Button>
-            </div>
-          </div>
-        </IColumn>
-      </IRow>
-      <IRow v-if="!showAdminRole">
-        <IColumn>
-          <div class="text-center">
-            <p class="lead">
-              Already have an account?
-              <a :href="loginPage"> Sign in </a>
-            </p>
-          </div>
-        </IColumn>
-      </IRow>
-      <IRow v-if="!showAdminRole">
-        <p class="text-sm font-thin px-4">
-          By clicking “Create Account", I agree to Poneres Connect's <a href="#">Terms of Use</a>,
-          <a href="#">Privacy Policy</a> and to receive electronic communication about my accounts and services per
-          Poneres Connect's
-          <a href="#">Electronic Communications Agreement.</a>
-        </p>
-      </IRow>
-    </IForm>
-    <template #fallback>
-      <!-- this will be rendered on server side -->
-      <div class="flex justify-center">
-        <Loader2 class="w-6 h-6 animate-spin" />
-      </div>
-    </template>
-  </ClientOnly>
-</template>
 <script setup>
-import { inject } from "vue";
-import { useForm } from "@inkline/inkline/composables";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toTypedSchema } from "@vee-validate/zod";
+import { z } from "zod/v4";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader2 } from "lucide-vue-next";
-import { AsYouType } from 'libphonenumber-js'
+import { AsYouType } from "libphonenumber-js";
+import { toast } from "vue-sonner";
 
 const route = useRoute();
 const roles = route.query.roles;
-const email = route.query.email;
+const newUserForm = ref();
 
 // Clear the query params after navigation
 const router = useRouter();
@@ -122,80 +31,163 @@ if (!showAdminRole) {
   roleOptions.value.shift();
 }
 
-const { schema } = useForm({
-  email: {
-    value: email ? decodeURI(email) : undefined,
-    validators: [
-      {
-        name: "required",
-      },
-      {
-        name: "custom",
-        message: "Please enter a valid email address.",
-        validator: emailValidator,
-      },
-    ],
-  },
-  firstName: {
-    validators: [{ name: "required" }],
-  },
-  lastName: {
-    validators: [{ name: "required" }],
-  },
-  phoneNumber: {
-    validators: [{ name: "required" }],
-  },
-  password: {
-    validators: [
-      {
-        name: "required",
-      },
-      {
-        name: "minLength",
-        value: 8,
-      },
-      {
-        name: "custom",
+let formSchema = z
+  .object({
+    firstName: z.string(),
+    lastName: z.string(),
+    phoneNumber: z.string(),
+    email: z.email(),
+    password: z.string().min(8),
+    roles: z.array(z.string()).min(1),
+  })
+  .superRefine(({ password }, ctx) => {
+    var isValidPassword = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    if (isValidPassword.test(password)) {
+      ctx.addIssue({
+        code: "custom",
         message: "Password must contain at least one lower case, one upper case, and one special character.",
-        validator: (password) => {
-          var isValidPassword = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-          return isValidPassword.test(password);
-        },
-      },
-    ],
-  },
-  roles: {},
+        path: ["password"],
+      });
+    }
+  });
+
+let initialData = ref({
+  firstName: undefined,
+  lastName: undefined,
+  phoneNumber: undefined,
+  email: undefined,
 });
 
-const handleFormUpdate = async (e) => {
-    if (!e.phoneNumber.value) {
-        return;
-    }
-    const formatted = new AsYouType('US').input(e.phoneNumber.value);
-    schema.value.phoneNumber.value = formatted
-}
+const handlePhoneNumber = async (phoneNumber) => {
+  const formatted = new AsYouType("US").input(phoneNumber);
+  newUserForm.value.setFieldValue("phoneNumber", formatted);
+};
 
-const errorTypes = ["touched", "invalid"];
-const loading = ref(false);
-const errorMessage = inject("errorMessage");
+const saving = ref(false);
 
-const createAccount = async () => {
-  loading.value = true;
-  await signUpUser({
-    email: schema.value.email.value,
-    firstName: schema.value.firstName.value,
-    lastName: schema.value.lastName.value,
-    phoneNumber: schema.value.phoneNumber.value,
-    password: schema.value.password.value,
-    roles: schema.value.roles.value || roles.split(","),
-  })
+const onSubmit = async (data) => {
+  saving.value = true;
+  await signUpUser(data)
     .then(() => {
-      errorMessage.value = undefined;
       emit("afterSubmit");
     })
     .catch((err) => {
-      errorMessage.value = err?.data?.message;
+      toast.error(err?.data?.message);
     });
-  loading.value = false;
+  saving.value = false;
 };
 </script>
+<template>
+  <Form
+    v-slot="{ meta, values, validate }"
+    ref="newUserForm"
+    as=""
+    keep-values
+    :initial-values="initialData"
+    :validation-schema="toTypedSchema(formSchema)"
+  >
+    <form
+      class="max-w-lg"
+      @submit="
+        (e) => {
+          e.preventDefault();
+          validate();
+          if (meta.valid) {
+            onSubmit(values);
+          }
+        }
+      "
+    >
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="email">
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="firstName">
+          <FormItem>
+            <FormLabel>First name</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="lastName">
+          <FormItem>
+            <FormLabel>Last name</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="phoneNumber">
+          <FormItem>
+            <FormLabel>Phone number</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" @update:modelValue="handlePhoneNumber" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="password">
+          <FormItem>
+            <FormLabel>Password</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" type="password" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div v-if="!roles">
+        <div>
+          <CheckboxGroup id="roles" name="roles" :options="roleOptions" />
+        </div>
+      </div>
+      <div>
+        <div>
+          <div class="text-center mt-4">
+            <div>
+              <Button type="submit" :disabled="saving">
+                <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
+                Create account
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="!showAdminRole">
+        <div>
+          <div class="text-center">
+            <p class="lead">
+              Already have an account?
+              <a :href="loginPage"> Sign in </a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div v-if="!showAdminRole">
+        <p class="text-sm font-thin px-4">
+          By clicking “Create Account", I agree to Shift Stat's <a href="#">Terms of Use</a>,
+          <a href="#">Privacy Policy</a> and to receive electronic communication about my accounts and services per
+          Shift Stat's
+          <a href="#">Electronic Communications Agreement.</a>
+        </p>
+      </div>
+    </form>
+  </Form>
+</template>

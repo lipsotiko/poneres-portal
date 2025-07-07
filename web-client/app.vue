@@ -1,9 +1,11 @@
 <template>
+  <Toaster />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
 </template>
 <script setup lang="ts">
+import { Toaster } from "@/components/ui/sonner";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 
 useHead({

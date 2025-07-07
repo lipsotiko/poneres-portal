@@ -83,7 +83,7 @@ public class InvoiceScheduledTask {
         pdfMetadata.put("invoice_date", now.toLocalDate().toString());
 
         PdfProcessor pdfProcessor = processorFactory.get(PdfType.KW_COMMISSION_INVOICE);
-        byte[] invoicePdf = pdfProcessor.process(PdfType.KW_COMMISSION_INVOICE, pdfMetadata, Collections.emptyList(), false);
+        byte[] invoicePdf = pdfProcessor.process(PdfType.KW_COMMISSION_INVOICE, pdfMetadata, Collections.emptyList(), false, false);
         storageService.save(savedInvoice.getId(), invoicePdf, "invoice.pdf", "system");
 
         sendEmail(savedInvoice, invoicePdf);

@@ -14,15 +14,23 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <ag-grid-vue :loading="pending" :rowData="data?.content" :columnDefs="colDefs" :gridOptions="gridOptions"
-    :rowSelection="rowSelection" :getRowId="(params) => String(params.data.id)" style="height: 888px"
-    class="ag-theme-quartz" />
+  <ag-grid-vue
+    :loading="pending"
+    :rowData="data?.content"
+    :columnDefs="colDefs"
+    :gridOptions="gridOptions"
+    :rowSelection="rowSelection"
+    :getRowId="(params) => String(params.data.id)"
+    style="height: 888px"
+    class="ag-theme-quartz"
+  />
   <div class="_display:flex _justify-content:space-between">
-    <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+    <Pagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
     <div class="admin-actions">
-      <IButton outline size="sm" color="danger" :disabled="selectedOnboardingIds.length === 0" :loading="deleteing"
-        @click="handleDelete()">Delete
-      </IButton>
+      <Button variant="destructive" :disabled="deleteing || selectedOnboardingIds.length === 0" @click="handleDelete()">
+        <Loader2 v-if="deleteing" class="w-4 h-4 animate-spin" />
+        Delete
+      </Button>
     </div>
   </div>
 </template>
@@ -37,6 +45,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
 
 const deleteing = ref(false);
 const page = ref(1);
@@ -53,7 +63,7 @@ const colDefs = ref([
   { field: "location", width: 100 },
   { field: "dob" },
   { field: "specialty" },
-  { field: "npi" }
+  { field: "npi" },
 ]);
 
 const rowSelection = {

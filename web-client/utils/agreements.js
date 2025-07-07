@@ -84,28 +84,6 @@ const getAgreementPath = (type) => {
   return agreementTypes.find((t) => t.type === type).id;
 };
 
-const errorTypes = ["touched", "invalid"];
-const fieldOptions = {
-  validators: [
-    {
-      name: "required",
-    },
-  ],
-};
-
-const emailFieldOptions = {
-  validators: [
-    {
-      name: "required",
-    },
-    {
-      name: "custom",
-      message: "Please enter a valid email address.",
-      validator: emailValidator,
-    },
-  ],
-};
-
 export {
   previewAgreement,
   saveAgreement,
@@ -118,8 +96,5 @@ export {
   getAgreementPath,
   isTestMode,
   copyAgreement,
-  errorTypes,
-  fieldOptions,
-  emailFieldOptions,
   agreementTypes,
 };

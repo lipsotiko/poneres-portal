@@ -1,14 +1,4 @@
 <template>
-  <IToast
-    v-if="toastOpen"
-    v-model="toastOpen"
-    class="float-right w-[328px]"
-    color="success"
-    :duration="2500"
-    dismissible
-  >
-    {{ modalMessage }}
-  </IToast>
   <DefaultLayoutWrapper>
     <template #breadcrumbs>
       <Breadcrumb>
@@ -26,11 +16,11 @@
   </DefaultLayoutWrapper>
 
   <div class="flex justify-end m-4">
-    <IButton circle color="primary" to="/agreements/new">
-      <template #icon>
-        <IIcon name="ink-plus" />
-      </template>
-    </IButton>
+    <div class="flex justify-end m-4">
+      <Button @click="navigateTo('/agreements/new')">
+        <Plus />
+      </Button>
+    </div>
   </div>
   <ag-grid-vue
     :loading="pending"
@@ -40,17 +30,24 @@
     style="height: 888px"
     class="ag-theme-quartz"
   />
-  <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
-  <IModal v-model="sendAgreementModal">
-    <template #header>Send agreement?</template>
-    <span v-html="sendAgreementModalMessage"></span>
-    <template #footer>
-      <div style="display: flex; justify-content: space-between">
-        <IButton outline color="dark" @click="sendAgreementModal = false">No, don't</IButton>
-        <IButton color="success" :loading="sending" @click="handleSendForSigning">Yes, send it!</IButton>
-      </div>
-    </template>
-  </IModal>
+  <Pagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+  <Dialog :open="sendAgreementModal">
+    <DialogContent class="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Send agreement?</DialogTitle>
+        <DialogDescription> Are you sure you want to send this agreement? </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <div class="w-full flex justify-between">
+          <Button variant="destructive" @click="sendAgreementModal = false">No, don't</Button>
+          <Button :disabled="sending" @click="handleSendForSigning">
+            <Loader2 v-if="sending" class="w-4 h-4 animate-spin" />
+            Yes, send it!
+          </Button>
+        </div>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -64,12 +61,22 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Loader2, Plus } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
 const toastOpen = ref(false);
-const modalMessage = ref();
 const sending = ref(false);
 const sendAgreementModal = ref(false);
-const sendAgreementModalMessage = ref("Are you sure you want to send this agreement?");
 const agreementToSendId = ref();
 const page = ref(1);
 const sort = ref("createdAt,asc");
@@ -90,14 +97,14 @@ const colDefs = ref([
         agreementToSendId.value = id;
         const testMode = await isTestMode();
         if (!testMode) {
-          sendAgreementModalMessage.value =
-            "System is NOT in test mode!<br>Are you sure you want to send this agreement?";
+          toast.error("System is NOT in test mode!", {
+            description: "Are you sure you want to send this agreement?",
+          });
         }
         sendAgreementModal.value = true;
       },
       onReminderSent: () => {
-        modalMessage.value = "Reminder sent!";
-        toastOpen.value = true;
+        toast.success("Reminder sent!");
       },
     },
     cellRenderer: "SignatureStatus",
@@ -109,8 +116,7 @@ const colDefs = ref([
 const handleSendForSigning = async () => {
   sending.value = true;
   await sendForSigning(agreementToSendId.value);
-  modalMessage.value = "Document sent for signing!";
-  toastOpen.value = true;
+  toast.success("Document sent for signing!");
   sendAgreementModal.value = false;
   sending.value = false;
   refresh();

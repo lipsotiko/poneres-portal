@@ -1,11 +1,4 @@
 <template>
-  <PdfPreview
-    :key="getKey()"
-    :metadata="metadataForm"
-    :recipients="recipientsForm.recipients"
-    :type="pdfType"
-    :includeTestSignatures="includeTestSignatures"
-  />
   <DefaultLayoutWrapper>
     <template #breadcrumbs>
       <Breadcrumb>
@@ -26,44 +19,60 @@
     </template>
   </DefaultLayoutWrapper>
   <div class="ml-6">
-    <ClientOnly>
-      <IForm v-model="metaDataSchema" :disabled="loading || sent">
+    <Form
+      v-slot="{ meta, values, validate }"
+      as=""
+      ref="agreementForm"
+      keep-values
+      :validation-schema="toTypedSchema(schema)"
+    >
+      <form
+        @submit="
+          (e) => {
+            e.preventDefault();
+            validate();
+            if (meta.valid) {
+              onSubmit(values);
+            }
+          }
+        "
+      >
         <slot></slot>
-      </IForm>
-    </ClientOnly>
-    <Recipients
-      v-model="recipientsSchema"
-      :recipientName-1="recipientName1"
-      :recipientEmail-1="recipientEmail1"
-      :recipientName-2="recipientName2"
-      :recipientEmail-2="recipientEmail2"
-    />
-    <IRow>
-      <IColumn>
-        <div class="save">
-          <div class="_display:flex _justify-content:space-between">
-            <div class="left-buttons">
-              <IButton @click="loadTestData()" v-if="$config.public.deploymentType === 'local'">Load Test Data</IButton>
-              <IButton v-if="!isNew" @click="handleCopy()" :loading="copying">Copy</IButton>
-              <IButton @click="addRecipient()" :disabled="recipientsForm.recipients.length === 3"
-                >Add recipient</IButton
-              >
-              <IButton @click="open = true">Preview</IButton>
-              <ICheckbox v-model="includeTestSignatures">Include signatures</ICheckbox>
-            </div>
-            <div v-if="!loading" class="right-buttons">
-              <DeleteAgreementButton :id="agreementId" :isNew="isNew" />
-              <IButton v-if="!sent" color="primary" :loading="saving" @click="save()">Save</IButton>
+        <div>
+          <div>
+            <div class="save">
+              <div class="_display:flex _justify-content:space-between">
+                <div class="left-buttons">
+                  <Button
+                    variant="secondary"
+                    @click="(e) => loadTestData(e)"
+                    v-if="$config.public.deploymentType === 'local'"
+                    >Load Test Data</Button
+                  >
+                  <Button variant="secondary" v-if="!isNew" @click="(e) => handleCopy(e)" :disabled="copying"
+                    >Copy</Button
+                  >
+                  <Button variant="secondary" @click="(e) => handlePreview(e)">Preview</Button>
+                  <Checkbox2 v-model="includeTestSignatures" class="m-2" label="Include signatures" />
+                </div>
+                <div v-if="!loading" class="right-buttons">
+                  <DeleteAgreementButton :id="agreementId" :isNew="isNew" />
+                  <Button v-if="!sent" type="submit" :disabled="saving">
+                    <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
+                    Save
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </IColumn>
-    </IRow>
+      </form>
+    </Form>
   </div>
 </template>
 <script setup>
-import { inject } from "vue";
-import { useForm } from "@inkline/inkline/composables";
+import { useForm, useFieldArray } from "vee-validate";
+import { z } from "zod/v4";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -72,26 +81,19 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-const {
-  pdfType,
-  title,
-  agreementId,
-  schema,
-  testData,
-  recipientName1,
-  recipientEmail1,
-  recipientName2,
-  recipientEmail2,
-} = defineProps([
+import { toTypedSchema } from "@vee-validate/zod";
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
+
+const agreementForm = ref();
+
+const { pdfType, title, agreementId, schema, testData } = defineProps([
   "pdfType",
   "title",
   "agreementId",
   "schema",
   "testData",
-  "recipientName-1",
-  "recipientEmail-1",
-  "recipientName-2",
-  "recipientEmail-2",
 ]);
 
 const isNew = agreementId === "New";
@@ -101,38 +103,8 @@ const loading = ref(false);
 const copying = ref(false);
 const includeTestSignatures = ref(true);
 
-const open = inject("sideBarOpen");
-
-const { schema: metaDataSchema, form: metadataForm, validate: metadataValidate } = useForm({ ...schema });
-
-const {
-  schema: recipientsSchema,
-  form: recipientsForm,
-  validate: recipientsValidate,
-} = useForm({
-  recipients: [
-    {
-      name: fieldOptions,
-      email: emailFieldOptions,
-    },
-    {
-      name: fieldOptions,
-      email: emailFieldOptions,
-    },
-  ],
-});
-
-const addRecipient = () => {
-  recipientsSchema.value.recipients.push({
-    name: { ...fieldOptions },
-    email: { ...emailFieldOptions },
-  });
-};
-
-const getKey = () =>
-  JSON.stringify(metadataForm.value) +
-  JSON.stringify(recipientsForm.value) +
-  JSON.stringify(includeTestSignatures.value);
+useForm();
+const { push: addRecipient } = useFieldArray("recipients");
 
 onMounted(async () => {
   if (isNew) {
@@ -144,59 +116,83 @@ onMounted(async () => {
   sent.value = agreement.sent;
 
   Object.keys(agreement.metadata).forEach((k) => {
-    if (metaDataSchema.value.hasOwnProperty(k)) {
-      metaDataSchema.value[k].value = agreement.metadata[k];
+    if (agreementForm.value.values.hasOwnProperty(k)) {
+      agreementForm.value.setFieldValue(k, agreement.metadata[k]);
     }
   });
 
   agreement.recipients.forEach((recipient, index) => {
     if (index > 1) {
-      addRecipient(recipientsSchema);
+      console.log("here");
+      addRecipient({
+        name: undefined,
+        email: undefined,
+      });
     }
-    recipientsSchema.value.recipients[index].email.value = recipient.email;
-    recipientsSchema.value.recipients[index].name.value = recipient.name;
+    agreementForm.value.setFieldValue(`recipients[${index}].name`, recipient.name);
+    agreementForm.value.setFieldValue(`recipients[${index}].email`, recipient.email);
   });
 
   loading.value = false;
 });
 
-const save = async () => {
-  await metadataValidate();
-  await recipientsValidate();
+const hasMaxRecipients = () => {
+  agreementForm.value?.values.recipients.length === 3;
+};
 
-  if (!metaDataSchema.value.valid || !recipientsSchema.value.valid) {
-    return;
-  }
-
+const onSubmit = async (data) => {
   saving.value = true;
+
+  let data2 = { ...data };
+  const recipients = data.recipients;
+  delete data2.recipients;
 
   await saveAgreement({
     id: isNew ? undefined : agreementId,
     type: pdfType,
-    metadata: metadataForm.value,
-    recipients: recipientsForm.value.recipients,
+    metadata: data2,
+    recipients: recipients,
   }).then(() => {
     navigateTo("/agreements");
   });
 };
 
-const handleCopy = async () => {
+const handleCopy = async (e) => {
+  e.preventDefault();
+
   copying.value = true;
   await copyAgreement(agreementId).then(() => {
     navigateTo("/agreements");
   });
 };
 
-const loadTestData = () => {
-  Object.keys(testData).forEach((k) => {
-    metaDataSchema.value[k].value = testData[k];
+const handlePreview = (e) => {
+  e.preventDefault();
+
+  let data2 = { ...agreementForm.value.values };
+  const recipients = agreementForm.value.values.recipients;
+  delete data2.recipients;
+
+  previewAgreement(pdfType, {
+    metadata: data2,
+    recipients: recipients,
+    includeTestSignatures: includeTestSignatures.value,
+  }).then((blob) => {
+    var fileURL = window.URL.createObjectURL(blob);
+    window.open(`${fileURL}`);
   });
-  metaDataSchema.value.touched = true;
-  recipientsSchema.value.recipients[0].name.value = "Hello World";
-  recipientsSchema.value.recipients[0].email.value = "evangelos.poneres@gmail.com";
-  recipientsSchema.value.recipients[1].name.value = "Hello World";
-  recipientsSchema.value.recipients[1].email.value = "hello@poneres.com";
-  recipientsSchema.value.touched = true;
+};
+
+const loadTestData = (e) => {
+  e.preventDefault();
+  Object.keys(testData).forEach((k) => {
+    agreementForm.value.setFieldValue(k, testData[k]);
+  });
+
+  agreementForm.value.setFieldValue("recipients[0].name", "Hello World");
+  agreementForm.value.setFieldValue("recipients[0].email", "evangelos.poneres@gmail.com");
+  agreementForm.value.setFieldValue("recipients[1].name", "John Wick");
+  agreementForm.value.setFieldValue("recipients[1].email", "evangelos@poneres.com");
 };
 </script>
 <style>

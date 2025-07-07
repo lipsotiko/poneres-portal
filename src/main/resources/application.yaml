@@ -54,8 +54,6 @@ logging:
 #          mongodb:
 #            core:
 #              MongoTemplate: DEBUG
-pdf:
-  fields-preview: true
 management:
   endpoints:
     web:

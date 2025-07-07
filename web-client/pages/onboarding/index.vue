@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate'
 import { toTypedSchema } from "@vee-validate/zod";
 import { Check, Circle, Dot, ChevronLeft, X } from "lucide-vue-next";
 import { h, ref } from "vue";
@@ -18,11 +17,10 @@ import {
   StepperTitle,
   StepperTrigger,
 } from "@/components/ui/stepper";
-import { Toaster } from "@/components/ui/sonner";
 import { toast } from "vue-sonner";
 
 definePageMeta({
-  ssr: false,
+  // ssr: false,
   layout: "onboarding",
 });
 
@@ -38,25 +36,23 @@ let formSchema = [
     uncomfortableProcedures: z.string(),
     haveYouDoneLocumsBefore: z.string(),
     activeCertifications: z.string(),
-    malpractice: z.string()
+    malpractice: z.string(),
   }),
   z.object({
     resume: z.file().max(2_000_000).mime(["application/pdf"]),
-    licenseFiles: z.array(z.object({
-      state: z.string(),
-      licenseNumber: z.string(),
-      expirationDate: z.string(),
-      license: z.file().max(2_000_000).mime(["application/pdf"]),
-    }))
+    licenseFiles: z.array(
+      z.object({
+        state: z.string(),
+        licenseNumber: z.string(),
+        expirationDate: z.string(),
+        license: z.file().max(2_000_000).mime(["application/pdf"]),
+      }),
+    ),
   }),
   z.object({
     employmentType: z.union([z.literal("full_time"), z.literal("part_time")]),
   }),
 ];
-
-const form = useForm({
-  validationSchema: formSchema,
-})
 
 const stepIndex = ref(1);
 const steps = [
@@ -80,88 +76,104 @@ const getFile = async (f) => {
     reader.onloadend = () => {
       resolve({
         dataURL: reader.result,
-        fileName: f.name
+        fileName: f.name,
       });
     };
     reader.readAsDataURL(f);
   });
-}
+};
 
 const saving = ref(false);
 const submitted = ref(false);
 
 const saveOnboarding = async (data) => {
   saving.value = true;
-  const { fileName: resumeFileName, dataURL: resumeDataURL } = await getFile(data.resume)
+  const { fileName: resumeFileName, dataURL: resumeDataURL } = await getFile(data.resume);
 
-  const licenseFiles = await Promise.all(data.licenseFiles.map(l => getFile(l.license)))
+  const licenseFiles = await Promise.all(data.licenseFiles.map((l) => getFile(l.license)));
 
-  await $fetch('/api/onboarding', {
+  await $fetch("/api/onboarding", {
     method: "POST",
     body: {
       onboarding: data,
       resumeFileName,
       resumeDataURL,
-      licenseFiles
-    }
+      licenseFiles,
+    },
   });
-}
+};
 
 async function onSubmit(values: any) {
   await saveOnboarding(values);
   submitted.value = true;
   toast.success("Thank you!", {
-    description: h('div', [
-      h('div', 'Your onboarding has started.'),
-      h('div', 'You will be redirected shortly...')
-    ]),
+    description: h("div", [h("div", "Your onboarding has started."), h("div", "You will be redirected shortly...")]),
     onAutoClose: () => {
-      navigateTo("/")
-    }
-  })
+      navigateTo("/");
+    },
+  });
 }
 
 const initialData = {
-  licenseFiles: [{
-    state: undefined,
-    licenseNumber: undefined,
-    expirationDate: undefined
-  }]
-}
+  licenseFiles: [
+    {
+      state: undefined,
+      licenseNumber: undefined,
+      expirationDate: undefined,
+    },
+  ],
+};
 </script>
 
 <template>
-  <Toaster />
   <NuxtLink to="/" class="flex p-2">
     <ChevronLeft />
     Back
   </NuxtLink>
-  <Form v-slot="{ meta, values, validate }" as="" keep-values :initial-values="initialData"
-    :validation-schema="toTypedSchema(formSchema[stepIndex - 1])">
+  <Form
+    v-slot="{ meta, values, validate }"
+    as=""
+    keep-values
+    :initial-values="initialData"
+    :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
+  >
     <Stepper v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep }" v-model="stepIndex" class="block w-full">
-      <form class="p-4" @submit="
-        (e) => {
-          e.preventDefault();
+      <form
+        class="p-4"
+        @submit="
+          (e) => {
+            e.preventDefault();
 
-          validate();
+            validate();
 
-          if (stepIndex === steps.length && meta.valid) {
-            values.resume = resumeRef;
-            onSubmit(values);
+            if (stepIndex === steps.length && meta.valid) {
+              values.resume = resumeRef;
+              onSubmit(values);
+            }
           }
-        }
-      ">
+        "
+      >
         <div class="flex w-full flex-start gap-2">
-          <StepperItem v-for="step in steps" :key="step.step" v-slot="{ state }"
-            class="relative flex w-full flex-col items-center justify-center" :step="step.step">
-            <StepperSeparator v-if="step.step !== steps[steps.length - 1].step"
-              class="absolute left-[calc(50%+20px)] right-[calc(-50%+10px)] top-5 block h-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-primary" />
+          <StepperItem
+            v-for="step in steps"
+            :key="step.step"
+            v-slot="{ state }"
+            class="relative flex w-full flex-col items-center justify-center"
+            :step="step.step"
+          >
+            <StepperSeparator
+              v-if="step.step !== steps[steps.length - 1].step"
+              class="absolute left-[calc(50%+20px)] right-[calc(-50%+10px)] top-5 block h-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-primary"
+            />
 
             <StepperTrigger as-child>
-              <Button :variant="state === 'completed' || state === 'active' ? 'default' : 'outline'" size="icon"
+              <Button
+                :variant="state === 'completed' || state === 'active' ? 'default' : 'outline'"
+                size="icon"
                 class="z-10 rounded-full shrink-0"
                 :class="[state === 'active' && 'ring-2 ring-ring ring-offset-2 ring-offset-background']"
-                :disabled="state !== 'completed' && !meta.valid">
+                :disabled="state !== 'completed' && !meta.valid"
+              >
                 <Check v-if="state === 'completed'" class="size-5" />
                 <Circle v-if="state === 'active'" />
                 <Dot v-if="state === 'inactive'" />
@@ -169,12 +181,16 @@ const initialData = {
             </StepperTrigger>
 
             <div class="mt-5 flex flex-col items-center text-center">
-              <StepperTitle :class="[state === 'active' && 'text-primary']"
-                class="text-sm font-semibold transition lg:text-base">
+              <StepperTitle
+                :class="[state === 'active' && 'text-primary']"
+                class="text-sm font-semibold transition lg:text-base"
+              >
                 {{ step.title }}
               </StepperTitle>
-              <StepperDescription :class="[state === 'active' && 'text-primary']"
-                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm">
+              <StepperDescription
+                :class="[state === 'active' && 'text-primary']"
+                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm"
+              >
                 {{ step.description }}
               </StepperDescription>
             </div>
@@ -325,8 +341,12 @@ const initialData = {
               <FormItem>
                 <FormLabel>Resume (PDF)</FormLabel>
                 <FormControl>
-                  <input id="resume" type="file" v-bind="componentField"
-                    class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white" />
+                  <input
+                    id="resume"
+                    type="file"
+                    v-bind="componentField"
+                    class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -376,8 +396,12 @@ const initialData = {
                       <FormItem class="w-full">
                         <FormLabel>License (PDF)</FormLabel>
                         <FormControl>
-                          <input type="file" v-bind="componentField" @change="handleLicenseChange"
-                            class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white" />
+                          <input
+                            type="file"
+                            v-bind="componentField"
+                            @change="handleLicenseChange"
+                            class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -390,9 +414,7 @@ const initialData = {
                   </div>
                 </div>
               </fieldset>
-              <Button type="button" variant="outline" @click="push({ state: '' })">
-                Add State +
-              </Button>
+              <Button type="button" variant="outline" @click="push({ state: '' })"> Add State + </Button>
             </FormFieldArray>
           </template>
           <template v-if="stepIndex === 3">
@@ -422,8 +444,13 @@ const initialData = {
         <div class="flex items-center justify-between mt-4">
           <Button :disabled="isPrevDisabled" variant="outline" size="sm" @click="prevStep()"> Back </Button>
           <div class="flex items-center gap-3">
-            <Button v-if="stepIndex !== 3" :type="meta.valid ? 'button' : 'submit'" :disabled="isNextDisabled" size="sm"
-              @click="meta.valid && nextStep()">
+            <Button
+              v-if="stepIndex !== 3"
+              :type="meta.valid ? 'button' : 'submit'"
+              :disabled="isNextDisabled"
+              size="sm"
+              @click="meta.valid && nextStep()"
+            >
               Next
             </Button>
             <Button v-if="stepIndex === 3" size="sm" type="submit" :disabled="saving || submitted">

@@ -15,11 +15,9 @@
     </template>
   </DefaultLayoutWrapper>
   <div class="flex justify-end m-4">
-    <IButton circle color="primary" to="/maintenance/new">
-      <template #icon>
-        <IIcon name="ink-plus" />
-      </template>
-    </IButton>
+    <Button @click="navigateTo('/maintenance/new')">
+      <Plus />
+    </Button>
   </div>
   <ag-grid-vue
     :loading="pending"
@@ -30,7 +28,7 @@
     style="height: 888px"
     class="ag-theme-quartz"
   />
-  <IPagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+  <Pagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
 </template>
 <script setup>
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -43,6 +41,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Loader2, Plus } from "lucide-vue-next";
 
 const page = ref(1);
 const sort = ref("createdAt,asc");
@@ -93,7 +93,7 @@ const gridOptions = {
 
 const onRowClicked = ({ data: { id } }) => {
   navigateTo(`/maintenance/${id}`);
-}
+};
 
 const { pending, data, refresh } = await useLazyAsyncData(
   "maintenance",

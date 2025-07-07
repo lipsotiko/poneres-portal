@@ -1,3 +1,38 @@
+<script setup>
+import { z } from "zod/v4";
+import { toTypedSchema } from "@vee-validate/zod";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-vue-next";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const saving = ref(false);
+
+let formSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  status: z.string(),
+  type: z.string(),
+  priority: z.string(),
+  costEstimate: z.number(),
+});
+
+const onSubmit = async (data) => {
+  saving.value = true;
+  await saveMaintenanceRequest(data);
+  navigateTo("/maintenance");
+};
+</script>
 <template>
   <DefaultLayoutWrapper>
     <template #breadcrumbs>
@@ -18,154 +53,133 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <ClientOnly>
-    <IForm v-model="schema" :disabled="saving">
-      <IRow>
-        <IColumn>
-          <IFormGroup required>
-            <IFormLabel for="title">Title</IFormLabel>
-            <IInput id="title" name="title" placeholder="Request title..." :error="errorTypes" />
-            <IFormError for="title" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn>
-          <IFormGroup required>
-            <IFormLabel for="status">Status</IFormLabel>
-            <ISelect
-              id="status"
-              name="status"
-              :options="[
-                { id: 'REQUESTED', label: 'REQUESTED' },
-                { id: 'APPROVED', label: 'APPROVED' },
-                { id: 'SCHEDULED', label: 'SCHEDULED' },
-                { id: 'CANCELLED', label: 'CANCELLED' },
-                { id: 'COMPLETED', label: 'COMPLETED' },
-              ]"
-              placeholder="Choose a status.."
-              :error="errorTypes"
-            />
-            <IFormError for="status" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-        <IColumn>
-          <IFormGroup required>
-            <IFormLabel for="priority">Priority</IFormLabel>
-            <ISelect
-              id="priority"
-              name="priority"
-              :options="[
-                { id: 'Low', label: 'Low' },
-                { id: 'Medium', label: 'Medium' },
-                { id: 'High', label: 'High' },
-                { id: 'Emergency', label: 'Emergency' },
-              ]"
-              placeholder="Choose a priority.."
-              :error="errorTypes"
-            />
-            <IFormError for="priority" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-        <IColumn>
-          <IFormGroup required>
-            <IFormLabel for="type">Type</IFormLabel>
-            <ISelect
-              id="type"
-              name="type"
-              :options="[
-                { id: 'Plumbing', label: 'Plumbing' },
-                { id: 'Electrical', label: 'Electrical' },
-                { id: 'HVAC', label: 'HVAC' },
-                { id: 'Structural', label: 'Structural' },
-                { id: 'Appliances', label: 'Appliances' },
-                { id: 'Other', label: 'Other' },
-              ]"
-              placeholder="Choose a type.."
-              :error="errorTypes"
-            />
-            <IFormError for="type" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-        <IColumn>
-          <IFormGroup required>
-            <IFormLabel for="costEstimate">Estimate ($)</IFormLabel>
-            <IInput id="costEstimate" name="costEstimate" placeholder="Cost estimate..." type="number" :error="errorTypes" />
-            <IFormError for="costEstimate" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-      <IRow>
-        <IColumn>
-          <IFormGroup required>
-            <IFormLabel for="description">Description</IFormLabel>
-            <!-- <Textarea /> -->
-            <ITextarea id="description" name="description" placeholder="Describe your request..." :error="errorTypes" />
-            <IFormError for="description" :visible="errorTypes" />
-          </IFormGroup>
-        </IColumn>
-      </IRow>
-    </IForm>
-  </ClientOnly>
-  <div class="bottom">
-    <Button color="primary" @click="submit()" :disabled="saving || loading">
-      <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
-      Submit</Button
+  <Form v-slot="{ meta, values, validate }" as="" keep-values :validation-schema="toTypedSchema(formSchema)">
+    <form
+      @submit="
+        (e) => {
+          e.preventDefault();
+          validate();
+          if (meta.valid) {
+            onSubmit(values);
+          }
+        }
+      "
     >
-  </div>
+      <div class="py-2">
+        <FormField v-slot="{ componentField }" name="title">
+          <FormItem>
+            <FormLabel>Title</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" placeholder="Request title..." />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+      </div>
+      <div class="grid grid-cols-4 gap-4 py-2">
+        <div>
+          <FormField v-slot="{ componentField }" name="status">
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <FormControl>
+                <Select v-bind="componentField">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a status..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem
+                        v-for="s in ['REQUESTED', 'APPROVED', 'SCHEDULED', 'CANCELLED', 'COMPLETED']"
+                        :value="s"
+                      >
+                        {{ s }}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+        <div>
+          <FormField v-slot="{ componentField }" name="priority">
+            <FormItem>
+              <FormLabel>Priority</FormLabel>
+              <FormControl>
+                <Select v-bind="componentField">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a priority..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem v-for="p in ['LOW', 'MEDIUM', 'HIGH', 'EMERGENCY']" :value="p">
+                        {{ p }}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+        <div>
+          <FormField v-slot="{ componentField }" name="type">
+            <FormItem>
+              <FormLabel>Type</FormLabel>
+              <FormControl>
+                <Select v-bind="componentField">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a type..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem
+                        v-for="t in ['PLUMBING', 'ELECTIRCAL', 'HVAC', 'STRUCTURAL', 'APPLIANCES', 'Other']"
+                        :value="t"
+                      >
+                        {{ t }}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+        <div>
+          <FormField v-slot="{ componentField }" name="costEstimate">
+            <FormItem>
+              <FormLabel>Estimate ($)</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" placeholder="Cost estimate..." type="number" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+      </div>
+      <div class="py-2">
+        <div>
+          <FormField v-slot="{ componentField }" name="description">
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea v-bind="componentField" placeholder="Describe your request..." />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+      </div>
+      <div class="flex justify-end m-4">
+        <Button color="primary" type="submit" :disabled="saving">
+          <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
+          Submit</Button
+        >
+      </div>
+    </form>
+  </Form>
 </template>
-<script setup>
-import * as z from "zod";
-
-import { useForm } from "@inkline/inkline/composables";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-vue-next";
-
-const saving = ref(false);
-
-const formSchema = [
-  z.object({
-    title: z.string(),
-    description: z.string(),
-    status: z.string(),
-    type: z.string(),
-    priority: z.string(),
-    costEstimate: z.number(),
-  })
-];
-
-const { schema, form, validate } = useForm({
-  status: { ...fieldOptions, value: 'REQUESTED' },
-  type: { ...fieldOptions },
-  priority: { ...fieldOptions },
-  costEstimate: { ...fieldOptions },
-  title: { ...fieldOptions },
-  description: { ...fieldOptions },
-});
-
-const submit = async () => {
-  saving.value = true;
-  await saveMaintenanceRequest(form.value);
-  navigateTo("/maintenance");
-};
-</script>
-<style scoped>
-.bottom {
-  margin: 12px;
-  display: flex;
-  justify-content: center;
-}
-
-textarea[id="description"] {
-  height: 222px;
-}
-</style>

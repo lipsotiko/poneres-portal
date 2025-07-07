@@ -20,10 +20,7 @@ const value = ref<DateValue>();
 <template>
   <Popover>
     <PopoverTrigger as-child>
-      <Button
-        variant="outline"
-        :class="cn('justify-start text-left font-normal', !value && 'text-muted-foreground')"
-      >
+      <Button variant="outline" :class="cn('justify-start text-left font-normal', !value && 'text-muted-foreground')">
         <CalendarIcon class="mr-2 h-4 w-4" />
         {{ value ? df.format(value.toDate(getLocalTimeZone())) : "Pick a date" }}
       </Button>

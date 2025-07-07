@@ -24,9 +24,9 @@ public class PropertyManagementProcessorV1 extends AbstractProcessor {
     @Override
     public List<Map<String, Object>> signatureFields(List<SignatureRecipient> recipients) {
         List<Map<String, Object>> fields = new ArrayList<>();
-        List<Integer> initialBottomOfPages = List.of(1, 2);
+        List<Integer> initialBottomOfPages = List.of(1, 2, 3);
 
-        int signaturePosition = 508;
+        int signaturePosition = 768;
 
         for(int i = 0; i < recipients.size(); i++) {
             if (i == 0) {
@@ -39,8 +39,8 @@ public class PropertyManagementProcessorV1 extends AbstractProcessor {
                 }
             }
 
-            fields.add(buildField(3, 106, signaturePosition, i, "signature"));
-            signaturePosition -= 50;
+            fields.add(buildField(4, 106, signaturePosition, i, "signature"));
+            signaturePosition -= 96;
         }
         return fields;
     }

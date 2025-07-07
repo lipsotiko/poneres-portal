@@ -2,7 +2,7 @@
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
-  modules: ["@inkline/plugin/nuxt", "dayjs-nuxt"],
+  modules: ["@inkline/plugin/nuxt", "dayjs-nuxt", "@nuxtjs/storybook"],
   devtools: { enabled: true },
   inkline: {
     globals: {
@@ -39,5 +39,10 @@ export default defineNuxtConfig({
     //     changeOrigin: true
     //   }
     // }
+    storybook: {
+      url: "http://localhost:6006",
+      storybookRoute: "/stories",
+      port: 6006,
+    },
   },
 });

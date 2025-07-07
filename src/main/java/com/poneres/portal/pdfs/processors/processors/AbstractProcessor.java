@@ -12,7 +12,6 @@ import org.joda.money.Money;
 import org.joda.money.format.MoneyFormatter;
 import org.joda.money.format.MoneyFormatterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -28,9 +27,6 @@ import static com.poneres.portal.pdfs.processors.DocumentHelper.*;
 
 @Slf4j
 abstract class AbstractProcessor implements PdfProcessor {
-
-    @Value("${pdf.fields-preview}")
-    private Boolean fieldsPreview;
 
     @Autowired
     private SignatureApplicator signatureApplicator;
@@ -59,11 +55,11 @@ abstract class AbstractProcessor implements PdfProcessor {
         }
     }
 
-    public byte[] process(PdfType type, Map<String, Object> metadata, List<SignatureRecipient> recipients, Boolean includeTestSignatures) {
+    public byte[] process(PdfType type, Map<String, Object> metadata, List<SignatureRecipient> recipients, Boolean includeTestSignatures, Boolean withFieldNames) {
         try (PDDocument doc = loadPdfDoc(type)) {
             removePages(doc, pagesToRemove());
             preProcess(metadata);
-            assignValues(doc, metadata, fieldsPreview);
+            assignValues(doc, metadata, withFieldNames);
             applySignatures(doc, recipients, includeTestSignatures);
             return docToBytes(doc);
         } catch (IOException e) {
