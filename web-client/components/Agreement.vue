@@ -53,7 +53,10 @@
                     >Copy</Button
                   >
                   <Button variant="secondary" @click="(e) => handlePreview(e)">Preview</Button>
-                  <Checkbox2 v-model="includeTestSignatures" class="m-2" label="Include signatures" />
+                  <div class="m-2">
+                    <Checkbox v-model="includeTestSignatures" />
+                    <label class="m-2">Include signatures</label>
+                  </div>
                 </div>
                 <div v-if="!loading" class="right-buttons">
                   <DeleteAgreementButton :id="agreementId" :isNew="isNew" />
@@ -84,6 +87,7 @@ import {
 import { toTypedSchema } from "@vee-validate/zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "lucide-vue-next";
 
 const agreementForm = ref();

@@ -20,11 +20,11 @@ const { showAdminRole } = defineProps(["showAdminRole"]);
 const emit = defineEmits(["afterSubmit"]);
 
 const roleOptions = ref([
-  { id: "ADMIN", label: "Admin" },
-  { id: "OWNER", label: "Owner" },
-  { id: "RESIDENT", label: "Resident" },
-  { id: "PROVIDER", label: "Provider" },
-  { id: "FACILITY", label: "Facility" },
+  { value: "ADMIN", label: "Admin" },
+  { value: "OWNER", label: "Owner" },
+  { value: "RESIDENT", label: "Resident" },
+  { value: "PROVIDER", label: "Provider" },
+  { value: "FACILITY", label: "Facility" },
 ]);
 
 if (!showAdminRole) {
@@ -33,29 +33,46 @@ if (!showAdminRole) {
 
 let formSchema = z
   .object({
+    email: z.email(),
     firstName: z.string(),
     lastName: z.string(),
-    phoneNumber: z.string(),
-    email: z.email(),
-    password: z.string().min(8),
-    roles: z.array(z.string()).min(1),
-  })
-  .superRefine(({ password }, ctx) => {
-    var isValidPassword = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-    if (isValidPassword.test(password)) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Password must contain at least one lower case, one upper case, and one special character.",
-        path: ["password"],
-      });
-    }
+    phoneNumber: z.string().check(({ value, issues}) => {
+      console.log(value);
+      var isValidPhoneNumber = new RegExp("^\\(\\d{3}\\) \\d{3}-\\d{4}$");
+      if(!isValidPhoneNumber.test(value)) {
+        issues.push({
+          code: 'valid_phone_number',
+          message: "Phone number must match the format: (###) ###-####.",
+        });
+      }
+    }),
+    password: z.string().min(8).check(({ value, issues }) => {
+      var isValidPassword = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+      if (!isValidPassword.test(value)) {
+        issues.push({
+          code: 'valid_password',
+          message: "Password must contain at least one lower case, one upper case, and one special character.",
+        });
+      }
+    }),
+    roles: z.record(z.string(), z.boolean()).check(({ value, issues }) => {
+      if (Object.keys(value).length === 0 || !Object.values(value).some(v => v === true)) {
+        issues.push({
+          code: 'valid_roles',
+          message: 'At least one role is required',
+        })
+      }
+    }),
   });
 
 let initialData = ref({
+  email: undefined,
   firstName: undefined,
   lastName: undefined,
   phoneNumber: undefined,
-  email: undefined,
+  roles: {
+    // ADMIN: true,
+  }
 });
 
 const handlePhoneNumber = async (phoneNumber) => {
@@ -153,9 +170,17 @@ const onSubmit = async (data) => {
           </FormItem>
         </FormField>
       </div>
-      <div v-if="!roles">
+      <div v-if="!roles" class="py-2">
         <div>
-          <CheckboxGroup id="roles" name="roles" :options="roleOptions" />
+          <FormField v-slot="{ value, handleChange }" name="roles">
+            <FormItem>
+              <FormLabel>Roles</FormLabel>
+              <FormControl>
+                <CheckboxGroup :modelValue="value" :options="roleOptions" @update:modelValue="handleChange" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
         </div>
       </div>
       <div>
