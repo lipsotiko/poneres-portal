@@ -2,13 +2,8 @@
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
-  modules: ["@inkline/plugin/nuxt", "dayjs-nuxt", "@nuxtjs/storybook"],
+  modules: ["dayjs-nuxt", "@nuxtjs/storybook"],
   devtools: { enabled: true },
-  inkline: {
-    globals: {
-      colorMode: "light",
-    },
-  },
   css: ["~/assets/css/main.css"],
   vite: {
     plugins: [tailwindcss()],

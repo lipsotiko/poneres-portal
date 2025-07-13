@@ -13,8 +13,6 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "@inkline/config": "^1.9.1",
-    "@inkline/plugin": "^1.5.2",
     "@nuxtjs/storybook": "^8.4.1",
     "dayjs-nuxt": "^2.1.11",
     "nuxt": "^3.9.0",
@@ -26,7 +24,6 @@
   },
   "dependencies": {
     "@imgly/background-removal": "^1.4.5",
-    "@inkline/inkline": "^4.2.1",
     "@tailwindcss/vite": "^4.1.6",
     "@vee-validate/zod": "^4.15.0",
     "@vueuse/core": "^13.5.0",
