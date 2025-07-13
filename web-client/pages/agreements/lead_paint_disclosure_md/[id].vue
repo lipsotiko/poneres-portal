@@ -138,7 +138,7 @@ const {
   params: { id: agreementId },
 } = useRoute();
 
-let metaDataSchema = z.object({
+const metaDataSchema = z.object({
   landlord: z.string(),
   tenant: z.string(),
   leasedAddress: z.string(),

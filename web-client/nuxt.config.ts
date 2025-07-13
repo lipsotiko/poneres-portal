@@ -36,6 +36,7 @@ export default defineNuxtConfig({
     // }
     storybook: {
       url: "http://localhost:6006",
+      stories: ['~/components/**/*.stories.ts'],
       storybookRoute: "/stories",
       port: 6006,
     },
