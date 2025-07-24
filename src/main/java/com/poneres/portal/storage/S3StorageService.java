@@ -1,57 +1,57 @@
 package com.poneres.portal.storage;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.core.sync.ResponseTransformer;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class S3StorageService implements StorageService {
 
-    @Value("${s3.bucket}")
+    @Value("${aws.s3.bucket}")
     private String bucket;
 
     @Autowired
-    private AmazonS3 s3Client;
+    private S3Client s3Client;
 
     public void save(String key, byte[] document, String fileName, String uploadedBy) {
-        ObjectMetadata meta = new ObjectMetadata();
-        meta.setContentLength(document.length);
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("file-name", fileName);
+        metadata.put("uploaded-by", uploadedBy);
+
+        PutObjectRequest.Builder putObjectRequestBuilder =
+                PutObjectRequest.builder()
+                        .bucket(bucket)
+                        .key(key)
+                        .metadata(metadata)
+                        .contentLength((long) document.length);
 
         if (fileName.endsWith(".pdf")) {
-            meta.setContentType("application/pdf");
+            putObjectRequestBuilder.contentType("application/pdf");
         }
 
-        Map<String, String> userMeta = new HashMap<>();
-        userMeta.put("file-name", fileName);
-        userMeta.put("uploaded-by", uploadedBy);
-
-        meta.setUserMetadata(userMeta);
-
-        ByteArrayInputStream stream = new ByteArrayInputStream(document);
-        PutObjectRequest putRequest = new PutObjectRequest(bucket, key, stream, meta);
-        s3Client.putObject(putRequest);
+        s3Client.putObject(putObjectRequestBuilder.build(), RequestBody.fromBytes(document));
     }
 
     public StorageResponse get(String key) {
-        S3Object object = s3Client.getObject(bucket, key);
-        S3ObjectInputStream objectContent = object.getObjectContent();
-        String fileName = object.getObjectMetadata().getUserMetadata().get("file-name");
-        try {
-            return new StorageResponse(fileName, objectContent.readAllBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ResponseBytes<GetObjectResponse> object = s3Client.getObject(GetObjectRequest.builder().bucket(bucket).key(key).build(), ResponseTransformer.toBytes());
+        byte[] data = object.asByteArray();
+        String fileName = object.response().metadata().get("file-name");
+        return new StorageResponse(fileName, data);
     }
 
     @Override
     public void delete(String key) {
-        s3Client.deleteObject(new DeleteObjectRequest(bucket, key));
+        s3Client.deleteObject(DeleteObjectRequest.builder().bucket(bucket).key(key).build());
     }
 }

@@ -117,5 +117,23 @@ public class AbstractPoneresPortalInit {
                 }})
                 .scheduleEnabled(false)
                 .build());
+
+        invoiceJobRepository.save(InvoiceJob.builder()
+                .id("4")
+                .type(PdfType.KW_COMMISSION_INVOICE)
+                .jobMetadata(new HashMap<>(){{
+                    put("client", "Test");
+                    put("to", "evangelos.poneres@gmail.com");
+                    put("cc", "evangelos@poneres.com");
+                    put("services", "Property Management");
+                }})
+                .pdfMetadata(new HashMap<>(){{
+                    put("client", "Test Client");
+                    put("address", "2707 Hunting Ridge Ct. Baldwin, MD 21013");
+                    put("services", "Property Management");
+                    put("commission", "123.45");
+                }})
+                .scheduleEnabled(false)
+                .build());
     }
 }
