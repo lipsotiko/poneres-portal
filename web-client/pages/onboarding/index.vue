@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { Check, Circle, Dot, ChevronLeft, X } from "lucide-vue-next";
+import { Check, Circle, Dot, ChevronLeft, X, Loader2 } from "lucide-vue-next";
 import { h, ref } from "vue";
 import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-vue-next";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormFieldArray } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +17,7 @@ import {
   StepperTrigger,
 } from "@/components/ui/stepper";
 import { toast } from "vue-sonner";
+import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 
 definePageMeta({
   // ssr: false,
@@ -123,6 +123,9 @@ const initialData = {
     },
   ],
 };
+
+const current = today(getLocalTimeZone());
+const maxDateDob = new CalendarDate(current.year - 18, current.month, current.day);
 </script>
 
 <template>
@@ -228,11 +231,18 @@ const initialData = {
               </FormField>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-              <FormField v-slot="{ componentField }" name="dob">
+              <FormField v-slot="{ handleChange }" name="dob">
                 <FormItem>
                   <FormLabel>Date of birth</FormLabel>
                   <FormControl>
-                    <DatePicker v-bind="componentField" />
+                    <DatePicker2
+                      :maxValue="maxDateDob"
+                      @update:model-value="
+                        (v) => {
+                          handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
+                        }
+                      "
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

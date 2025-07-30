@@ -22,26 +22,28 @@
     <h3>{{ data.firstName }} {{ data.middleName }} {{ data.lastName }}</h3>
     <hr />
     <table>
-      <tr>
-        <td class="w-28 font-medium">DOB</td>
-        <td>{{ data.dob }}</td>
-      </tr>
-      <tr>
-        <td class="w-28 font-medium">NPI</td>
-        <td>{{ data.npi }}</td>
-      </tr>
-      <tr>
-        <td class="w-28 font-medium">Location</td>
-        <td>{{ data.location }}</td>
-      </tr>
-      <tr>
-        <td class="w-28 font-medium">Specialty</td>
-        <td>{{ data.specialty }}</td>
-      </tr>
-      <tr>
-        <td class="w-28 font-medium">Employment</td>
-        <td>{{ data.employmentType }}</td>
-      </tr>
+      <tbody>
+        <tr>
+          <td class="w-28 font-medium">DOB</td>
+          <td>{{ data.dob }}</td>
+        </tr>
+        <tr>
+          <td class="w-28 font-medium">NPI</td>
+          <td>{{ data.npi }}</td>
+        </tr>
+        <tr>
+          <td class="w-28 font-medium">Location</td>
+          <td>{{ data.location }}</td>
+        </tr>
+        <tr>
+          <td class="w-28 font-medium">Specialty</td>
+          <td>{{ data.specialty }}</td>
+        </tr>
+        <tr>
+          <td class="w-28 font-medium">Employment</td>
+          <td>{{ data.employmentType }}</td>
+        </tr>
+      </tbody>
     </table>
     <div class="mt-4">
       <div>

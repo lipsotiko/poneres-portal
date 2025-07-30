@@ -45,9 +45,6 @@ export const Ghost: Story = {
 };
 
 export const Link: Story = {
-  components: { Button },
-  setup() { return { args }; },
-  template: '<Button v-bind="args" />',
   args: {
     default: 'Hello',
     variant: 'link',
