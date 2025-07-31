@@ -5,14 +5,24 @@
         <SidebarGroup>
           <SidebarGroupLabel>Poneres</SidebarGroupLabel>
           <SidebarGroupContent>
-            <div v-if="pendingUserInfo" class="flex justify-center mt-4">
-              <Loader2 class="w-4 h-4 animate-spin" />
-            </div>
-            <SidebarMenu v-else class="pl-0!">
+            <SidebarMenu class="pl-0!">
               <SidebarMenuItem
-                v-for="item in items.filter(
-                  (i) => i.showFor == 'ALL' || i.showFor.some((r) => user?.roles.includes(r)),
-                )"
+                v-for="item in itemsForAll"
+                :key="item.title"
+              >
+                <SidebarMenuButton asChild>
+                  <NuxtLink :href="item.url">
+                    <component :is="item.icon" />
+                    <span>{{ item.title }}</span>
+                  </NuxtLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <div v-if="pendingUserInfo" class="flex justify-center mt-4">
+                <Loader2 class="w-4 h-4 animate-spin" />
+              </div>
+              <SidebarMenuItem
+                v-if="user?.roles.includes('ADMIN')"
+                v-for="item in itemsForAdmin"
                 :key="item.title"
               >
                 <SidebarMenuButton asChild>
@@ -46,15 +56,13 @@
 <script setup>
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import {
-  Calendar,
   Home,
   Hospital,
-  Inbox,
+  IdCard,
   Search,
   Settings,
   User,
   FilePenLine,
-  Wrench,
   MonitorCog,
   LogOut,
   View,
@@ -87,60 +95,44 @@ const { pending: pendingUserInfo } = await useFetch("/api/user/info", {
   },
 });
 
-const items = [
+const itemsForAll = [
   {
     title: "Home",
     url: "/",
     icon: Home,
-    showFor: ["ALL"],
   },
   {
-    title: "Shifts",
+    title: "Shift Passport",
+    url: "/onboarding",
+    icon: IdCard,
+  },
+  {
+    title: "Marketplace",
     url: "/",
     icon: Hospital,
-    showFor: ["ADMIN", "PROVIDER"],
-  },
-  {
-    title: "Onboarding Review",
-    url: "/onboarding-review",
-    icon: View,
-    showFor: ["ADMIN"],
-  },
-  {
-    title: "Messages",
-    url: "#",
-    icon: Inbox,
-    showFor: ["ALL"],
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-    showFor: ["ADMIN", "PROVIDER", "FACILITY"],
-  },
-  {
-    title: "Agreements",
-    url: "/agreements",
-    icon: FilePenLine,
-    showFor: ["ADMIN"],
-  },
-  {
-    title: "Maintenance",
-    url: "/maintenance",
-    icon: Wrench,
-    showFor: ["ADMIN", "OWNER"],
   },
   {
     title: "Profile",
     url: "/profile",
     icon: User,
-    showFor: ["ALL"],
+  },
+];
+
+const itemsForAdmin = [
+  {
+    title: "Onboarding Review",
+    url: "/onboarding-review",
+    icon: View,
   },
   {
     title: "Admin",
     url: "/admin",
     icon: MonitorCog,
-    showFor: ["ADMIN"],
+  },
+  {
+    title: "Agreements",
+    url: "/agreements",
+    icon: FilePenLine,
   },
 ];
 </script>

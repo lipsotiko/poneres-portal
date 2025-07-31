@@ -24,44 +24,40 @@
     <table>
       <tbody>
         <tr>
-          <td class="w-28 font-medium">DOB</td>
+          <td class="w-[200px] font-medium text-right pr-3">DOB</td>
           <td>{{ data.dob }}</td>
         </tr>
         <tr>
-          <td class="w-28 font-medium">NPI</td>
+          <td class="w-[200px] font-medium text-right pr-3">Gender</td>
+          <td>{{ data.gender }}</td>
+        </tr>
+        <tr>
+          <td class="w-[200px] font-medium text-right pr-3">NPI</td>
           <td>{{ data.npi }}</td>
         </tr>
         <tr>
-          <td class="w-28 font-medium">Location</td>
+          <td class="w-[200px] font-medium text-right pr-3">Location</td>
           <td>{{ data.location }}</td>
         </tr>
         <tr>
-          <td class="w-28 font-medium">Specialty</td>
+          <td class="w-[200px] font-medium text-right pr-3">Citizenship status</td>
+          <td>{{ data.citizenshipStatus }}</td>
+        </tr>
+        <tr>
+          <td class="w-[200px] font-medium text-right pr-3">Specialty</td>
           <td>{{ data.specialty }}</td>
         </tr>
         <tr>
-          <td class="w-28 font-medium">Employment</td>
+          <td class="w-[200px] font-medium text-right pr-3">Employment</td>
           <td>{{ data.employmentType }}</td>
+        </tr>
+        <tr>
+          <td class="w-[200px] font-medium text-right pr-3">Schedule preferences</td>
+          <td>{{ data.schedulePreferences }}</td>
         </tr>
       </tbody>
     </table>
     <div class="mt-4">
-      <div>
-        <label class="font-medium"> Are there any procedures/cases you are uncomfortable seeing/doing? </label>
-        <p class="pl-2">{{ data.uncomfortableProcedures }}</p>
-      </div>
-      <div>
-        <label class="font-medium"> Have you ever done locums before? If so, when and where? </label>
-        <p class="pl-2">{{ data.haveYouDoneLocumsBefore }}</p>
-      </div>
-      <div>
-        <label class="font-medium"> Do you have any active certifications? (i.e. BLS, ACLS, NRP, etc.) </label>
-        <p class="pl-2">{{ data.activeCertifications }}</p>
-      </div>
-      <div>
-        <label class="font-medium"> Any dropped, pending or settled malpractice cases? </label>
-        <p class="pl-2">{{ data.malpractice }}</p>
-      </div>
       <hr />
       <div>
         <ul>

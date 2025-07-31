@@ -21,8 +21,10 @@ public class Onboarding {
     private String middleName;
     private String lastName;
     private LocalDate dob;
+    private String gender;
     private String specialty;
     private String npi;
+    private String citizenship_status;
     private String location;
     private String uncomfortableProcedures;
     private String haveYouDoneLocumsBefore;
@@ -31,6 +33,7 @@ public class Onboarding {
     private String resumeId;
     private List<OnboardingLicenseFile> licenseFiles;
     private String employmentType;
+    private List<String> schedulePreferences;
     private String createdBy;
     private LocalDateTime createdAt;
 }

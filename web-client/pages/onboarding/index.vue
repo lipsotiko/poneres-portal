@@ -6,6 +6,7 @@ import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormFieldArray } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -20,23 +21,20 @@ import { toast } from "vue-sonner";
 import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
 
 definePageMeta({
-  // ssr: false,
   layout: "onboarding",
 });
 
 let formSchema = [
   z.object({
     firstName: z.string(),
-    middleName: z.string(),
+    middleName: z.string().optional(),
     lastName: z.string(),
     dob: z.string(),
+    gender: z.string(),
     specialty: z.string(),
     npi: z.string(),
     location: z.string(),
-    uncomfortableProcedures: z.string(),
-    haveYouDoneLocumsBefore: z.string(),
-    activeCertifications: z.string(),
-    malpractice: z.string(),
+    citizenshipStatus: z.string(),
   }),
   z.object({
     resume: z.file().max(2_000_000).mime(["application/pdf"]),
@@ -50,7 +48,8 @@ let formSchema = [
     ),
   }),
   z.object({
-    employmentType: z.union([z.literal("full_time"), z.literal("part_time")]),
+    employmentType: z.string(),
+    schedulePreferences: z.array(z.string()).min(1),
   }),
 ];
 
@@ -122,10 +121,42 @@ const initialData = {
       expirationDate: undefined,
     },
   ],
+  schedulePreferences: []
 };
 
 const current = today(getLocalTimeZone());
 const maxDateDob = new CalendarDate(current.year - 18, current.month, current.day);
+
+const schedulePreferences = [
+  {
+    id: "day",
+    label: "Day",
+  },
+  {
+    id: "evening",
+    label: "Evening",
+  },
+  {
+    id: "night",
+    label: "Night",
+  },
+  {
+    id: "on_call",
+    label: "On call",
+  },
+  {
+    id: "24_hr",
+    label: "24 Hour",
+  },
+  {
+    id: "weekends",
+    label: "Weekends",
+  },
+  {
+    id: "prn",
+    label: "PRN",
+  },
+];
 </script>
 
 <template>
@@ -230,24 +261,69 @@ const maxDateDob = new CalendarDate(current.year - 18, current.month, current.da
                 </FormItem>
               </FormField>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-              <FormField v-slot="{ handleChange }" name="dob">
-                <FormItem>
-                  <FormLabel>Date of birth</FormLabel>
-                  <FormControl>
-                    <DatePicker2
-                      :maxValue="maxDateDob"
-                      @update:model-value="
-                        (v) => {
-                          handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
-                        }
-                      "
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-              <div class="col-span-2">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="col-span-1 lg:col-span-1">
+                <FormField v-slot="{ componentField }" name="gender">
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <Select v-bind="componentField">
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a gender" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="male"> Male </SelectItem>
+                          <SelectItem value="female"> Female </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-1 lg:col-span-1">
+                <FormField v-slot="{ handleChange }" name="dob">
+                  <FormItem>
+                    <FormLabel>Date of birth</FormLabel>
+                    <FormControl>
+                      <DatePicker2
+                        :maxValue="maxDateDob"
+                        @update:model-value="
+                          (v) => {
+                            handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
+                          }
+                        "
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-1 lg:col-span-1">
+                <FormField v-slot="{ componentField }" name="citizenship_status">
+                  <FormItem>
+                    <FormLabel>Citizenship status</FormLabel>
+                    <Select v-bind="componentField">
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="us_citizen"> US Citizen </SelectItem>
+                          <SelectItem value="green_card"> Green Card </SelectItem>
+                          <SelectItem value="other"> Other </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-1 lg:col-span-1">
                 <FormField v-slot="{ componentField }" name="specialty">
                   <FormItem>
                     <FormLabel>Specialty</FormLabel>
@@ -300,46 +376,6 @@ const maxDateDob = new CalendarDate(current.year - 18, current.month, current.da
                       </Select>
                     </FormControl>
                     <FormMessage />
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="col-span-5">
-                <FormField v-slot="{ componentField }" name="uncomfortableProcedures">
-                  <FormItem>
-                    <FormLabel>Are there any procedures/cases you are uncomfortable seeing/doing?</FormLabel>
-                    <FormControl>
-                      <Textarea v-bind="componentField" />
-                    </FormControl>
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="col-span-5">
-                <FormField v-slot="{ componentField }" name="haveYouDoneLocumsBefore">
-                  <FormItem>
-                    <FormLabel>Have you ever done locums before? If so, when and where?</FormLabel>
-                    <FormControl>
-                      <Textarea v-bind="componentField" />
-                    </FormControl>
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="col-span-5">
-                <FormField v-slot="{ componentField }" name="activeCertifications">
-                  <FormItem>
-                    <FormLabel>Do you have any active certifications? (i.e. BLS, ACLS, NRP, etc.)</FormLabel>
-                    <FormControl>
-                      <Textarea v-bind="componentField" />
-                    </FormControl>
-                  </FormItem>
-                </FormField>
-              </div>
-              <div class="col-span-5">
-                <FormField v-slot="{ componentField }" name="malpractice">
-                  <FormItem>
-                    <FormLabel>Any dropped, pending or settled malpractice cases?</FormLabel>
-                    <FormControl>
-                      <Textarea v-bind="componentField" />
-                    </FormControl>
                   </FormItem>
                 </FormField>
               </div>
@@ -396,7 +432,7 @@ const maxDateDob = new CalendarDate(current.year - 18, current.month, current.da
                     <FormItem>
                       <FormLabel>Expiration Date</FormLabel>
                       <FormControl>
-                        <DatePicker v-bind="componentField" />
+                        <DatePicker v-bind="componentField" :minValue="current" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -430,8 +466,7 @@ const maxDateDob = new CalendarDate(current.year - 18, current.month, current.da
           <template v-if="stepIndex === 3">
             <FormField v-slot="{ componentField }" name="employmentType">
               <FormItem>
-                <FormLabel>Employment</FormLabel>
-
+                <FormLabel>Employment type</FormLabel>
                 <Select v-bind="componentField">
                   <FormControl>
                     <SelectTrigger>
@@ -440,17 +475,62 @@ const maxDateDob = new CalendarDate(current.year - 18, current.month, current.da
                   </FormControl>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="full_time"> Full Time </SelectItem>
-                      <SelectItem value="part_time"> Part Time </SelectItem>
+                      <SelectItem value="short_term"> Short Term </SelectItem>
+                      <SelectItem value="long_term"> Long Term </SelectItem>
+                      <SelectItem value="long_and_short_term"> Short or Long Term </SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             </FormField>
+
+            <FormField name="schedulePreferences">
+              <FormItem>
+                <FormLabel>Schedule preferences</FormLabel>
+                <FormField v-for="item in schedulePreferences" v-slot="{ value, handleChange }" :key="item.id" type="checkbox" :value="item.id" :unchecked-value="false" name="schedulePreferences">
+                  <FormItem class="flex flex-row items-start space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        :model-value="value.includes(item.id)"
+                        @update:model-value="handleChange"
+                      />
+                    </FormControl>
+                    <FormLabel class="font-normal">
+                      {{ item.label }}
+                    </FormLabel>
+                  </FormItem>
+                </FormField>
+                <FormMessage />
+              </FormItem>
+            </FormField>
+
+            <!-- <FormField v-slot="{ componentField }" name="schedulePreferences">
+              <FormItem>
+                <FormLabel>Schedule preference</FormLabel>
+                <Select v-bind="componentField">
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a schedule preference" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="day"> Day </SelectItem>
+                      <SelectItem value="evening"> Evening </SelectItem>
+                      <SelectItem value="night"> Night </SelectItem>
+                      <SelectItem value="on_call"> On call </SelectItem>
+                      <SelectItem value="24_hr"> 24 Hour </SelectItem>
+                      <SelectItem value="weekends"> Weekends </SelectItem>
+                      <SelectItem value="prn"> PRN </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            </FormField> -->
           </template>
         </div>
-
         <div class="flex items-center justify-between mt-4">
           <Button :disabled="isPrevDisabled" variant="outline" size="sm" @click="prevStep()"> Back </Button>
           <div class="flex items-center gap-3">

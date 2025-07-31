@@ -12,9 +12,8 @@ import { PopoverClose } from "reka-ui";
 const df = new DateFormatter("en-US", {
   dateStyle: "long",
 });
-
+const { minValue } = defineProps(["minValue"]);
 const emit = defineEmits(["update:modelValue"]);
-
 const value = ref<DateValue>();
 </script>
 
@@ -35,6 +34,7 @@ const value = ref<DateValue>();
       <Calendar
         v-model="value"
         initial-focus
+        :minValue="minValue"
         @update:model-value="
           (v) => {
             emit('update:modelValue', value.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
