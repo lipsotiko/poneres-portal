@@ -1,6 +1,7 @@
 <script setup>
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod/v4";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -20,59 +21,49 @@ const { showAdminRole } = defineProps(["showAdminRole"]);
 const emit = defineEmits(["afterSubmit"]);
 
 const roleOptions = ref([
-  { value: "ADMIN", label: "Admin" },
-  { value: "OWNER", label: "Owner" },
-  { value: "RESIDENT", label: "Resident" },
-  { value: "PROVIDER", label: "Provider" },
-  { value: "FACILITY", label: "Facility" },
+  { id: "ADMIN", label: "Admin" },
+  { id: "PROVIDER", label: "Provider" },
+  { id: "FACILITY", label: "Facility" },
 ]);
 
 if (!showAdminRole) {
   roleOptions.value.shift();
 }
 
-let formSchema = z
-  .object({
-    email: z.email(),
-    firstName: z.string(),
-    lastName: z.string(),
-    phoneNumber: z.string().check(({ value, issues}) => {
-      console.log(value);
-      var isValidPhoneNumber = new RegExp("^\\(\\d{3}\\) \\d{3}-\\d{4}$");
-      if(!isValidPhoneNumber.test(value)) {
-        issues.push({
-          code: 'valid_phone_number',
-          message: "Phone number must match the format: (###) ###-####.",
-        });
-      }
-    }),
-    password: z.string().min(8).check(({ value, issues }) => {
+let formSchema = z.object({
+  email: z.email(),
+  firstName: z.string(),
+  lastName: z.string(),
+  phoneNumber: z.string().check(({ value, issues }) => {
+    var isValidPhoneNumber = new RegExp("^\\(\\d{3}\\) \\d{3}-\\d{4}$");
+    if (!isValidPhoneNumber.test(value)) {
+      issues.push({
+        code: "valid_phone_number",
+        message: "Phone number must match the format: (###) ###-####.",
+      });
+    }
+  }),
+  password: z
+    .string()
+    .min(8)
+    .check(({ value, issues }) => {
       var isValidPassword = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
       if (!isValidPassword.test(value)) {
         issues.push({
-          code: 'valid_password',
+          code: "valid_password",
           message: "Password must contain at least one lower case, one upper case, and one special character.",
         });
       }
     }),
-    roles: z.record(z.string(), z.boolean()).check(({ value, issues }) => {
-      if (Object.keys(value).length === 0 || !Object.values(value).some(v => v === true)) {
-        issues.push({
-          code: 'valid_roles',
-          message: 'At least one role is required',
-        })
-      }
-    }),
-  });
+  roles: z.array(z.string()).min(1),
+});
 
 let initialData = ref({
   email: undefined,
   firstName: undefined,
   lastName: undefined,
   phoneNumber: undefined,
-  roles: {
-    // ADMIN: true,
-  }
+  roles: [],
 });
 
 const handlePhoneNumber = async (phoneNumber) => {
@@ -172,12 +163,27 @@ const onSubmit = async (data) => {
       </div>
       <div v-if="!roles" class="py-2">
         <div>
-          <FormField v-slot="{ value, handleChange }" name="roles">
+          <FormField name="roles">
             <FormItem>
               <FormLabel>Roles</FormLabel>
-              <FormControl>
-                <CheckboxGroup :modelValue="value" :options="roleOptions" @update:modelValue="handleChange" />
-              </FormControl>
+              <FormField
+                v-for="item in roleOptions"
+                v-slot="{ value, handleChange }"
+                :key="item.id"
+                type="checkbox"
+                :value="item.id"
+                :unchecked-value="false"
+                name="roles"
+              >
+                <FormItem class="flex flex-row items-start space-y-0">
+                  <FormControl>
+                    <Checkbox :model-value="value.includes(item.id)" @update:model-value="handleChange" />
+                  </FormControl>
+                  <FormLabel class="font-normal">
+                    {{ item.label }}
+                  </FormLabel>
+                </FormItem>
+              </FormField>
               <FormMessage />
             </FormItem>
           </FormField>
@@ -198,15 +204,15 @@ const onSubmit = async (data) => {
       <div v-if="!showAdminRole">
         <div>
           <div class="text-center">
-            <p class="lead">
+            <p class="py-2">
               Already have an account?
-              <a :href="loginPage"> Sign in </a>
+              <NuxtLink :href="loginPage" class="hover:cursor-pointer hover:underline"> Sign in </NuxtLink>
             </p>
           </div>
         </div>
       </div>
       <div v-if="!showAdminRole">
-        <p class="text-sm font-thin px-4">
+        <p class="text-sm font-light px-4 py-2">
           By clicking “Create Account", I agree to Shift Stat's <a href="#">Terms of Use</a>,
           <a href="#">Privacy Policy</a> and to receive electronic communication about my accounts and services per
           Shift Stat's

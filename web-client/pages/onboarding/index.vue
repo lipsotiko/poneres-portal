@@ -504,31 +504,6 @@ const schedulePreferences = [
                 <FormMessage />
               </FormItem>
             </FormField>
-
-            <!-- <FormField v-slot="{ componentField }" name="schedulePreferences">
-              <FormItem>
-                <FormLabel>Schedule preference</FormLabel>
-                <Select v-bind="componentField">
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a schedule preference" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="day"> Day </SelectItem>
-                      <SelectItem value="evening"> Evening </SelectItem>
-                      <SelectItem value="night"> Night </SelectItem>
-                      <SelectItem value="on_call"> On call </SelectItem>
-                      <SelectItem value="24_hr"> 24 Hour </SelectItem>
-                      <SelectItem value="weekends"> Weekends </SelectItem>
-                      <SelectItem value="prn"> PRN </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            </FormField> -->
           </template>
         </div>
         <div class="flex items-center justify-between mt-4">

@@ -3,16 +3,12 @@
     <Card class="max-w-full md:mt-18 md:w-[500px]">
       <CardHeader>
         <CardTitle class="text-center">Sign up</CardTitle>
+        <CardDescription v-if="successfulUserRegistration" class="text-center">
+          Log in to view your dashboard!
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div v-if="successfulUserRegistration">
-          <div class="text-center">
-            <p class="lead">Log in to view your dashboard!</p>
-            <Button @click="goToLoginPage">Log in</Button>
-          </div>
-        </div>
+      <CardContent v-if="!successfulUserRegistration">
         <NewUserForm
-          v-else
           @afterSubmit="
             () => {
               successfulUserRegistration = true;
@@ -22,6 +18,11 @@
           :showAdminRole="false"
         />
       </CardContent>
+      <CardFooter v-else class="inline">
+        <div class="text-center">
+          <Button @click="goToLoginPage">Log in</Button>
+        </div>
+      </CardFooter>
     </Card>
   </div>
 </template>

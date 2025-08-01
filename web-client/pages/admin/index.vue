@@ -30,7 +30,29 @@
     class="ag-theme-quartz"
   />
   <div class="_display:flex _justify-content:space-between">
-    <Pagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
+    <Pagination
+      @update:page="(e) => (page = e)"
+      v-slot="{ page }"
+      :items-per-page="data?.size"
+      :total="data?.totalElements"
+      :default-page="1"
+    >
+      <PaginationContent v-slot="{ items }">
+        <PaginationFirst />
+        <PaginationPrevious />
+        <template v-for="(item, index) in items" :key="index">
+          <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === page">
+            {{ item.value }}
+          </PaginationItem>
+        </template>
+
+        <PaginationEllipsis :index="4" />
+
+        <PaginationNext />
+        <PaginationLast />
+      </PaginationContent>
+    </Pagination>
+    <!-- <Pagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" /> -->
     <div class="admin-actions">
       <Button variant="destructive" :disabled="deleteing || selectedUserIds.length === 0" @click="handleDelete()">
         <Loader2 v-if="deleteing" class="w-4 h-4 animate-spin" />
@@ -50,6 +72,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  Pagination,
+  PaginationFirst,
+  PaginationLast,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { Loader2, Plus } from "lucide-vue-next";
 
