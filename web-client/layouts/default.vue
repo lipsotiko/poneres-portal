@@ -17,11 +17,8 @@
                   </NuxtLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <div v-if="pendingUserInfo" class="flex justify-center mt-4">
-                <Loader2 class="w-4 h-4 animate-spin" />
-              </div>
               <SidebarMenuItem
-                v-if="user?.roles.includes('ADMIN')"
+                v-if="user?.roles.includes('ADMIN') && $config.public.deploymentType !== 'local'"
                 v-for="item in itemsForAdmin"
                 :key="item.title"
               >
@@ -56,23 +53,24 @@
 <script setup>
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import {
+  CalendarDays,
+  DollarSign,
+  FilePenLine,
   Home,
   Hospital,
   IdCard,
+  LogOut,
+  Mail,
+  MonitorCog,
   Search,
   Settings,
   User,
-  FilePenLine,
-  MonitorCog,
-  LogOut,
   View,
 } from "lucide-vue-next";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -112,6 +110,21 @@ const itemsForAll = [
     icon: Hospital,
   },
   {
+    title: "Messages",
+    url: "/",
+    icon: Mail,
+  },
+  {
+    title: "Calendar",
+    url: "/",
+    icon: CalendarDays,
+  },
+  {
+    title: "Earnings",
+    url: "/earnings",
+    icon: DollarSign,
+  },
+  {
     title: "Profile",
     url: "/profile",
     icon: User,
@@ -119,11 +132,6 @@ const itemsForAll = [
 ];
 
 const itemsForAdmin = [
-  {
-    title: "Onboarding Review",
-    url: "/onboarding-review",
-    icon: View,
-  },
   {
     title: "Admin",
     url: "/admin",
@@ -133,6 +141,11 @@ const itemsForAdmin = [
     title: "Agreements",
     url: "/agreements",
     icon: FilePenLine,
+  },
+  {
+    title: "Onboarding Review",
+    url: "/onboarding-review",
+    icon: View,
   },
 ];
 </script>

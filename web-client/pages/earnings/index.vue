@@ -15,11 +15,11 @@
     </template>
   </DefaultLayoutWrapper>
   <Button variant="link" @click="() => navigateTo('/earnings/payout-method')">
-    <i class="fa-solid fa-building-columns"></i>
+    <Landmark />
     Payout method
   </Button>
   <Button variant="link" @click="() => navigateTo('/earnings/payout-history')">
-    <i class="fa-solid fa-clock-rotate-left"></i>
+    <History />
     Payout history
   </Button>
 </template>
@@ -33,4 +33,5 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { Landmark, History } from "lucide-vue-next";
 </script>

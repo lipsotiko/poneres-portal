@@ -18,12 +18,14 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <img src="/stripe-label.svg" />
-  <i class="fa-solid fa-arrow-right"></i>
-  <Button @click="goToPayoutSetup" :disabled="loading">
-    <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
-    Go through setup
-  </Button>
+  <div class="flex">
+    <img src="/stripe-label.svg" />
+    <ArrowRight />
+    <Button @click="goToPayoutSetup" :disabled="loading">
+      <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
+      Go through setup
+    </Button>
+  </div>
 </template>
 <script setup>
 import {
@@ -36,6 +38,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-vue-next";
+import { ArrowRight } from "lucide-vue-next";
 
 const loading = ref(false);
 const goToPayoutSetup = async () => {
