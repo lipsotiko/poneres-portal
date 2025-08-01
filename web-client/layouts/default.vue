@@ -3,7 +3,12 @@
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Poneres</SidebarGroupLabel>
+          <SidebarGroupLabel class="border-b-1 h-10 ">
+            <div class="flex">
+              <img src="/logo.png" class="w-[32px] h-[32px]"/>
+              <p class="inline pl-2 py-1 text-lg font-semibold">ShiftStat</p>
+            </div>
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu class="pl-0!">
               <SidebarMenuItem
