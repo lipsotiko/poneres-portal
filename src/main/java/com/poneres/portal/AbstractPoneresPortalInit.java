@@ -96,7 +96,7 @@ public class AbstractPoneresPortalInit {
                     put("client", "Veer Visaria");
                     put("address", "1761 W. Morse Ave #GS, Chicago, IL 60626");
                     put("services", "Tenant Placement");
-                    put("commission", "$2895.00");
+                    put("commission", "$2900.00");
                 }})
                 .scheduleEnabled(false)
                 .build());
@@ -113,27 +113,27 @@ public class AbstractPoneresPortalInit {
                     put("client", "Veer Visaria");
                     put("address", "1761 W. Morse Ave #GS, Chicago, IL 60626");
                     put("services", "Property Management");
-                    put("commission", "$231.60");
+                    put("commission", "$232.00");
                 }})
-                .scheduleEnabled(false)
+                .scheduleEnabled(true)
                 .build());
 
-        invoiceJobRepository.save(InvoiceJob.builder()
-                .id("4")
-                .type(PdfType.KW_COMMISSION_INVOICE)
-                .jobMetadata(new HashMap<>(){{
-                    put("client", "Test");
-                    put("to", "evangelos.poneres@gmail.com");
-                    put("cc", "evangelos@poneres.com");
-                    put("services", "Property Management");
-                }})
-                .pdfMetadata(new HashMap<>(){{
-                    put("client", "Test Client");
-                    put("address", "2707 Hunting Ridge Ct. Baldwin, MD 21013");
-                    put("services", "Property Management");
-                    put("commission", "123.45");
-                }})
-                .scheduleEnabled(false)
-                .build());
+//        invoiceJobRepository.save(InvoiceJob.builder()
+//                .id("4")
+//                .type(PdfType.KW_COMMISSION_INVOICE)
+//                .jobMetadata(new HashMap<>(){{
+//                    put("client", "Test");
+//                    put("to", "evangelos.poneres@gmail.com");
+//                    put("cc", "evangelos@poneres.com");
+//                    put("services", "Property Management");
+//                }})
+//                .pdfMetadata(new HashMap<>(){{
+//                    put("client", "Test Client");
+//                    put("address", "2707 Hunting Ridge Ct. Baldwin, MD 21013");
+//                    put("services", "Property Management");
+//                    put("commission", "123.45");
+//                }})
+//                .scheduleEnabled(false)
+//                .build());
     }
 }
