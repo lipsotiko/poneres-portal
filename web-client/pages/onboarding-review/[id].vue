@@ -18,7 +18,7 @@
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <Card class="p-4">
+  <Card class="mt-2 p-4">
     <h3>{{ data.firstName }} {{ data.middleName }} {{ data.lastName }}</h3>
     <hr />
     <table>
@@ -90,7 +90,7 @@ const {
   params: { id: onboardingId },
 } = useRoute();
 
-const { pending, data, refresh } = await useAsyncData("onboarding", () => $fetch(`/api/onboarding/${onboardingId}`), {
+const { pending, data, refresh } = await useAsyncData("onboardingById", () => $fetch(`/api/onboarding/${onboardingId}`), {
   server: false,
 });
 

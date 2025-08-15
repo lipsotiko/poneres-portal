@@ -22,7 +22,7 @@
     :rowSelection="rowSelection"
     :getRowId="(params) => String(params.data.id)"
     style="height: 888px"
-    class="ag-theme-quartz"
+    class="ag-theme-quartz mt-2"
   />
   <div class="_display:flex _justify-content:space-between">
     <Pagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
@@ -88,7 +88,7 @@ const gridOptions = {
 };
 
 const { pending, data, refresh } = await useAsyncData(
-  "properties-created-by",
+  "onboarding",
   () =>
     $fetch("/api/onboarding", {
       query: {

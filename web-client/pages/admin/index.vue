@@ -124,7 +124,7 @@ const gridOptions = {
 };
 
 const { pending, data, refresh } = await useAsyncData(
-  "properties-created-by",
+  "users",
   () =>
     $fetch("/api/user", {
       query: {

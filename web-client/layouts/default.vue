@@ -10,7 +10,7 @@
             </div>
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu class="pl-0!">
+            <SidebarMenu class="pl-0! mt-2">
               <SidebarMenuItem
                 v-for="item in itemsForAll"
                 :key="item.title"
