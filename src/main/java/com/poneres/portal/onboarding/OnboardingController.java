@@ -6,7 +6,6 @@ import com.poneres.portal.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -39,15 +38,20 @@ public class OnboardingController {
         String resumeId = randomUUID().toString();
         byte[] resume = base64ToBytes(request.getResumeDataURL());
         storageService.save(resumeId, resume, request.getResumeFileName(), createdBy);
-        onboarding.setResumeId(resumeId);
+        onboarding.setResumeFileId(resumeId);
 
         for(int i = 0; i < request.getLicenseFiles().size(); i++) {
             OnboardingLicenseFileRequest lf = request.getLicenseFiles().get(i);
             String licenseId = randomUUID().toString();
             byte[] license = base64ToBytes(lf.getDataURL());
             storageService.save(licenseId, license, lf.getFileName(), createdBy);
-            onboarding.getLicenseFiles().get(i).setLicenseId(licenseId);
+            onboarding.getLicenseFiles().get(i).setLicenseFileId(licenseId);
         }
+
+        String governmentIdentificationId = randomUUID().toString();
+        byte[] govId = base64ToBytes(request.getGovIdDataURL());
+        storageService.save(governmentIdentificationId, govId, request.getGovIdFileName(), createdBy);
+        onboarding.setGovIdFileId(governmentIdentificationId);
 
         onboarding.setCreatedAt(LocalDateTime.now());
         onboardingRepository.save(onboarding);
@@ -64,7 +68,7 @@ public class OnboardingController {
     public void delete(@PathVariable("id") String id) {
         Optional<Onboarding> onboarding = onboardingRepository.findById(id);
         onboarding.ifPresent(o -> {
-            storageService.delete(o.getResumeId());
+            storageService.delete(o.getResumeFileId());
             onboardingRepository.delete(o);
         });
     }
@@ -75,7 +79,7 @@ public class OnboardingController {
         deleteOnboardingRequest.getOnboardingIds().forEach(id -> {
             Optional<Onboarding> onboarding = onboardingRepository.findById(id);
             onboarding.ifPresent(o -> {
-                storageService.delete(o.getResumeId());
+                storageService.delete(o.getResumeFileId());
                 onboardingRepository.delete(o);
             });
         });

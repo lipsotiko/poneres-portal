@@ -24,14 +24,15 @@ public class Onboarding {
     private String gender;
     private String specialty;
     private String npi;
-    private String citizenship_status;
+    private String citizenshipStatus;
     private String location;
     private String uncomfortableProcedures;
     private String haveYouDoneLocumsBefore;
     private String activeCertifications;
     private String malpractice;
-    private String resumeId;
+    private String resumeFileId;
     private List<OnboardingLicenseFile> licenseFiles;
+    private String govIdFileId;
     private String employmentType;
     private List<String> schedulePreferences;
     private String createdBy;

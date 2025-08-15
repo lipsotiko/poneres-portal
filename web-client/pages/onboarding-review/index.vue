@@ -55,7 +55,7 @@ const colDefs = ref([
   {
     colId: "name",
     headerName: "Name",
-    valueGetter: (p) => `${p.data.firstName} ${p.data.middleName} ${p.data.lastName}`,
+    valueGetter: (p) => `${p.data.firstName} ${p.data.middleName || ''} ${p.data.lastName}`,
     context: "/onboarding-review",
     cellRenderer: "LinkField",
     width: 268,

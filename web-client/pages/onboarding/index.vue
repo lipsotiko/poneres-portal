@@ -26,15 +26,15 @@ definePageMeta({
 
 let formSchema = [
   z.object({
-    firstName: z.string(),
+    firstName: z.string("First name is required."),
     middleName: z.string().optional(),
-    lastName: z.string(),
-    dob: z.string(),
-    gender: z.string(),
-    specialty: z.string(),
-    npi: z.string(),
-    location: z.string(),
-    citizenshipStatus: z.string(),
+    lastName: z.string("Last name is required."),
+    dob: z.string("DOB is required."),
+    gender: z.string("Gender is required."),
+    specialty: z.string("Specialty is required."),
+    npi: z.string("NPI is required."),
+    location: z.string("Location is required."),
+    citizenshipStatus: z.string("Citizenship status is required."),
   }),
   z.object({
     resume: z.file().max(2_000_000).mime(["application/pdf"]),
@@ -46,6 +46,7 @@ let formSchema = [
         license: z.file().max(2_000_000).mime(["application/pdf"]),
       }),
     ),
+    govId: z.file().max(2_000_000).mime(["application/pdf", "image/jpeg", "image/png"])
   }),
   z.object({
     employmentType: z.string(),
@@ -88,6 +89,7 @@ const submitted = ref(false);
 const saveOnboarding = async (data) => {
   saving.value = true;
   const { fileName: resumeFileName, dataURL: resumeDataURL } = await getFile(data.resume);
+  const { fileName: govIdFileName, dataURL: govIdDataURL } = await getFile(data.govId);
 
   const licenseFiles = await Promise.all(data.licenseFiles.map((l) => getFile(l.license)));
 
@@ -97,6 +99,8 @@ const saveOnboarding = async (data) => {
       onboarding: data,
       resumeFileName,
       resumeDataURL,
+      govIdFileName,
+      govIdDataURL,
       licenseFiles,
     },
   });
@@ -302,7 +306,7 @@ const schedulePreferences = [
                 </FormField>
               </div>
               <div class="col-span-1 lg:col-span-1">
-                <FormField v-slot="{ componentField }" name="citizenship_status">
+                <FormField v-slot="{ componentField }" name="citizenshipStatus">
                   <FormItem>
                     <FormLabel>Citizenship status</FormLabel>
                     <Select v-bind="componentField">
@@ -397,7 +401,7 @@ const schedulePreferences = [
                 <FormMessage />
               </FormItem>
             </FormField>
-
+            <hr>
             <FormFieldArray name="licenseFiles" v-slot="{ fields, push, remove }">
               <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
                 <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
@@ -462,6 +466,21 @@ const schedulePreferences = [
               </fieldset>
               <Button type="button" variant="outline" @click="push({ state: '' })"> Add State + </Button>
             </FormFieldArray>
+            <hr>
+            <FormField v-slot="{ componentField }" name="govId">
+              <FormItem>
+                <FormLabel>Government ID (PDF / PNG / JPG)</FormLabel>
+                <FormControl>
+                  <input
+                    id="resume"
+                    type="file"
+                    v-bind="componentField"
+                    class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            </FormField>
           </template>
           <template v-if="stepIndex === 3">
             <FormField v-slot="{ componentField }" name="employmentType">

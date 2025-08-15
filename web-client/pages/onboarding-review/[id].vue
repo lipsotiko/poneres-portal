@@ -59,13 +59,16 @@
     </table>
     <div class="mt-4">
       <hr />
-      <div>
+      <div class="mt-4">
         <ul>
           <li>
-            <Button variant="link" @click="downloadFile(data.resumeId)">Resume</Button>
+            <Button variant="link" @click="downloadFile(data.resumeFileId)">Resume</Button>
           </li>
           <li v-for="f in data.licenseFiles">
-            <Button variant="link" @click="downloadFile(f.licenseId)">{{ f.state }} License</Button>
+            <Button variant="link" @click="downloadFile(f.licenseFileId)">{{ f.state }} License</Button>
+          </li>
+          <li>
+            <Button variant="link" @click="downloadFile(data.govIdFileId)">Government ID</Button>
           </li>
         </ul>
       </div>

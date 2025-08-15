@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.poneres.portal.user.Role.*;
@@ -47,8 +46,8 @@ public class PoneresPortalInitLocal extends AbstractPoneresPortalInit {
         });
 
         onboardingRepository.findAll().forEach(onboarding -> {
-            storageService.delete(onboarding.getResumeId());
-            onboarding.getLicenseFiles().forEach(l -> storageService.delete(l.getLicenseId()));
+            storageService.delete(onboarding.getResumeFileId());
+            onboarding.getLicenseFiles().forEach(l -> storageService.delete(l.getLicenseFileId()));
             onboardingRepository.delete(onboarding);
         });
 

@@ -40,6 +40,14 @@ public class S3StorageService implements StorageService {
             putObjectRequestBuilder.contentType("application/pdf");
         }
 
+        if (fileName.endsWith(".png")) {
+            putObjectRequestBuilder.contentType("image/png");
+        }
+
+        if (fileName.endsWith(".jpg")) {
+            putObjectRequestBuilder.contentType("image/jpg");
+        }
+
         s3Client.putObject(putObjectRequestBuilder.build(), RequestBody.fromBytes(document));
     }
 

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class OnboardingLicenseFile {
-    private String licenseId;
+    private String licenseFileId;
     private String state;
     private String licenseNumber;
     private LocalDate expirationDate;

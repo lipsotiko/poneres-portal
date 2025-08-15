@@ -19,8 +19,9 @@ public class StorageController {
     @GetMapping(value = "/download/{key}", produces = MediaType.APPLICATION_PDF_VALUE)
     @UserAuthorized(value = { "isAdmin" })
     public ResponseEntity<byte[]> download(@PathVariable("key") String key) {
+        StorageResponse storageResponse = storageService.get(key);
         return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(storageService.get(key).getContent());
+                .contentType(storageResponse.getMediaType())
+                .body(storageResponse.getContent());
     }
 }
