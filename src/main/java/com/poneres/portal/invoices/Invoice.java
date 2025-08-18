@@ -21,5 +21,6 @@ public class Invoice {
     private String to;
     private String cc;
     private String services;
+    private Boolean paid;
     private LocalDateTime createdAt;
 }

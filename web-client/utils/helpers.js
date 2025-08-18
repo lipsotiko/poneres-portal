@@ -52,4 +52,31 @@ const states = [
   { id: "WY", label: "Wyoming" },
 ];
 
-export { states };
+const degreeTypes = [
+  {
+    id: "MD",
+    label: "Doctor of Medicine",
+  },
+  {
+    id: "DO",
+    label: "Doctor of Osteopathic Medicine",
+  },
+  {
+    id: "PA",
+    label: "Physician Assistant",
+  },
+  {
+    id: "NP",
+    label: "Nurse Practitioner",
+  },
+  {
+    id: "BS",
+    label: "Bachelor of Science",
+  },
+  {
+    id: "MS",
+    label: "Master of Science",
+  },
+];
+
+export { degreeTypes, states };

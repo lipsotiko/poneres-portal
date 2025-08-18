@@ -74,7 +74,6 @@ const df = new DateFormatter("en-US", {
               :default-value="value?.month.toString()"
               @update:model-value="
                 (v) => {
-                  console.log('there', v);
                   if (!v) return;
                   if (!value) {
                     value = defaultMaxDate.set({

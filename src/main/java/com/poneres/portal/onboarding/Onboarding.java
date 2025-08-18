@@ -33,6 +33,8 @@ public class Onboarding {
     private String resumeFileId;
     private List<OnboardingLicenseFile> licenseFiles;
     private String govIdFileId;
+    private List<EducationDetails> educationDetails;
+    private List<EmploymentHistory> employmentHistory;
     private String employmentType;
     private List<String> schedulePreferences;
     private String createdBy;

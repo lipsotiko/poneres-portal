@@ -18,5 +18,6 @@ export const Primary: Story = {
 export const PrimaryWithDate: Story = {
   args: {
     defaultValue: new CalendarDate(1988, 4, 28),
+    initialFocus: true,
   },
 };

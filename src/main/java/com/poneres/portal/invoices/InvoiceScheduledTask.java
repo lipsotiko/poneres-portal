@@ -34,7 +34,7 @@ public class InvoiceScheduledTask {
     @Autowired
     private EmailService emailService;
 
-    @Scheduled(cron = "0 0 4 1 * *")
+    @Scheduled(cron = "0 0 4 1 * *") // On the first of every month.
 //    @Scheduled(fixedRate = 60000) // every 15 seconds
     public void sendInvoice() {
         invoiceJobRepository.findAll().stream()

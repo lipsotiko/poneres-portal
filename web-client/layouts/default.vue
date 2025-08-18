@@ -23,7 +23,7 @@
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem
-                v-if="user?.roles.includes('ADMIN') && $config.public.deploymentType === 'local'"
+                v-if="user?.roles.includes('ADMIN')"
                 v-for="item in itemsForAdmin"
                 :key="item.title"
               >
