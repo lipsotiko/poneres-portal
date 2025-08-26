@@ -79,4 +79,36 @@ const degreeTypes = [
   },
 ];
 
-export { degreeTypes, states };
+const schedulePreferences = [
+  {
+    id: "day",
+    label: "Day",
+  },
+  {
+    id: "evening",
+    label: "Evening",
+  },
+  {
+    id: "night",
+    label: "Night",
+  },
+  {
+    id: "on_call",
+    label: "On call",
+  },
+  {
+    id: "24_hr",
+    label: "24 Hour",
+  },
+  {
+    id: "weekends",
+    label: "Weekends",
+  },
+  {
+    id: "prn",
+    label: "PRN",
+  },
+];
+
+
+export { degreeTypes, schedulePreferences, states };

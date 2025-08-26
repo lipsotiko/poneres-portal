@@ -69,6 +69,8 @@ public class OnboardingController {
         Optional<Onboarding> onboarding = onboardingRepository.findById(id);
         onboarding.ifPresent(o -> {
             storageService.delete(o.getResumeFileId());
+            storageService.delete(o.getGovIdFileId());
+            o.getLicenseFiles().forEach(l -> storageService.delete(l.getLicenseFileId()));
             onboardingRepository.delete(o);
         });
     }

@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/stepper";
 import { toast } from "vue-sonner";
 import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
-import { Card } from "@/components/ui/card";
 
 const dayjs = useDayjs();
 
@@ -197,37 +196,6 @@ const initialData = {
 const current = today(getLocalTimeZone());
 const maxDateDob = new CalendarDate(current.year - 18, current.month, current.day);
 
-const schedulePreferences = [
-  {
-    id: "day",
-    label: "Day",
-  },
-  {
-    id: "evening",
-    label: "Evening",
-  },
-  {
-    id: "night",
-    label: "Night",
-  },
-  {
-    id: "on_call",
-    label: "On call",
-  },
-  {
-    id: "24_hr",
-    label: "24 Hour",
-  },
-  {
-    id: "weekends",
-    label: "Weekends",
-  },
-  {
-    id: "prn",
-    label: "PRN",
-  },
-];
-
 const loadSection1TestData = (e) => {
   e.preventDefault();
   console.log("Load Section 1 Test Data");
@@ -235,10 +203,10 @@ const loadSection1TestData = (e) => {
     firstName: 'Elias',
     middleName: 'Sevastianos',
     lastName: 'Poneres',
-    gender: 'male',
+    gender: 'Male',
     dob: '2007-01-02',
-    citizenshipStatus: 'us_citizen',
-    specialty: 'anesthesiology',
+    citizenshipStatus: 'US Citizen',
+    specialty: 'Anesthesiology',
     npi: '123456789',
     location: 'MD',
     homeAddress: {
@@ -341,19 +309,10 @@ const loadSection5TestData = (e) => {
   e.preventDefault();
   console.log("Load Section 5 Test Data");
   onboardingForm.value.setValues({
-    employmentType: 'short_term',
+    employmentType: 'Short or Long Term',
     schedulePreferences: ['day', 'evening']
   })
 }
-
-const downloadFile = async (e, file) => {
-  e.preventDefault();
-  navigateTo(URL.createObjectURL(file), {
-    open: {
-      target: "_blank",
-    },
-  });
-};
 </script>
 
 <template>
@@ -369,7 +328,7 @@ const downloadFile = async (e, file) => {
     :initial-values="initialData"
     :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
   >
-    <Stepper v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep }" v-model="stepIndex" class="block w-full">
+    <Stepper v-slot="{ isNextDisabled, isPrevDisabled, nextStep, prevStep, goTo }" v-model="stepIndex" class="block w-full">
       <form
         class="p-4"
         @submit="
@@ -473,8 +432,8 @@ const downloadFile = async (e, file) => {
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="male"> Male </SelectItem>
-                          <SelectItem value="female"> Female </SelectItem>
+                          <SelectItem value="Male"> Male </SelectItem>
+                          <SelectItem value="Female"> Female </SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -514,9 +473,9 @@ const downloadFile = async (e, file) => {
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="us_citizen"> US Citizen </SelectItem>
-                          <SelectItem value="green_card"> Green Card </SelectItem>
-                          <SelectItem value="other"> Other </SelectItem>
+                          <SelectItem value="US Citizen"> US Citizen </SelectItem>
+                          <SelectItem value="Green Card"> Green Card </SelectItem>
+                          <SelectItem value="Other"> Other </SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -536,10 +495,10 @@ const downloadFile = async (e, file) => {
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="anesthesiology"> Anesthesiology </SelectItem>
-                          <SelectItem value="crna"> Certified Registered Nurse Anesthetist (CRNA) </SelectItem>
-                          <SelectItem value="ems"> Emergency Medicine Specialists </SelectItem>
-                          <SelectItem value="rn"> Registered Nurse (RN) </SelectItem>
+                          <SelectItem value="Anesthesiology"> Anesthesiology </SelectItem>
+                          <SelectItem value="CRNA"> Certified Registered Nurse Anesthetist (CRNA) </SelectItem>
+                          <SelectItem value="EMS"> Emergency Medicine Specialists </SelectItem>
+                          <SelectItem value="RN"> Registered Nurse (RN) </SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -828,7 +787,7 @@ const downloadFile = async (e, file) => {
                   <div class="col-span-1 sm:col-span-4">
                     <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].positionDetails`">
                       <FormItem>
-                        <FormLabel>Duties & Responsibilities</FormLabel>
+                        <FormLabel>Description</FormLabel>
                         <FormControl>
                           <Textarea v-bind="componentField" class="h-32" />
                         </FormControl>
@@ -847,9 +806,9 @@ const downloadFile = async (e, file) => {
                       </FormItem>
                     </FormField>
                   </div>
-                  <div class="col-span-1 sm:col-span-2">
+                  <div class="col-span-1 sm:col-span-2 flex">
                     <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].supervisorContact`">
-                      <FormItem>
+                      <FormItem class="w-full">
                         <FormLabel>Supervisor Contact</FormLabel>
                         <FormControl>
                           <Input v-bind="componentField" />
@@ -857,6 +816,11 @@ const downloadFile = async (e, file) => {
                         <FormMessage />
                       </FormItem>
                     </FormField>
+                    <div v-if="idx != 0" class="mt-[21px] ml-3">
+                      <Button variant="outline" size="icon" @click="remove(idx)">
+                        <X class="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </fieldset>
@@ -928,7 +892,7 @@ const downloadFile = async (e, file) => {
                       <FormMessage />
                     </FormItem>
                   </FormField>
-                  <div class="col-span-2 flex">
+                  <div class="col-span-1 sm:col-span-2 flex">
                     <FormField v-slot="{ componentField }" :name="`licenseFiles[${idx}].license`">
                       <FormItem class="w-full">
                         <FormLabel>License (PDF)</FormLabel>
@@ -982,9 +946,9 @@ const downloadFile = async (e, file) => {
                   </FormControl>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="short_term"> Short Term </SelectItem>
-                      <SelectItem value="long_term"> Long Term </SelectItem>
-                      <SelectItem value="long_and_short_term"> Short or Long Term </SelectItem>
+                      <SelectItem value="Short Term"> Short Term </SelectItem>
+                      <SelectItem value="Long Term"> Long Term </SelectItem>
+                      <SelectItem value="Short or Long Term"> Short or Long Term </SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -1018,115 +982,7 @@ const downloadFile = async (e, file) => {
             <Button variant="link" @click="loadSection5TestData">Load Test Data</Button>
           </template>
           <template v-if="stepIndex === 6">
-            <Card class="p-6">
-              <h3 class="text-lg">Basic Information</h3>
-              <table>
-                <tbody>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">Name</td>
-                    <td>{{ values.firstName }} {{ values.middleName }} {{ values.lastName }}</td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">DOB</td>
-                    <td>{{ values.dob }}</td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">Gender</td>
-                    <td>{{ values.gender }}</td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">NPI</td>
-                    <td>{{ values.npi }}</td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">Location</td>
-                    <td>{{ values.location }}</td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">Citizenship status</td>
-                    <td>{{ values.citizenshipStatus }}</td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">Specialty</td>
-                    <td>{{ values.specialty }}</td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3 align-top">Home address</td>
-                    <td>
-                      <span>{{ values.homeAddress.addressLine1 }}</span><br>
-                      <span>{{ `${values.homeAddress.city}, ${values.homeAddress.state}, ${values.homeAddress.zip}` }}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3 align-top">Mailing address</td>
-                    <td>
-                      <span>{{ values.mailingAddress.addressLine1 }}</span><br>
-                      <span>{{ `${values.mailingAddress.city}, ${values.mailingAddress.state}, ${values.mailingAddress.zip}` }}</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <h3 class="text-lg">Education</h3>
-              <table>
-                <tbody>
-                  <tr v-for="e in values.educationDetails">
-                    <td class="w-[200px] font-medium text-right pr-3">
-                      {{ `${e.schoolName}` }}
-                    </td>
-                    <td>
-                      <ul>
-                        <li>
-                          {{ `${e.degree} / ${e.graduationDate}` }}
-                        </li>
-                      </ul>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <h3 class="text-lg">Work history</h3>
-              <table>
-                <tbody>
-                  <tr v-for="e in values.employmentHistory">
-                    <td class="w-[200px] font-medium text-right pr-3 align-top">
-                      {{ `${e.employerName}` }}
-                    </td>
-                    <td>
-                      <ul>
-                        <li>
-                          {{ `${e.startDate} - ${e.endDate}` }} <br>
-                          {{ e.positionDetails }}
-                        </li>
-                      </ul>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <h3 class="text-lg">Credentials</h3>
-              <ul>
-                <li>
-                  <Button variant="link" @click="e => downloadFile(e, values.resume)">Resume</Button>
-                </li>
-                <li v-for="f in values.licenseFiles">
-                  <Button variant="link" @click="e => downloadFile(e, f.license)">{{ f.state }} License</Button> Lic.# {{ f.licenseNumber }} Exp. {{ f.expirationDate }}
-                </li>
-                <li>
-                  <Button variant="link" @click="e => downloadFile(e, values.govId)">Government ID</Button>
-                </li> 
-              </ul>
-              <h3 class="text-lg">Scheduling</h3>
-              <table>
-                <tbody>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">Employment</td>
-                    <td>{{ values.employmentType }}</td>
-                  </tr>
-                  <tr>
-                    <td class="w-[200px] font-medium text-right pr-3">Schedule preferences</td>
-                    <td>{{ values.schedulePreferences }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Card>
+            <OnboardingReview :values="values" @goToStep="(step) => stepIndex = step" />
           </template>
         </div>
         <div class="flex items-center justify-between mt-4">
