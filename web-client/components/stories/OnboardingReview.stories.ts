@@ -15,6 +15,9 @@ export const Primary: Story = {
     values: {
       licenseFiles: [
         {
+          license: {
+            name: 'md-license.pdf'
+          },
           state: "MD",
           licenseNumber: "123456789",
           expirationDate: "2029-01-02",
@@ -75,6 +78,12 @@ export const Primary: Story = {
         zip: "21211",
       },
       employmentType: "Short or Long Term",
+      resume: {
+        name: 'resume.pdf'
+      },
+      govId: {
+        name: 'government-id.pdf'
+      }
     },
   },
 };

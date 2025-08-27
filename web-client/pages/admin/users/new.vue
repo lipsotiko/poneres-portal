@@ -8,7 +8,11 @@
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/admin">Admin</BreadcrumbLink>
+            <BreadcrumbLink as-child>
+              <NuxtLink to="/admin">
+                Admin
+              </NuxtLink>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

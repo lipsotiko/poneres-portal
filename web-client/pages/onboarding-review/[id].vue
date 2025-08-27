@@ -8,7 +8,11 @@
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/onboarding-review">Onboarding Review</BreadcrumbLink>
+            <BreadcrumbLink as-child>
+              <NuxtLink to="/onboarding-review">
+                Onboarding Review
+              </NuxtLink>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <SidebarTrigger />
+    <SidebarTrigger class="mr-4" />
     <div class="mt-1">
       <slot name="breadcrumbs" />
     </div>
