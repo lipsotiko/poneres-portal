@@ -52,6 +52,21 @@
             }}</span>
           </td>
         </tr>
+        <tr>
+          <td class="w-[200px] font-medium text-right pr-3">Employment</td>
+          <td>{{ values.employmentType }}</td>
+        </tr>
+        <tr>
+          <td class="w-[200px] font-medium text-right pr-3">Schedule preferences</td>
+          <td>
+            {{
+              schedulePreferences
+                .filter((t) => values.schedulePreferences.includes(t.id))
+                .map((t) => t.label)
+                .join(", ")
+            }}
+          </td>
+        </tr>
       </tbody>
     </table>
     <div class="flex justify-between">
@@ -131,10 +146,12 @@
           <td class="w-[200px] font-medium text-right pr-3 align-top">License</td>
           <td>
             <ul>
-                <li>State: {{ l.state }}</li>
-                <li>Lic.#: {{ l.licenseNumber}}</li>
-                <li>Exp.: {{ l.expirationDate }}</li>
-                <li>{{ l.license.name }} <Button variant="link" @click="(e) => downloadFile(e, l.license)">View</Button> </li>
+              <li>State: {{ l.state }}</li>
+              <li>Lic.#: {{ l.licenseNumber }}</li>
+              <li>Exp.: {{ l.expirationDate }}</li>
+              <li>
+                {{ l.license.name }} <Button variant="link" @click="(e) => downloadFile(e, l.license)">View</Button>
+              </li>
             </ul>
           </td>
         </tr>
@@ -147,34 +164,12 @@
         </tr>
       </tbody>
     </table>
-    <div class="flex justify-between">
-      <h3 class="text-lg font-semibold">Scheduling</h3>
-      <Button variant="link" @click="emit('goToStep', 5)">Edit</Button>
-    </div>
-    <table class="mb-4">
-      <tbody>
-        <tr>
-          <td class="w-[200px] font-medium text-right pr-3">Employment</td>
-          <td>{{ values.employmentType }}</td>
-        </tr>
-        <tr>
-          <td class="w-[200px] font-medium text-right pr-3">Schedule preferences</td>
-          <td>
-            {{
-              schedulePreferences
-                .filter((t) => values.schedulePreferences.includes(t.id))
-                .map((t) => t.label)
-                .join(", ")
-            }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </Card>
 </template>
 <script setup>
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const { values } = defineProps(["values"]);
 const emit = defineEmits(["goToStep"]);

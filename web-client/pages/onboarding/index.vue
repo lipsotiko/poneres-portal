@@ -4,7 +4,7 @@ import { Check, Circle, Dot, ChevronLeft, X, Loader2 } from "lucide-vue-next";
 import { h, ref } from "vue";
 import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormFieldArray } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormDescription, FormMessage, FormFieldArray } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,6 +53,26 @@ let formSchema = [
       state: z.string("State is required."),
       zip: z.string("Zip Code is required."),
     }),
+    employmentType: z.string(),
+    schedulePreferences: z.array(z.string()).min(1),
+  }),
+  z.object({
+    resume: z.file().max(2_000_000).mime(["application/pdf"]),
+    licenseFiles: z.array(
+      z.object({
+        state: z.string(),
+        licenseNumber: z.string(),
+        expirationDate: z.string(),
+        license: z.file().max(2_000_000).mime(["application/pdf"]),
+      }),
+    ).min(1),
+    govId: z.file().max(2_000_000).mime(["application/pdf", "image/jpeg", "image/png"]),
+  }),
+  z.object({
+  }),
+  z.object({
+  }),
+  z.object({
   }),
   z.object({
     educationDetails: z.array(
@@ -76,22 +96,15 @@ let formSchema = [
     ).min(1)
   }),
   z.object({
-    resume: z.file().max(2_000_000).mime(["application/pdf"]),
-    licenseFiles: z.array(
-      z.object({
-        state: z.string(),
-        licenseNumber: z.string(),
-        expirationDate: z.string(),
-        license: z.file().max(2_000_000).mime(["application/pdf"]),
-      }),
-    ).min(1),
-    govId: z.file().max(2_000_000).mime(["application/pdf", "image/jpeg", "image/png"]),
+    attestationOne: z.boolean().refine((attestationOne) => attestationOne === true, {
+      error: "Attestation is required.",
+    }),
+    attestationTwo: z.boolean().refine((attestationTwo) => attestationTwo === true, {
+      error: "Attestation is required.",
+    }),
+    signature: z.string(),
+    signatureDate: z.string()
   }),
-  z.object({
-    employmentType: z.string(),
-    schedulePreferences: z.array(z.string()).min(1),
-  }),
-  z.object({}),
 ];
 
 const stepIndex = ref(1);
@@ -102,23 +115,31 @@ const steps = [
   },
   {
     step: 2,
-    title: "Education",
-  },
-  {
-    step: 3,
-    title: "Work History",
-  },
-  {
-    step: 4,
     title: "Credentials",
   },
   {
+    step: 3,
+    title: "Insurance & Legal",
+  },
+  {
+    step: 4,
+    title: "Billing Readiness",
+  },
+  {
     step: 5,
-    title: "Scheduling",
+    title: "Immunizations",
   },
   {
     step: 6,
-    title: "Review",
+    title: "Education",
+  },
+  {
+    step: 7,
+    title: "Work History",
+  },
+  {
+    step: 8,
+    title: "Review & Attestation",
   },
 ];
 
@@ -169,7 +190,7 @@ async function onSubmit(values: any) {
   });
 }
 
-const initialData = {
+let initialData = {
   licenseFiles: [
     {
       state: undefined,
@@ -191,14 +212,88 @@ const initialData = {
     supervisorContact: undefined,
   }],
   schedulePreferences: [],
+  attestationOne: false,
+  attestationTwo: false,
+  signatureDate: dayjs().format('DD/MM/YYYY')
 };
+
+// initialData = {
+//   licenseFiles: [
+//     {
+//       state: "MD",
+//       licenseNumber: "123456789",
+//       expirationDate: "2029-01-02",
+//       license: {},
+//     },
+//   ],
+//   educationDetails: [
+//     {
+//       schoolName: "Towson University",
+//       graduationDate: "2017-12-13",
+//       degree: "BS",
+//     },
+//     {
+//       schoolName: "Drexel University",
+//       graduationDate: "2020-12-13",
+//       degree: "MD",
+//     },
+//   ],
+//   employmentHistory: [
+//     {
+//       employerName: "General Dynamics",
+//       startDate: "2020-03-02",
+//       endDate: "2023-12-13",
+//       positionDetails:
+//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+//       supervisorName: "Jane Smith",
+//       supervisorContact: "444-333-1111",
+//     },
+//     {
+//       employerName: "Pivotal Labs",
+//       startDate: "2023-12-03",
+//       endDate: "2024-6-11",
+//       positionDetails:
+//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+//       supervisorName: "Jack Jones",
+//       supervisorContact: "444-333-2222",
+//     },
+//   ],
+//   schedulePreferences: ["day", "evening"],
+//   attestationOne: false,
+//   attestationTwo: false,
+//   signatureDate: "02/09/2025",
+//   firstName: "Elias",
+//   middleName: "Sevastianos",
+//   lastName: "Poneres",
+//   gender: "Male",
+//   dob: "2007-01-02",
+//   citizenshipStatus: "US Citizen",
+//   specialty: "Anesthesiology",
+//   npi: "123456789",
+//   location: "MD",
+//   homeAddress: {
+//     addressLine1: "111 Beech Ave.",
+//     city: "Baltimore",
+//     state: "MD",
+//     zip: "21211",
+//   },
+//   mailingAddress: {
+//     addressLine1: "222 Beech Ave.",
+//     city: "Baltimore",
+//     state: "MD",
+//     zip: "21211",
+//   },
+//   employmentType: "Short or Long Term",
+//   resume: {},
+//   govId: {},
+// };
 
 const current = today(getLocalTimeZone());
 const maxDateDob = new CalendarDate(current.year - 18, current.month, current.day);
 
 const loadSection1TestData = (e) => {
   e.preventDefault();
-  console.log("Load Section 1 Test Data");
+  console.log("Load - Basic Info. - Test Data");
   onboardingForm.value.setValues({
     firstName: 'Elias',
     middleName: 'Sevastianos',
@@ -220,13 +315,15 @@ const loadSection1TestData = (e) => {
       city: 'Baltimore',
       state: 'MD',
       zip: '21211'
-    }
+    },
+    employmentType: 'Short or Long Term',
+    schedulePreferences: ['day', 'evening']
   })
 }
 
-const loadSection2TestData = (e) => {
+const loadEducationTestData = (e) => {
   e.preventDefault();
-  console.log("Load Section 2 Test Data");
+  console.log("Load - Education. - Test Data");
   onboardingForm.value.setValues({
     educationDetails: [{
       schoolName: 'Towson University',
@@ -240,9 +337,9 @@ const loadSection2TestData = (e) => {
   });
 }
 
-const loadSection3TestData = (e) => {
+const loadWorkHistoryTestData = (e) => {
   e.preventDefault();
-  console.log("Load Section 3 Test Data");
+  console.log("Load - Work History - Test Data");
   onboardingForm.value.setValues({
     employmentHistory: [{
       employerName: 'General Dynamics',
@@ -275,9 +372,9 @@ const base64toFile = (b64, fileName, type) => {
   return new File([blob], fileName, { type });
 }
 
-const loadSection4TestData = (e) => {
+const loadCredentialsTestData = (e) => {
   e.preventDefault();
-  console.log("Load Section 4 Test Data");
+  console.log("Load - Credentials - Test Data");
 
   // Resume
   const resumePdf = 'JVBERi0xLjMKJf////8KOCAwIG9iago8PAovVHlwZSAvRXh0R1N0YXRlCi9jYSAxCi9DQSAxCj4+CmVuZG9iago3IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMSAwIFIKL01lZGlhQm94IFswIDAgNTk1LjI4IDg0MS44OV0KL0NvbnRlbnRzIDUgMCBSCi9SZXNvdXJjZXMgNiAwIFIKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL1Byb2NTZXQgWy9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUldCi9FeHRHU3RhdGUgPDwKL0dzMSA4IDAgUgo+PgovRm9udCA8PAovRjEgOSAwIFIKPj4KPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0xlbmd0aCAxMjEKL0ZpbHRlciAvRmxhdGVEZWNvZGUKPj4Kc3RyZWFtCnicM1QwAEJdQyBhYWKoZ2GpkJzLpe9ebKiQXsyl75JalpmcGuTupJBczGUAVlqcnMeVxlXIZYhNo1MIVNxQwcRAwdzMRM/AzEghBGiim6GCIZCVxhVtY2BgYAjERkBsDMQmQGwK4tspGMQqhHhxuYZwBXIBAOXbICoKZW5kc3RyZWFtCmVuZG9iagoxMSAwIG9iagoocGRmbWFrZSkKZW5kb2JqCjEyIDAgb2JqCihwZGZtYWtlKQplbmRvYmoKMTMgMCBvYmoKKEQ6MjAyNTA4MTkyMTA0NTlaKQplbmRvYmoKMTAgMCBvYmoKPDwKL1Byb2R1Y2VyIDExIDAgUgovQ3JlYXRvciAxMiAwIFIKL0NyZWF0aW9uRGF0ZSAxMyAwIFIKPj4KZW5kb2JqCjE1IDAgb2JqCjw8Ci9UeXBlIC9Gb250RGVzY3JpcHRvcgovRm9udE5hbWUgL0FaWlpaWitOb3RvU2Fucy1SZWd1bGFyCi9GbGFncyA0Ci9Gb250QkJveCBbLTYyMSAtNTA4IDI4MDAgMTA2N10KL0l0YWxpY0FuZ2xlIDAKL0FzY2VudCAxMDY5Ci9EZXNjZW50IC0yOTMKL0NhcEhlaWdodCA3MTQKL1hIZWlnaHQgNTM2Ci9TdGVtViAwCi9Gb250RmlsZTIgMTQgMCBSCj4+CmVuZG9iagoxNiAwIG9iago8PAovVHlwZSAvRm9udAovU3VidHlwZSAvQ0lERm9udFR5cGUyCi9CYXNlRm9udCAvQVpaWlpaK05vdG9TYW5zLVJlZ3VsYXIKL0NJRFN5c3RlbUluZm8gPDwKL1JlZ2lzdHJ5IChBZG9iZSkKL09yZGVyaW5nIChJZGVudGl0eSkKL1N1cHBsZW1lbnQgMAo+PgovRm9udERlc2NyaXB0b3IgMTUgMCBSCi9XIFswIFs2MDAgNjIyIDU2NCA0NzkgNjE4IDkzNV1dCi9DSURUb0dJRE1hcCAvSWRlbnRpdHkKPj4KZW5kb2JqCjE3IDAgb2JqCjw8Ci9MZW5ndGggMjQwCi9GaWx0ZXIgL0ZsYXRlRGVjb2RlCj4+CnN0cmVhbQp4nF1QsW7DIBDd+YobkyEiceV0sZCidPGQtqrbqeqA4bCQakAYD/77wjlNqp4ET+/u3vE4fm6fWmcT8NfoVYcJjHU64uTnqBB6HKxjhwq0VenK6FajDIxncbdMCcfWGQ9NwwD4Wy5PKS6wOWnf47bkXqLGaN0Am49zR5luDuEbR3QJ9kwI0GjyuIsMz3JE4CTdtTrXbVp2WXXveF8CQkX8sFpSXuMUpMIo3YCs2ecQjckhGDr9r3wV9eZvNxSoBXzeaV0RHGuCx4cVVnbU4quM/h1SXikbuf1AzTFm87Q2cl38Woe3zQYfiorODyZdelcKZW5kc3RyZWFtCmVuZG9iago5IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMAovQmFzZUZvbnQgL0FaWlpaWitOb3RvU2Fucy1SZWd1bGFyCi9FbmNvZGluZyAvSWRlbnRpdHktSAovRGVzY2VuZGFudEZvbnRzIFsxNiAwIFJdCi9Ub1VuaWNvZGUgMTcgMCBSCj4+CmVuZG9iago0IDAgb2JqCjw8Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9UeXBlIC9DYXRhbG9nCi9QYWdlcyAxIDAgUgovTmFtZXMgMiAwIFIKPj4KZW5kb2JqCjEgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9Db3VudCAxCi9LaWRzIFs3IDAgUl0KPj4KZW5kb2JqCjIgMCBvYmoKPDwKL0Rlc3RzIDw8CiAgL05hbWVzIFsKXQo+Pgo+PgplbmRvYmoKMTQgMCBvYmoKPDwKL0xlbmd0aCA3MDgKL0ZpbHRlciAvRmxhdGVEZWNvZGUKPj4Kc3RyZWFtCnicVVJNTBNBFJ6Zlm3EAE673VYo0HbbbSlt+dnuttVSihQoBKHE0NISqKSAVUAIQoLBqBePkhg8mHgyHjiZEE4eOXiqRxN/YogHYySeiIkYTbr4ttREJ/lm5tt973vve5m11fU5pEMxRFB7YW5mFp2uOwC5AB8qfA/gWFzO/+VvAZalmY2VCv8OsK6szlU41sOmu7Z4e77CzyNEnIWltY1TronCZkYYdqJ55906E8rVRX4gjeZQ/Xtw/81X9fyc34+UthVt9ZG2FSgDPaoZAK1P+YjQWXNp+/dB9dFp1j+LqZxuwD3AF0jKA3bVLsoaDKZQfxMi8X+ZWoRf4pMHu9qHUGwaUn6RItLAgJBIbdRpo7Zp/FR5giXlNSmWZJHMQhwMheQgrg6BTdzJcUaWYXQGXsNTnpp4KnbKUkAQsJC5FfL0OF5df7GV3Z9fSCedw6Toy8bDw74aZR+7lA+kOKL87OttC9WDbPDkmGBiRybUXJE12jgOxIJGhuHtgiAFZNlkZ3Q2VdzRl5eURySTFEc9Lcng8HrPxYX+7kEdppYwsUeWBqXJnEF/WU+jm5mJu/HEWMIfd4F78eQY70EVD0JOtqzrkspV1JZdfgJFxE7OpBME3s4YWY4zNRG8F7h6KTTWbJ1s641wYSkw5F7Odow7m+xDLjlc3yWKCeFxoN+hP5c819DqYK1WlnWHvPEhA+2vZfkmrrmRNbjDUH0UPBqJGTwiTHkXX0vKxqhIWbUHWaLEmKjRUjnGx9LezIWuSF8jMZcOBywO2pKK45yyE4v50lFsArFxeFgpsOIqj8sIww+Umy5f1Fv5KprEKFEtibJMnk1m01JopDdtbhfkaMPEQE0V7YhYo1cMVQ1TxD5VUJ7jTHcsm1Le44wnbPGlupVvxDxoceq9fr+XTKBpchPNkAAK4k9IJDfQqGYHjf8Be5ij3wplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCAxOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDE2NTcgMDAwMDAgbiAKMDAwMDAwMTcxNCAwMDAwMCBuIAowMDAwMDAxNTk1IDAwMDAwIG4gCjAwMDAwMDE1NzQgMDAwMDAgbiAKMDAwMDAwMDI5MiAwMDAwMCBuIAowMDAwMDAwMTc1IDAwMDAwIG4gCjAwMDAwMDAwNjUgMDAwMDAgbiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAxNDI0IDAwMDAwIG4gCjAwMDAwMDA1NzMgMDAwMDAgbiAKMDAwMDAwMDQ4NSAwMDAwMCBuIAowMDAwMDAwNTExIDAwMDAwIG4gCjAwMDAwMDA1MzcgMDAwMDAgbiAKMDAwMDAwMTc2MSAwMDAwMCBuIAowMDAwMDAwNjQ5IDAwMDAwIG4gCjAwMDAwMDA4NjYgMDAwMDAgbiAKMDAwMDAwMTExMSAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDE4Ci9Sb290IDMgMCBSCi9JbmZvIDEwIDAgUgovSUQgWzwzNzQzNmM4MWNlZDczZGZiNDM0NGVjMjE3NzBhZDk3Mz4gPDM3NDM2YzgxY2VkNzNkZmI0MzQ0ZWMyMTc3MGFkOTczPl0KPj4Kc3RhcnR4cmVmCjI1NDIKJSVFT0YK';
@@ -304,15 +401,6 @@ const loadSection4TestData = (e) => {
     govId: govIdFile,
   })
 }
-
-const loadSection5TestData = (e) => {
-  e.preventDefault();
-  console.log("Load Section 5 Test Data");
-  onboardingForm.value.setValues({
-    employmentType: 'Short or Long Term',
-    schedulePreferences: ['day', 'evening']
-  })
-}
 </script>
 
 <template>
@@ -336,6 +424,8 @@ const loadSection5TestData = (e) => {
             e.preventDefault();
 
             validate();
+
+            console.log('meta', meta, values);
 
             if (stepIndex === steps.length && meta.valid) {
               values.resume = resumeRef; //TODO: Why??
@@ -419,8 +509,8 @@ const loadSection5TestData = (e) => {
                 </FormItem>
               </FormField>
             </div>
-            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              <div class="col-span-1 lg:col-span-1">
+            <div class="grid grid-cols-4 lg:grid-cols-1 gap-4">
+              <div class="col-span-3 lg:col-span-1">
                 <FormField v-slot="{ componentField }" name="gender">
                   <FormItem>
                     <FormLabel>Gender</FormLabel>
@@ -672,163 +762,55 @@ const loadSection5TestData = (e) => {
                 </FormField>
               </div>
             </div>
+            <hr></hr>
+            <p class="font-semibold p-2">Scheduling</p>
+            <FormField v-slot="{ componentField }" name="employmentType">
+              <FormItem>
+                <FormLabel>Employment type</FormLabel>
+                <Select v-bind="componentField">
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an employment type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="Short Term"> Short Term </SelectItem>
+                      <SelectItem value="Long Term"> Long Term </SelectItem>
+                      <SelectItem value="Short or Long Term"> Short or Long Term </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            </FormField>
+            <FormField name="schedulePreferences">
+              <FormItem>
+                <FormLabel>Schedule preferences</FormLabel>
+                <FormField
+                  v-for="item in schedulePreferences"
+                  v-slot="{ value, handleChange }"
+                  :key="item.id"
+                  type="checkbox"
+                  :value="item.id"
+                  :unchecked-value="false"
+                  name="schedulePreferences"
+                >
+                  <FormItem class="flex flex-row items-start space-y-0">
+                    <FormControl>
+                      <Checkbox :model-value="value.includes(item.id)" @update:model-value="handleChange" />
+                    </FormControl>
+                    <FormLabel class="font-normal">
+                      {{ item.label }}
+                    </FormLabel>
+                  </FormItem>
+                </FormField>
+                <FormMessage />
+              </FormItem>
+            </FormField>
             <Button variant="link" @click="loadSection1TestData">Load Test Data</Button>
           </template>
           <template v-if="stepIndex === 2">
-            <FormFieldArray name="educationDetails" v-slot="{ fields, push, remove }">
-              <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
-                <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-                  <div class="col-span-1 sm:col-span-3">
-                    <FormField v-slot="{ componentField }" :name="`educationDetails[${idx}].schoolName`">
-                      <FormItem>
-                        <FormLabel>School Name</FormLabel>
-                        <Input v-bind="componentField" />
-                        <FormMessage />
-                      </FormItem>
-                    </FormField>
-                  </div>
-                  <FormField v-slot="{ handleChange, value }" :name="`educationDetails[${idx}].graduationDate`">
-                    <FormItem>
-                      <FormLabel>Graduation Date</FormLabel>
-                      <FormControl>
-                        <DatePicker2
-                        :key="value"
-                        :defaultValue="value ? new CalendarDate(dayjs(value).year(), dayjs(value).month() + 1, dayjs(value).date()) : undefined"
-                        @update:model-value="
-                          (v) => {
-                            handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
-                          }
-                        "
-                      />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  </FormField>
-                  <div class="col-span-1 flex">
-                    <FormField v-slot="{ componentField }" :name="`educationDetails[${idx}].degree`">
-                      <FormItem class="flex-auto">
-                        <FormLabel>Degree</FormLabel>
-                        <FormControl>
-                          <Select v-bind="componentField">
-                          <FormControl class="w-full">
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a degree type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectItem v-for="dt in degreeTypes" :value="dt.id"> {{ dt.label }} </SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    </FormField>
-                    <div v-if="idx != 0" class="mt-[21px] ml-3">
-                      <Button variant="outline" size="icon" @click="remove(idx)">
-                        <X class="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-              <Button type="button" variant="outline" @click="push({ state: '' })"> Add Education + </Button>
-            </FormFieldArray>
-            <Button variant="link" @click="loadSection2TestData">Load Test Data</Button>
-          </template>
-          <template v-if="stepIndex === 3">
-            <FormFieldArray name="employmentHistory" v-slot="{ fields, push, remove }">
-              <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                  <div class="col-span-1 sm:col-span-2">
-                    <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].employerName`">
-                      <FormItem>
-                        <FormLabel>Employer Name</FormLabel>
-                        <Input v-bind="componentField" />
-                        <FormMessage />
-                      </FormItem>
-                    </FormField>
-                  </div>
-                  <FormField v-slot="{ handleChange, value }" :name="`employmentHistory[${idx}].startDate`">
-                    <FormItem>
-                      <FormLabel>Start Date</FormLabel>
-                      <FormControl>
-                        <DatePicker2
-                        :key="value"
-                        :defaultValue="value ? new CalendarDate(dayjs(value).year(), dayjs(value).month() + 1, dayjs(value).date()) : undefined"
-                        @update:model-value="
-                          (v) => {
-                            handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
-                          }
-                        "
-                      />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  </FormField>
-                  <FormField v-slot="{ handleChange, value }" :name="`employmentHistory[${idx}].endDate`">
-                    <FormItem>
-                      <FormLabel>End Date</FormLabel>
-                      <FormControl>
-                        <DatePicker2
-                        :key="value"
-                        :defaultValue="value ? new CalendarDate(dayjs(value).year(), dayjs(value).month() + 1, dayjs(value).date()) : undefined"
-                        @update:model-value="
-                          (v) => {
-                            handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
-                          }
-                        "
-                      />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  </FormField>
-                  <div class="col-span-1 sm:col-span-4">
-                    <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].positionDetails`">
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Textarea v-bind="componentField" class="h-32" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    </FormField>
-                  </div>
-                  <div class="col-span-1 sm:col-span-2">
-                    <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].supervisorName`">
-                      <FormItem>
-                        <FormLabel>Supervisor Name</FormLabel>
-                        <FormControl>
-                          <Input v-bind="componentField" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    </FormField>
-                  </div>
-                  <div class="col-span-1 sm:col-span-2 flex">
-                    <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].supervisorContact`">
-                      <FormItem class="w-full">
-                        <FormLabel>Supervisor Contact</FormLabel>
-                        <FormControl>
-                          <Input v-bind="componentField" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    </FormField>
-                    <div v-if="idx != 0" class="mt-[21px] ml-3">
-                      <Button variant="outline" size="icon" @click="remove(idx)">
-                        <X class="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-              <Button type="button" variant="outline" @click="push({ state: '' })"> Add Work History + </Button>
-            </FormFieldArray>
-            <Button variant="link" @click="loadSection3TestData">Load Test Data</Button>
-          </template>
-          <template v-if="stepIndex === 4">
             <FormField v-slot="{ componentField }" name="resume">
               <FormItem>
                 <FormLabel>Resume (PDF)</FormLabel>
@@ -932,57 +914,214 @@ const loadSection5TestData = (e) => {
                 <FormMessage />
               </FormItem>
             </FormField>
-            <Button variant="link" @click="loadSection4TestData">Load Test Data</Button>
+            <Button variant="link" @click="loadCredentialsTestData">Load Test Data</Button>
           </template>
           <template v-if="stepIndex === 5">
-            <FormField v-slot="{ componentField }" name="employmentType">
-              <FormItem>
-                <FormLabel>Employment type</FormLabel>
-                <Select v-bind="componentField">
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an employment type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="Short Term"> Short Term </SelectItem>
-                      <SelectItem value="Long Term"> Long Term </SelectItem>
-                      <SelectItem value="Short or Long Term"> Short or Long Term </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-            <FormField name="schedulePreferences">
-              <FormItem>
-                <FormLabel>Schedule preferences</FormLabel>
-                <FormField
-                  v-for="item in schedulePreferences"
-                  v-slot="{ value, handleChange }"
-                  :key="item.id"
-                  type="checkbox"
-                  :value="item.id"
-                  :unchecked-value="false"
-                  name="schedulePreferences"
-                >
-                  <FormItem class="flex flex-row items-start space-y-0">
-                    <FormControl>
-                      <Checkbox :model-value="value.includes(item.id)" @update:model-value="handleChange" />
-                    </FormControl>
-                    <FormLabel class="font-normal">
-                      {{ item.label }}
-                    </FormLabel>
-                  </FormItem>
-                </FormField>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-            <Button variant="link" @click="loadSection5TestData">Load Test Data</Button>
           </template>
           <template v-if="stepIndex === 6">
+            <FormFieldArray name="educationDetails" v-slot="{ fields, push, remove }">
+              <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
+                <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+                  <div class="col-span-1 sm:col-span-3">
+                    <FormField v-slot="{ componentField }" :name="`educationDetails[${idx}].schoolName`">
+                      <FormItem>
+                        <FormLabel>School Name</FormLabel>
+                        <Input v-bind="componentField" />
+                        <FormMessage />
+                      </FormItem>
+                    </FormField>
+                  </div>
+                  <FormField v-slot="{ handleChange, value }" :name="`educationDetails[${idx}].graduationDate`">
+                    <FormItem>
+                      <FormLabel>Graduation Date</FormLabel>
+                      <FormControl>
+                        <DatePicker2
+                        :key="value"
+                        :defaultValue="value ? new CalendarDate(dayjs(value).year(), dayjs(value).month() + 1, dayjs(value).date()) : undefined"
+                        @update:model-value="
+                          (v) => {
+                            handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
+                          }
+                        "
+                      />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
+                  <div class="col-span-1 flex">
+                    <FormField v-slot="{ componentField }" :name="`educationDetails[${idx}].degree`">
+                      <FormItem class="flex-auto">
+                        <FormLabel>Degree</FormLabel>
+                        <FormControl>
+                          <Select v-bind="componentField">
+                          <FormControl class="w-full">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a degree type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem v-for="dt in degreeTypes" :value="dt.id"> {{ dt.label }} </SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    </FormField>
+                    <div v-if="idx != 0" class="mt-[21px] ml-3">
+                      <Button variant="outline" size="icon" @click="remove(idx)">
+                        <X class="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <Button type="button" variant="outline" @click="push({ state: '' })"> Add Education + </Button>
+            </FormFieldArray>
+            <Button variant="link" @click="loadEducationTestData">Load Test Data</Button>
+          </template>
+          <template v-if="stepIndex === 7">
+            <FormFieldArray name="employmentHistory" v-slot="{ fields, push, remove }">
+              <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                  <div class="col-span-1 sm:col-span-2">
+                    <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].employerName`">
+                      <FormItem>
+                        <FormLabel>Employer Name</FormLabel>
+                        <Input v-bind="componentField" />
+                        <FormMessage />
+                      </FormItem>
+                    </FormField>
+                  </div>
+                  <FormField v-slot="{ handleChange, value }" :name="`employmentHistory[${idx}].startDate`">
+                    <FormItem>
+                      <FormLabel>Start Date</FormLabel>
+                      <FormControl>
+                        <DatePicker2
+                        :key="value"
+                        :defaultValue="value ? new CalendarDate(dayjs(value).year(), dayjs(value).month() + 1, dayjs(value).date()) : undefined"
+                        @update:model-value="
+                          (v) => {
+                            handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
+                          }
+                        "
+                      />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
+                  <FormField v-slot="{ handleChange, value }" :name="`employmentHistory[${idx}].endDate`">
+                    <FormItem>
+                      <FormLabel>End Date</FormLabel>
+                      <FormControl>
+                        <DatePicker2
+                        :key="value"
+                        :defaultValue="value ? new CalendarDate(dayjs(value).year(), dayjs(value).month() + 1, dayjs(value).date()) : undefined"
+                        @update:model-value="
+                          (v) => {
+                            handleChange(v.toDate(getLocalTimeZone()).toISOString().split('T')[0]);
+                          }
+                        "
+                      />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
+                  <div class="col-span-1 sm:col-span-4">
+                    <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].positionDetails`">
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea v-bind="componentField" class="h-32" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    </FormField>
+                  </div>
+                  <div class="col-span-1 sm:col-span-2">
+                    <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].supervisorName`">
+                      <FormItem>
+                        <FormLabel>Supervisor Name</FormLabel>
+                        <FormControl>
+                          <Input v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    </FormField>
+                  </div>
+                  <div class="col-span-1 sm:col-span-2 flex">
+                    <FormField v-slot="{ componentField }" :name="`employmentHistory[${idx}].supervisorContact`">
+                      <FormItem class="w-full">
+                        <FormLabel>Supervisor Contact</FormLabel>
+                        <FormControl>
+                          <Input v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    </FormField>
+                    <div v-if="idx != 0" class="mt-[21px] ml-3">
+                      <Button variant="outline" size="icon" @click="remove(idx)">
+                        <X class="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <Button type="button" variant="outline" @click="push({ state: '' })"> Add Work History + </Button>
+            </FormFieldArray>
+            <Button variant="link" @click="loadWorkHistoryTestData">Load Test Data</Button>
+          </template>
+          <template v-if="stepIndex === 8">
             <OnboardingReview :values="values" @goToStep="(step) => stepIndex = step" />
+            <FormField v-slot="{ value, handleChange }" type="checkbox" name="attestationOne">
+              <FormItem class="flex flex-row items-start gap-x-3 space-y-0 rounded-md border p-4 shadow">
+                <FormControl>
+                  <Checkbox :model-value="value" @update:model-value="handleChange" />
+                </FormControl>
+                <div class="space-y-1 leading-none">
+                  <FormLabel>I attest that the information provided is accurate and truthful.</FormLabel>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            </FormField>
+            <FormField v-slot="{ value, handleChange }" type="checkbox" name="attestationTwo">
+              <FormItem class="flex flex-row items-start gap-x-3 space-y-0 rounded-md border p-4 shadow">
+                <FormControl>
+                  <Checkbox :model-value="value" @update:model-value="handleChange" />
+                </FormControl>
+                <div class="space-y-1 leading-none">
+                  <FormLabel>I authorize ShiftStat to share my credential packet with facilities I apply to.</FormLabel>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            </FormField>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              <div class="col-span-1 sm:col-span-3">
+                <FormField v-slot="{ componentField }" name="signature">
+                  <FormItem>
+                    <FormLabel>Signiture</FormLabel>
+                    <FormDescription>Please type your full name.</FormDescription>
+                    <FormControl>
+                      <Input v-bind="componentField" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+              <div class="col-span-1 sm:col-span-1">
+                <FormField v-slot="{ componentField }" name="signatureDate">
+                  <FormItem>
+                    <FormLabel>Signiture Date</FormLabel>
+                    <FormDescription>-</FormDescription>
+                    <FormControl>
+                      <Input v-bind="componentField" disabled />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+            </div>
           </template>
         </div>
         <div class="flex items-center justify-between mt-4">
