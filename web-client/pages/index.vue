@@ -11,7 +11,9 @@
     </template>
   </DefaultLayoutWrapper>
   <div class="m-8">
-    <p>Click <NuxtLink to="/onboarding" class="hover:underline font-semibold">here</NuxtLink> to complete your onboarding.</p>
+    <Card class="p-8">
+      <OnboardingStatus />
+    </Card>
   </div>
 </template>
 <script setup>
@@ -24,4 +26,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 </script>

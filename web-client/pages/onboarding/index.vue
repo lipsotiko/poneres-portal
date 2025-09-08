@@ -119,26 +119,14 @@ const steps = [
   },
   {
     step: 3,
-    title: "Insurance & Legal",
-  },
-  {
-    step: 4,
-    title: "Billing Readiness",
-  },
-  {
-    step: 5,
-    title: "Immunizations",
-  },
-  {
-    step: 6,
     title: "Education",
   },
   {
-    step: 7,
+    step: 4,
     title: "Work History",
   },
   {
-    step: 8,
+    step: 5,
     title: "Review & Attestation",
   },
 ];
@@ -916,9 +904,7 @@ const loadCredentialsTestData = (e) => {
             </FormField>
             <Button variant="link" @click="loadCredentialsTestData">Load Test Data</Button>
           </template>
-          <template v-if="stepIndex === 5">
-          </template>
-          <template v-if="stepIndex === 6">
+          <template v-if="stepIndex === 3">
             <FormFieldArray name="educationDetails" v-slot="{ fields, push, remove }">
               <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
                 <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
@@ -981,7 +967,7 @@ const loadCredentialsTestData = (e) => {
             </FormFieldArray>
             <Button variant="link" @click="loadEducationTestData">Load Test Data</Button>
           </template>
-          <template v-if="stepIndex === 7">
+          <template v-if="stepIndex === 4">
             <FormFieldArray name="employmentHistory" v-slot="{ fields, push, remove }">
               <fieldset class="InputGroup" v-for="(field, idx) in fields" :key="field.key">
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -1072,7 +1058,7 @@ const loadCredentialsTestData = (e) => {
             </FormFieldArray>
             <Button variant="link" @click="loadWorkHistoryTestData">Load Test Data</Button>
           </template>
-          <template v-if="stepIndex === 8">
+          <template v-if="stepIndex === 5">
             <OnboardingReview :values="values" @goToStep="(step) => stepIndex = step" />
             <FormField v-slot="{ value, handleChange }" type="checkbox" name="attestationOne">
               <FormItem class="flex flex-row items-start gap-x-3 space-y-0 rounded-md border p-4 shadow">
