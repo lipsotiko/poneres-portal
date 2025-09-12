@@ -22,7 +22,7 @@
     :rowSelection="rowSelection"
     :getRowId="(params) => String(params.data.id)"
     style="height: 888px"
-    class="ag-theme-quartz mt-2"
+    class="ag-theme-quartz my-2"
   />
   <div class="_display:flex _justify-content:space-between">
     <Pagination v-model="page" :items-total="data?.totalElements" :items-per-page="data?.size" />
@@ -64,6 +64,11 @@ const colDefs = ref([
   { field: "dob" },
   { field: "specialty" },
   { field: "npi" },
+  { 
+    field: "onboardingStatus", 
+    cellRenderer: "OnboardingStatusUpdate",
+    width: 268,
+   }
 ]);
 
 const rowSelection = {
@@ -116,10 +121,12 @@ const handleDelete = async () => {
 </script>
 <script>
 import { LinkField } from "#components";
+import { OnboardingStatusUpdate } from "#components";
 
 export default {
   components: {
     LinkField,
+    OnboardingStatusUpdate
   },
 };
 </script>

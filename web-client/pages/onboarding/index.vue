@@ -69,12 +69,6 @@ let formSchema = [
     govId: z.file().max(2_000_000).mime(["application/pdf", "image/jpeg", "image/png"]),
   }),
   z.object({
-  }),
-  z.object({
-  }),
-  z.object({
-  }),
-  z.object({
     educationDetails: z.array(
       z.object({
         schoolName: z.string(),
@@ -412,8 +406,6 @@ const loadCredentialsTestData = (e) => {
             e.preventDefault();
 
             validate();
-
-            console.log('meta', meta, values);
 
             if (stepIndex === steps.length && meta.valid) {
               values.resume = resumeRef; //TODO: Why??

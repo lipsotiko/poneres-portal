@@ -2,7 +2,7 @@
   <Card class="p-6">
     <div class="flex justify-between">
       <h3 class="text-lg font-semibold">Basic Information</h3>
-      <Button variant="link" @click="emit('goToStep', 1)">Edit</Button>
+      <Button v-if="hideEdit" variant="link" @click="emit('goToStep', 1)">Edit</Button>
     </div>
     <table class="mb-4">
       <tbody>
@@ -71,7 +71,7 @@
     </table>
     <div class="flex justify-between">
       <h3 class="text-lg font-semibold">Education</h3>
-      <Button variant="link" @click="emit('goToStep', 2)">Edit</Button>
+      <Button v-if="hideEdit" variant="link" @click="emit('goToStep', 2)">Edit</Button>
     </div>
     <div>
       <table v-for="e in values.educationDetails" class="mb-4">
@@ -99,7 +99,7 @@
     </div>
     <div class="flex justify-between">
       <h3 class="text-lg font-semibold">Work history</h3>
-      <Button variant="link" @click="emit('goToStep', 3)">Edit</Button>
+      <Button v-if="hideEdit" variant="link" @click="emit('goToStep', 3)">Edit</Button>
     </div>
     <table v-for="e in values.employmentHistory" class="mb-4">
       <tbody>
@@ -131,13 +131,17 @@
     </table>
     <div class="flex justify-between">
       <h3 class="text-lg font-semibold">Credentials</h3>
-      <Button variant="link" @click="emit('goToStep', 4)">Edit</Button>
+      <Button v-if="hideEdit" variant="link" @click="emit('goToStep', 4)">Edit</Button>
     </div>
     <table>
       <tbody>
         <tr>
           <td class="w-[200px] font-medium text-right pr-3">Resume</td>
-          <td>
+          <td v-if="values.resumeFileId">
+            <span>{{values.resumeFileId}}</span>
+            <Button variant="link" @click="(e) => downloadFileByKey(values.resumeFileId)">View</Button>
+          </td>
+          <td v-else>
             <span>{{ values.resume.name }}</span>
             <Button variant="link" @click="(e) => downloadFile(e, values.resume)">View</Button>
           </td>
@@ -149,7 +153,11 @@
               <li>State: {{ l.state }}</li>
               <li>Lic.#: {{ l.licenseNumber }}</li>
               <li>Exp.: {{ l.expirationDate }}</li>
-              <li>
+              <li v-if="l.licenseFileId">
+                <span>{{l.licenseFileId}}</span>
+                <Button variant="link" @click="(e) => downloadFileByKey(l.licenseFileId)">View</Button>
+              </li>
+              <li v-else>
                 {{ l.license.name }} <Button variant="link" @click="(e) => downloadFile(e, l.license)">View</Button>
               </li>
             </ul>
@@ -157,7 +165,11 @@
         </tr>
         <tr>
           <td class="w-[200px] font-medium text-right pr-3">Government ID</td>
-          <td>
+          <td v-if="values.govIdFileId">
+            <span>{{ values.govIdFileId }}</span>
+            <Button variant="link" @click="(e) => downloadFile(e, values.govId)">View</Button>
+          </td>
+          <td v-else>
             <span>{{ values.govId.name }}</span>
             <Button variant="link" @click="(e) => downloadFile(e, values.govId)">View</Button>
           </td>
@@ -171,12 +183,21 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const { values } = defineProps(["values"]);
+const { values, hideEdit } = defineProps(["values", "hideEdit"]);
 const emit = defineEmits(["goToStep"]);
 
 const downloadFile = async (e, file) => {
   e.preventDefault();
   navigateTo(URL.createObjectURL(file), {
+    open: {
+      target: "_blank",
+    },
+  });
+};
+
+const downloadFileByKey = (key) => {
+  navigateTo(`/api/storage/download/${key}`, {
+    external: true,
     open: {
       target: "_blank",
     },

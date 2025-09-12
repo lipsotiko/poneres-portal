@@ -12,6 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-vue-next";
 import { AsYouType } from "libphonenumber-js";
 import { toast } from "vue-sonner";
@@ -85,82 +86,84 @@ const verifyEmail = () => {
       </Breadcrumb>
     </template>
   </DefaultLayoutWrapper>
-  <Form
-    v-slot="{ meta, values, validate }"
-    ref="profileForm"
-    as=""
-    keep-values
-    :initial-values="initialData"
-    :validation-schema="toTypedSchema(formSchema)"
-  >
-    <form
-      class="max-w-lg"
-      @submit="
-        (e) => {
-          e.preventDefault();
-          validate();
-          if (meta.valid) {
-            onSubmit(values);
-          }
-        }
-      "
+  <Card class="m-2 p-4">
+    <Form
+      v-slot="{ meta, values, validate }"
+      ref="profileForm"
+      as=""
+      keep-values
+      :initial-values="initialData"
+      :validation-schema="toTypedSchema(formSchema)"
     >
-      <div class="py-2">
-        <FormField v-slot="{ componentField }" name="firstName">
-          <FormItem>
-            <FormLabel>First name</FormLabel>
-            <FormControl>
-              <Input v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-      </div>
-      <div class="py-2">
-        <FormField v-slot="{ componentField }" name="lastName">
-          <FormItem>
-            <FormLabel>Last name</FormLabel>
-            <FormControl>
-              <Input v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-      </div>
-      <div class="py-2">
-        <FormField v-slot="{ componentField }" name="phoneNumber">
-          <FormItem>
-            <FormLabel>Phone number</FormLabel>
-            <FormControl>
-              <Input v-bind="componentField" @update:modelValue="handlePhoneNumber" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-      </div>
-      <div class="py-2">
-        <FormField v-slot="{ componentField }" name="email">
-          <FormItem>
-            <FormLabel>Email</FormLabel>
-            <FormControl>
-              <div class="flex">
+      <form
+        class="max-w-lg"
+        @submit="
+          (e) => {
+            e.preventDefault();
+            validate();
+            if (meta.valid) {
+              onSubmit(values);
+            }
+          }
+        "
+      >
+        <div class="py-2">
+          <FormField v-slot="{ componentField }" name="firstName">
+            <FormItem>
+              <FormLabel>First name</FormLabel>
+              <FormControl>
                 <Input v-bind="componentField" />
-                <Button v-if="!userInfo?.verified" variant="link" :disabled="pendingUserInfo" @click="verifyEmail">
-                  <Loader2 v-if="pendingUserInfo" class="w-4 h-4 animate-spin" />
-                  <span v-else>Verify</span>
-                </Button>
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-      </div>
-      <div class="flex justify-center m-4">
-        <Button block color="primary" type="submit" :disabled="saving || pendingUserInfo">
-          <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
-          Save changes
-        </Button>
-      </div>
-    </form>
-  </Form>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+        <div class="py-2">
+          <FormField v-slot="{ componentField }" name="lastName">
+            <FormItem>
+              <FormLabel>Last name</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+        <div class="py-2">
+          <FormField v-slot="{ componentField }" name="phoneNumber">
+            <FormItem>
+              <FormLabel>Phone number</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" @update:modelValue="handlePhoneNumber" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+        <div class="py-2">
+          <FormField v-slot="{ componentField }" name="email">
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <div class="flex">
+                  <Input v-bind="componentField" />
+                  <Button v-if="!userInfo?.verified" variant="link" :disabled="pendingUserInfo" @click="verifyEmail">
+                    <Loader2 v-if="pendingUserInfo" class="w-4 h-4 animate-spin" />
+                    <span v-else>Verify</span>
+                  </Button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </div>
+        <div class="flex justify-center m-4">
+          <Button block color="primary" type="submit" :disabled="saving || pendingUserInfo">
+            <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
+            Save changes
+          </Button>
+        </div>
+      </form>
+    </Form>
+  </Card>
 </template>

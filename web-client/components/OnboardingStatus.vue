@@ -2,6 +2,7 @@
 import { BookUser, Check, Eye, IdCard } from "lucide-vue-next"
 import { Button } from "@/components/ui/button";
 import { Stepper, StepperDescription, StepperIndicator, StepperItem, StepperTitle, StepperTrigger } from "@/components/ui/stepper"
+import { Loader2 } from "lucide-vue-next";
 
 const steps = [{
   step: 1,
@@ -21,11 +22,24 @@ const steps = [{
 }]
 
 const stepIndex = ref(1)
+const { pending: pendingOnboardingStatus, data } = await useFetch("/api/onboarding/status", {
+  lazy: true,
+  server: false,
+  onResponse({ request, response, options }) {
+    if (response._data === 'SUBMITTED' || response._data === 'UNDER_REVIEW') {
+      stepIndex.value = 2;
+    }
 
+    if (response._data === 'COMPLETE') {
+      stepIndex.value = 3;
+    }
+  },
+});
 </script>
 
 <template>
-  <Stepper v-model="stepIndex">
+  <Loader2 v-if="pendingOnboardingStatus" class="w-4 h-4 animate-spin" />
+  <Stepper v-else v-model="stepIndex">
     <StepperItem
       v-for="item in steps"
       :key="item.step"

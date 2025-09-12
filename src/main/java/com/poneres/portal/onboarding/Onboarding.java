@@ -26,10 +26,8 @@ public class Onboarding {
     private String npi;
     private String citizenshipStatus;
     private String location;
-    private String uncomfortableProcedures;
-    private String haveYouDoneLocumsBefore;
-    private String activeCertifications;
-    private String malpractice;
+    private Address homeAddress;
+    private Address mailingAddress;
     private String resumeFileId;
     private List<OnboardingLicenseFile> licenseFiles;
     private String govIdFileId;
@@ -39,4 +37,9 @@ public class Onboarding {
     private List<String> schedulePreferences;
     private String createdBy;
     private LocalDateTime createdAt;
+
+    private String signature;
+    private String signatureDate;
+
+    private OnboardingStatus onboardingStatus;
 }

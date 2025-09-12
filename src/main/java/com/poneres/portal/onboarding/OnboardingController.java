@@ -6,6 +6,7 @@ import com.poneres.portal.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,8 @@ public class OnboardingController {
     public void save(@RequestBody OnboardingRequest request) {
         Onboarding onboarding = request.getOnboarding();
 
+        onboarding.setOnboardingStatus(OnboardingStatus.SUBMITTED);
+
         String createdBy = authenticationService.getUserProfile().getId();
         onboarding.setCreatedBy(createdBy);
 
@@ -55,6 +58,24 @@ public class OnboardingController {
 
         onboarding.setCreatedAt(LocalDateTime.now());
         onboardingRepository.save(onboarding);
+    }
+
+    @PostMapping("/update-status/{id}")
+    @UserAuthorized(value = { "isAdmin", "isProvider" })
+    public void updateStatus(@PathVariable("id") String id, @Param("status") OnboardingStatus status) {
+        Optional<Onboarding> onboarding = onboardingRepository.findById(id);
+        onboarding.ifPresent(o -> {
+            o.setOnboardingStatus(status);
+            onboardingRepository.save(o);
+        });
+    }
+
+    @GetMapping("/status")
+    @UserAuthorized(value = { "isAdmin", "isProvider" })
+    public OnboardingStatus getStatus() {
+        String createdBy = authenticationService.getUserProfile().getId();
+        Onboarding onboarding = onboardingRepository.findByCreatedBy(createdBy);
+        return onboarding.getOnboardingStatus();
     }
 
     @GetMapping("/{id}")
@@ -92,5 +113,6 @@ public class OnboardingController {
     public Page<Onboarding> get(Pageable pageable) {
         return onboardingRepository.findAll(pageable);
     }
+
 
 }
