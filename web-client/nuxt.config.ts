@@ -2,6 +2,7 @@
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
+  compatibilityDate: '2025-10-09',
   modules: ["dayjs-nuxt", "@nuxtjs/storybook"],
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],

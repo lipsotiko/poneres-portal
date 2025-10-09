@@ -31,6 +31,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "file-saver": "^2.0.5",
+    "jsdoc-type-pratt-parser": "^6.10.0",
     "libphonenumber-js": "^1.12.8",
     "lucide-vue-next": "^0.509.0",
     "reka-ui": "^2.3.2",
@@ -40,6 +41,7 @@
     "trim-canvas": "^0.1.2",
     "tw-animate-css": "^1.2.9",
     "vee-validate": "^4.15.0",
+    "vue-advanced-cropper": "^2.8.9",
     "vue-sonner": "^1.3.2",
     "zod": "^3.25.0"
   },
