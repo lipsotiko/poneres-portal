@@ -81,7 +81,7 @@ public class AbstractPoneresPortalInit {
                             put("services", "Property Management");
                             put("commission", "$188.65");
                         }})
-                        .scheduleEnabled(true)
+                        .scheduleEnabled(false)
                 .build());
         invoiceJobRepository.save(InvoiceJob.builder()
                 .id("2")
@@ -115,7 +115,7 @@ public class AbstractPoneresPortalInit {
                     put("services", "Property Management");
                     put("commission", "$232.00");
                 }})
-                .scheduleEnabled(true)
+                .scheduleEnabled(false)
                 .build());
 
 //        invoiceJobRepository.save(InvoiceJob.builder()

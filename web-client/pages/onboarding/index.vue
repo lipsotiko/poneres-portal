@@ -125,18 +125,7 @@ const steps = [
   },
 ];
 
-const getFile = async (f) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      resolve({
-        dataURL: reader.result,
-        fileName: f.name,
-      });
-    };
-    reader.readAsDataURL(f);
-  });
-};
+
 
 const saving = ref(false);
 const submitted = ref(false);
