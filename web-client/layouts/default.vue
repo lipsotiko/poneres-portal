@@ -6,31 +6,24 @@
           <SidebarGroupLabel class="border-b-1 h-10 ">
             <div class="flex">
               <img src="/logo.png" class="w-[32px] h-[32px]"/>
-              <p class="inline pl-2 py-1 text-lg font-semibold">ShiftStat</p>
+              <p class="inline pl-2 py-1 text-lg font-semibold">Boring Resume</p>
             </div>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu class="pl-0! mt-2">
-              <SidebarMenuItem
-                v-for="item in itemsForAll"
-                :key="item.title"
-              >
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <NuxtLink :href="item.url">
-                    <component :is="item.icon" />
-                    <span>{{ item.title }}</span>
+                  <NuxtLink href="/">
+                    <component :is="Home" />
+                    <span>Home</span>
                   </NuxtLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem
-                v-if="user?.roles.includes('ADMIN')"
-                v-for="item in itemsForAdmin"
-                :key="item.title"
-              >
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <NuxtLink :href="item.url">
-                    <component :is="item.icon" />
-                    <span>{{ item.title }}</span>
+                  <NuxtLink href="/account">
+                    <component :is="User" />
+                    <span>Account</span>
                   </NuxtLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -58,19 +51,10 @@
 <script setup>
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import {
-  CalendarDays,
-  DollarSign,
-  FilePenLine,
   Home,
-  Hospital,
-  IdCard,
   LogOut,
-  Mail,
   MonitorCog,
-  Search,
-  Settings,
   User,
-  View,
 } from "lucide-vue-next";
 import {
   Sidebar,
@@ -85,74 +69,5 @@ import {
 import { Loader2 } from "lucide-vue-next";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 
-const user = ref();
 const open = ref(false);
-
-const { pending: pendingUserInfo } = await useFetch("/api/user/info", {
-  lazy: true,
-  server: false,
-  onResponse({ request, response, options }) {
-    // if (response._data.userProfile.roles.includes('PROVIDER')) {
-    //   navigateTo("/onboarding");
-    // }
-
-    user.value = response._data.userProfile;
-  },
-});
-
-const itemsForAll = [
-  {
-    title: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Shift Passport",
-    url: "/onboarding",
-    icon: IdCard,
-  },
-  {
-    title: "Marketplace",
-    url: "/",
-    icon: Hospital,
-  },
-  {
-    title: "Messages",
-    url: "/",
-    icon: Mail,
-  },
-  {
-    title: "Calendar",
-    url: "/",
-    icon: CalendarDays,
-  },
-  {
-    title: "Earnings",
-    url: "/earnings",
-    icon: DollarSign,
-  },
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: User,
-  },
-];
-
-const itemsForAdmin = [
-  {
-    title: "Admin",
-    url: "/admin",
-    icon: MonitorCog,
-  },
-  {
-    title: "Agreements",
-    url: "/agreements",
-    icon: FilePenLine,
-  },
-  {
-    title: "Onboarding Review",
-    url: "/onboarding-review",
-    icon: View,
-  },
-];
 </script>
