@@ -48,7 +48,7 @@ public class LocalAuthenticationService implements AuthenticationService {
         return userProfileRepository.findById("3").orElse(
                 UserProfile.builder()
                         .id("3")
-                        .roles(List.of(Role.ADMIN, Role.RESIDENT))
+                        .roles(List.of(Role.ADMIN, Role.USER))
                         .build()
         );
     }

@@ -34,14 +34,6 @@ public class UserAuthorizedAspect {
             return;
         }
 
-        if (value.contains("isTenant") && authenticationService.hasRole(Role.RESIDENT)) {
-            return;
-        }
-
-        if (value.contains("isProvider") && authenticationService.hasRole(Role.PROVIDER)) {
-            return;
-        }
-
         throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED);
     }
 }
