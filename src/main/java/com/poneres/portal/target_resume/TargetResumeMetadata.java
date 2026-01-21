@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class TargetResumeMetadata {
     private String jobDescription;
+    private String resume;
 }

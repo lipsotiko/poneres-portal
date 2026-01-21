@@ -101,15 +101,26 @@
                 <Button variant="link" @click="loadSection1TestData">Load Test Data</Button>
               </template>
               <template v-if="stepIndex === 2">
-                <FormField v-slot="{ componentField }" name="resume">
+                <FormField v-slot="{ componentField }" name="resumeFile">
                   <FormItem>
-                    <FormLabel>Resume (PDF)</FormLabel>
+                    <FormLabel>Resume</FormLabel>
                     <FormControl>
                       <input
-                        id="resume"
+                        id="resumeFile" 
                         type="file"
                         v-bind="componentField"
                         class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+                <FormField v-slot="{ componentField }" name="resume">
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        v-bind="componentField"
+                        placeholder="Paste the resume text in here so we can analyze your skills"
                       />
                     </FormControl>
                     <FormMessage />
@@ -196,7 +207,8 @@ let formSchema = [
     jobDescription: z.string("Job description is required."),
   }),
   z.object({
-    resume: z.file().max(2_000_000).mime(["application/pdf"]),
+    resumeFile: z.file().max(2_000_000).mime(["application/pdf"]),
+    resume: z.string("Resume is required.")
   }),
 ];
 const results = ref({});
@@ -218,8 +230,6 @@ const colDefs = ref([
     headerName: "Key Word or Skill"
   },
   { field: "count" },
-  { field: "context" },
-  { field: "found" },
 ]);
 
 const saving = ref(false);
@@ -228,7 +238,39 @@ const loadSection1TestData = (e) => {
   e.preventDefault();
   console.log("Load - Job Description");
   targetResumeForm.value.setValues({
-    jobDescription: "Hello World!",
+    jobDescription: `Senior Backend Software Engineer
+
+Responsibilities:
+- Design and develop backend services using Java and Spring Boot
+- Build and maintain REST APIs consumed by web and mobile clients
+- Deploy and monitor applications on AWS infrastructure
+- Collaborate with product managers and frontend engineers
+- Write unit and integration tests to ensure code quality
+
+Skills:
+- Java
+- Spring Boot
+- AWS cloud services
+- SQL
+- Docker
+- Git version control
+
+Required Qualifications:
+- Strong experience with Java and object-oriented design
+- Experience building RESTful APIs and backend services
+- Solid understanding of SQL and relational databases
+- Experience working in a production environment
+
+Preferred Qualifications:
+- Experience with Python or other scripting languages
+- Familiarity with Kubernetes
+- Knowledge of CI/CD pipelines
+- Experience mentoring junior engineers 
+
+Other:
+  We are a fast-growing technology company building scalable cloud-based platforms
+  used by millions of users worldwide. Our engineering team values collaboration,
+  clean architecture, and continuous improvement.`,
   });
 };
 
@@ -255,13 +297,68 @@ const loadResumeTestData = (e) => {
   const resumeFile = base64toFile(resumePdf, "resume.pdf", "application/pdf");
 
   targetResumeForm.value.setValues({
-    resume: resumeFile,
+    resumeFile,
+      resume: `John Doe
+  Senior Backend Software Engineer
+
+  Summary:
+  Backend software engineer with 7+ years of experience designing and building
+  scalable backend systems using Java. Strong background in RESTful API development,
+  cloud infrastructure, and SQL databases. Experienced working in production
+  environments and collaborating with cross-functional teams.
+
+  Skills:
+  - Java
+  - Spring Boot
+  - RESTful API development
+  - AWS cloud services
+  - SQL and relational databases
+  - Docker
+  - Git
+  - Unit and integration testing
+
+  Professional Experience:
+  Senior Backend Software Engineer
+  ABC Technology Solutions
+  2019 - Present
+
+  - Designed and developed backend services using Java and Spring Boot
+  - Built and maintained REST APIs for web and mobile applications
+  - Deployed and supported applications running on AWS infrastructure
+  - Worked extensively with SQL databases to design schemas and optimize queries
+  - Collaborated with frontend engineers and product managers
+  - Wrote unit and integration tests to ensure reliability and code quality
+
+  Backend Software Engineer
+  XYZ Systems
+  2016 - 2019
+
+  - Developed Java-based backend applications in a microservices architecture
+  - Implemented RESTful APIs and integrated third-party services
+  - Supported production deployments and resolved system issues
+  - Used Docker for local development and application packaging
+
+  Projects:
+  Cloud-Based Order Management System
+  - Designed and implemented backend services using Java and Spring Boot
+  - Exposed REST APIs consumed by multiple client applications
+  - Deployed services to AWS using containerized Docker workloads
+  - Integrated SQL database for transactional data storage
+
+  Education:
+  Bachelor of Science in Computer Science
+  University of Somewhere
+
+  Other:
+  - Familiar with CI/CD concepts and automated build pipelines
+  - Comfortable working in Agile development environments`,
   });
 };
 
 const analyzeResume = async (data) => {
+  console.log(data);
   saving.value = true;
-  const { fileName: resumeFileName, dataURL: resumeDataURL } = await getFile(data.resume);
+  const { fileName: resumeFileName, dataURL: resumeDataURL } = await getFile(data.resumeFile);
   return await $fetch("/api/target-resume-analysis", {
     method: "POST",
     body: {
