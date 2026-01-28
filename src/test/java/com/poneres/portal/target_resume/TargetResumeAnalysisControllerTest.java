@@ -15,7 +15,7 @@ class TargetResumeAnalysisControllerTest {
     private TargetResumeAnalysisController targetResumeAnalysisController;
 
     @Test
-    public void test88() throws InterruptedException {
+    public void test95() throws InterruptedException {
         TargetResumeAnalysisRequest request = new TargetResumeAnalysisRequest();
         TargetResumeMetadata metadata = new TargetResumeMetadata();
         metadata.setJobDescription("""
@@ -108,6 +108,6 @@ class TargetResumeAnalysisControllerTest {
                 """);
         request.setMetadata(metadata);
         TargetResumeAnalysisResponse analyse = targetResumeAnalysisController.analyse(request);
-        assertEquals(85, analyse.getScore());
+        assertEquals(95, analyse.getScore());
     }
 }
