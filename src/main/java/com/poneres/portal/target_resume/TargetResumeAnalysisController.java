@@ -19,7 +19,7 @@ public class TargetResumeAnalysisController {
     @Autowired
     private NLPService nlpService;
 
-    final List<String> IGNORE = List.of("experience");
+    final List<String> IGNORE = List.of("experience", "qualifications", "understanding");
 
     final List<String> JOB_DESCRIPTION_SECTIONS = List.of(
             "required",
@@ -47,8 +47,8 @@ public class TargetResumeAnalysisController {
     );
 
     Map<String, Double> RESUME_SECTION_WEIGHTS = Map.of(
-            "experience", 1.5,
-            "skills", 1.3,
+            "experience", 2.0,
+            "skills", 1.8,
             "projects", 1.1,
             "summary", 1.0,
             "education", 0.8,
@@ -67,31 +67,15 @@ public class TargetResumeAnalysisController {
         String[] jdTags = nlpService.tag(jdTokens);
         String[] resumeTags = nlpService.tag(resumeTokens);
 
-        List<String> jdKeywords = new ArrayList<>();
-        for (int i = 0; i < jdTokens.length; i++) {
-            String t = jdTokens[i].toLowerCase();
-            if (jdTags[i].startsWith("NN") || JOB_DESCRIPTION_SECTIONS.contains(t)) {
-                String token = t;
-                token = token.replace(".", "");
-                jdKeywords.add(token);
-            }
-        }
-
-        List<String> resumeKeywords = new ArrayList<>();
-        for (int i = 0; i < resumeTokens.length; i++) {
-            String t = resumeTokens[i].toLowerCase();
-            if (resumeTags[i].startsWith("NN") || RESUME_SECTIONS.contains(t) && IGNORE.contains(t)) {
-                String token = t;
-                token = token.replace(".", "");
-                resumeKeywords.add(token);
-            }
-        }
+        List<String> jdKeywords = getStrings(jdTokens, jdTags, JOB_DESCRIPTION_SECTIONS);
+        List<String> resumeKeywords = getStrings(resumeTokens, resumeTags, RESUME_SECTIONS);
 
         Map<String, List<String>> jdSectioned = bySection(JOB_DESCRIPTION_SECTIONS, jdKeywords);
         Map<String, List<String>> resumeSectioned = bySection(RESUME_SECTIONS, resumeKeywords);
 
         List<KeywordMetadata> sorted = jdSectioned.values().stream().flatMap(Collection::stream)
-                .filter(t -> !JOB_DESCRIPTION_SECTION_WEIGHTS.containsKey(t))
+                .filter(t -> !JOB_DESCRIPTION_SECTIONS.contains(t))
+                .filter(t -> !RESUME_SECTIONS.contains(t))
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()))
                 .entrySet().stream().sorted(
                         Comparator.comparing(Map.Entry<String, Long>::getValue)
@@ -109,6 +93,19 @@ public class TargetResumeAnalysisController {
                 .score(round((score / maxScore) * 100))
                 .jobDescriptionKeywords(sorted)
                 .build();
+    }
+
+    private List<String> getStrings(String[] tokens, String[] taags, List<String> sections) {
+        List<String> keywords = new ArrayList<>();
+        for (int i = 0; i < tokens.length; i++) {
+            String t = tokens[i].toLowerCase();
+            if (taags[i].startsWith("NN") || sections.contains(t) && IGNORE.contains(t)) {
+                String token = t;
+                token = token.replace(".", "");
+                keywords.add(token);
+            }
+        }
+        return keywords;
     }
 
     private Map<String, List<String>> bySection(List<String> sections, List<String> tokens) {
@@ -157,7 +154,6 @@ public class TargetResumeAnalysisController {
             }
 
             for (Map.Entry<String, Integer> jdTerm : jdTf.entrySet()) {
-
                 String term = jdTerm.getKey();
                 int jdTermTf = jdTerm.getValue();
 
@@ -193,8 +189,6 @@ public class TargetResumeAnalysisController {
     }
 
     double maxScoreResume(Map<String, List<String>> jdSections) {
-        final int TF_CAP = 3;
-
         // Find the "best" resume section weight
         double bestResumeWeight = RESUME_SECTION_WEIGHTS.values()
                 .stream()

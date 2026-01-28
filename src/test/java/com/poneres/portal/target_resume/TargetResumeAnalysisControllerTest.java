@@ -81,52 +81,6 @@ class TargetResumeAnalysisControllerTest {
                   - Worked extensively with SQL databases to design schemas and optimize queries
                   - Collaborated with frontend engineers and product managers
                   - Wrote unit and integration tests to ensure reliability and code quality
-                
-                0 = qualifications
-                2 = java
-                3 = design
-                5 = building
-                6 = apis
-                7 = services
-                8 = understanding
-                9 = sql
-                10 = databases
-                12 = production
-                13 = environment
-                
-                0 = spring
-                1 = boot
-                2 = aws
-                3 = cloud
-                4 = services
-                5 = docker
-                6 = version
-                7 = control
-                
-                0 = design
-                1 = backend
-                2 = services
-                3 = java
-                4 = spring
-                5 = boot
-                6 = build
-                7 = rest
-                8 = apis
-                9 = web
-                10 = clients
-                11 = deploy
-                12 = monitor
-                13 = applications
-                14 = aws
-                15 = infrastructure
-                16 = product
-                17 = managers
-                18 = engineers
-                19 = unit
-                20 = integration
-                21 = tests
-                22 = code
-                23 = quality
 
                   Backend Software Engineer
                   XYZ Systems
@@ -151,55 +105,9 @@ class TargetResumeAnalysisControllerTest {
                   Other:
                   - Familiar with CI/CD concepts and automated build pipelines
                   - Comfortable working in Agile development environments
-                
-                0 = qualifications
-                2 = java
-                3 = design
-                5 = building
-                6 = apis
-                7 = services
-                8 = understanding
-                9 = sql
-                10 = databases
-                12 = production
-                13 = environment
-                
-                0 = spring
-                1 = boot
-                2 = aws
-                3 = cloud
-                4 = services
-                5 = docker
-                6 = version
-                7 = control
-                
-                0 = design
-                1 = backend
-                2 = services
-                3 = java
-                4 = spring
-                5 = boot
-                6 = build
-                7 = rest
-                8 = apis
-                9 = web
-                10 = clients
-                11 = deploy
-                12 = monitor
-                13 = applications
-                14 = aws
-                15 = infrastructure
-                16 = product
-                17 = managers
-                18 = engineers
-                19 = unit
-                20 = integration
-                21 = tests
-                22 = code
-                23 = quality
                 """);
         request.setMetadata(metadata);
         TargetResumeAnalysisResponse analyse = targetResumeAnalysisController.analyse(request);
-        assertEquals(88, analyse.getScore());
+        assertEquals(85, analyse.getScore());
     }
 }
