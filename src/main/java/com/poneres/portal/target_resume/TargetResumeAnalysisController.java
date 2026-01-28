@@ -19,6 +19,8 @@ public class TargetResumeAnalysisController {
     @Autowired
     private NLPService nlpService;
 
+    final List<String> IGNORE = List.of("experience");
+
     final List<String> JOB_DESCRIPTION_SECTIONS = List.of(
             "required",
             "skills",
@@ -28,10 +30,11 @@ public class TargetResumeAnalysisController {
     );
 
     final List<String> RESUME_SECTIONS = List.of(
-            "summary",
             "experience",
-            "education",
             "skills",
+            "projects",
+            "summary",
+            "education",
             "other"
     );
 
@@ -64,9 +67,7 @@ public class TargetResumeAnalysisController {
         String[] jdTags = nlpService.tag(jdTokens);
         String[] resumeTags = nlpService.tag(resumeTokens);
 
-        // Extract nouns (NN, NNS, NNP, NNPS)
         List<String> jdKeywords = new ArrayList<>();
-
         for (int i = 0; i < jdTokens.length; i++) {
             String t = jdTokens[i].toLowerCase();
             if (jdTags[i].startsWith("NN") || JOB_DESCRIPTION_SECTIONS.contains(t)) {
@@ -76,12 +77,10 @@ public class TargetResumeAnalysisController {
             }
         }
 
-        // Extract nouns (NN, NNS, NNP, NNPS)
         List<String> resumeKeywords = new ArrayList<>();
-
         for (int i = 0; i < resumeTokens.length; i++) {
             String t = resumeTokens[i].toLowerCase();
-            if (resumeTags[i].startsWith("NN") || RESUME_SECTIONS.contains(t)) {
+            if (resumeTags[i].startsWith("NN") || RESUME_SECTIONS.contains(t) && IGNORE.contains(t)) {
                 String token = t;
                 token = token.replace(".", "");
                 resumeKeywords.add(token);
@@ -91,7 +90,7 @@ public class TargetResumeAnalysisController {
         Map<String, List<String>> jdSectioned = bySection(JOB_DESCRIPTION_SECTIONS, jdKeywords);
         Map<String, List<String>> resumeSectioned = bySection(RESUME_SECTIONS, resumeKeywords);
 
-        List<KeywordMetadata> sorted = jdKeywords.stream()
+        List<KeywordMetadata> sorted = jdSectioned.values().stream().flatMap(Collection::stream)
                 .filter(t -> !JOB_DESCRIPTION_SECTION_WEIGHTS.containsKey(t))
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()))
                 .entrySet().stream().sorted(
@@ -107,7 +106,7 @@ public class TargetResumeAnalysisController {
         double score = scoreResume(jdSectioned, resumeSectioned);
         double maxScore = maxScoreResume(jdSectioned);
         return TargetResumeAnalysisResponse.builder()
-                .score((score / maxScore) * 100)
+                .score(round((score / maxScore) * 100))
                 .jobDescriptionKeywords(sorted)
                 .build();
     }
@@ -233,7 +232,7 @@ public class TargetResumeAnalysisController {
     }
 
     private static double round(double v) {
-        return Math.round(v * 100.0) / 100.0;
+        return Math.round(v);
     }
 
 }
