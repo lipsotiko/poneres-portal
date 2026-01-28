@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class TargetResumeAnalysisResponse {
-    private Integer score;
+    private double score;
     private String parsedResume;
     private List<KeywordMetadata> jobDescriptionKeywords;
 }
