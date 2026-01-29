@@ -82,8 +82,27 @@
                 </div>
               </StepperItem>
             </div>
+            <div class="flex items-center justify-between mt-2">
+              <Button :disabled="isPrevDisabled" variant="outline" size="sm" @click="prevStep()"> Back </Button>
+              <div class="flex items-center gap-3">
+                <Button
+                  v-if="stepIndex !== steps.length"
+                  :type="meta.valid ? 'button' : 'submit'"
+                  :disabled="isNextDisabled"
+                  size="sm"
+                  @click="meta.valid && nextStep()"
+                >
+                  Next
+                </Button>
+                <Button v-if="stepIndex === steps.length" size="sm" type="submit" :disabled="saving">
+                  <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
+                  Submit
+                </Button>
+              </div>
+            </div>
             <div class="flex flex-col gap-4 mt-8">
               <template v-if="stepIndex === 1">
+                <Button variant="link" @click="loadSection1TestData">Load Test Data</Button>
                 <!-- <div class="grid grid-cols-1 sm:grid-cols-3 gap-4"> -->
                 <FormField v-slot="{ componentField }" name="jobDescription">
                   <FormItem>
@@ -91,6 +110,7 @@
                     <FormControl>
                       <Textarea
                         v-bind="componentField"
+                        class="max-h-80"
                         placeholder="Paste the job description in here so we can analyze its skills"
                       />
                     </FormControl>
@@ -98,9 +118,9 @@
                   </FormItem>
                 </FormField>
                 <!-- </div> -->
-                <Button variant="link" @click="loadSection1TestData">Load Test Data</Button>
               </template>
               <template v-if="stepIndex === 2">
+                <Button variant="link" @click="loadResumeTestData">Load Test Data</Button>
                 <FormField v-slot="{ componentField }" name="resumeFile">
                   <FormItem>
                     <FormLabel>Resume</FormLabel>
@@ -120,32 +140,14 @@
                     <FormControl>
                       <Textarea
                         v-bind="componentField"
+                        class="max-h-80"
                         placeholder="Paste the resume text in here so we can analyze your skills"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 </FormField>
-                <Button variant="link" @click="loadResumeTestData">Load Test Data</Button>
               </template>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <Button :disabled="isPrevDisabled" variant="outline" size="sm" @click="prevStep()"> Back </Button>
-              <div class="flex items-center gap-3">
-                <Button
-                  v-if="stepIndex !== steps.length"
-                  :type="meta.valid ? 'button' : 'submit'"
-                  :disabled="isNextDisabled"
-                  size="sm"
-                  @click="meta.valid && nextStep()"
-                >
-                  Next
-                </Button>
-                <Button v-if="stepIndex === steps.length" size="sm" type="submit" :disabled="saving">
-                  <Loader2 v-if="saving" class="w-4 h-4 animate-spin" />
-                  Submit
-                </Button>
-              </div>
             </div>
           </form>
         </Stepper>
@@ -159,6 +161,9 @@
         <CardContent>
           <PieChart :key="results" :match-score="results?.score" />
         </CardContent>
+      </Card>
+      <Card class="my-4 p-6">
+        <TiptapEditor />
       </Card>
       <Card class="my-4 col-span-2">
         <CardHeader>
