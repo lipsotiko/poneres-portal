@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -75,10 +77,28 @@ public class TargetResumeAnalysisController {
 
         // Normalize the score to make it realistic
         double scoreNormalized = Math.round(Math.min(score * SCORE_MULTIPLIER, 100.0));
+
+        String jobDescriptionMarkUp = tag(sorted, request.getMetadata().getJobDescription().replace("\n", "<br>"));
+        String resumeMarkUp = tag(sorted, request.getMetadata().getResume());
+
         return TargetResumeAnalysisResponse.builder()
                 .score(scoreNormalized)
                 .jobDescriptionKeywords(sorted)
+                .jobDescriptionMarkup(jobDescriptionMarkUp)
+                .resumeMarkup(resumeMarkUp)
                 .build();
+    }
+
+    private String tag(List<KeywordMetadata> keywords, String text) {
+        String pattern = keywords.stream()
+                .map(KeywordMetadata::getWord)
+                .map(Pattern::quote)
+                .collect(Collectors.joining("|"));
+
+        Pattern regex = Pattern.compile("\\b(" + pattern + ")\\b", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = regex.matcher(text);
+        String highlighted = matcher.replaceAll("<b>$1</b>");
+        return "<p>" + highlighted.replace("\n", "<br>") + "</p>";
     }
 
     private List<String> getStrings(String[] tokens, String[] tags, Set<String> sections) {

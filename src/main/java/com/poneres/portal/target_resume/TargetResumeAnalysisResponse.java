@@ -11,4 +11,6 @@ public class TargetResumeAnalysisResponse {
     private double score;
     private String parsedResume;
     private List<KeywordMetadata> jobDescriptionKeywords;
+    private String jobDescriptionMarkup;
+    private String resumeMarkup;
 }

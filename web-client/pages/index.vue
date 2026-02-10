@@ -153,23 +153,13 @@
         </Stepper>
       </Form>
     </Card>
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-5 gap-4">
       <Card class="my-4">
         <CardHeader>
           <CardTitle>Relevancy Score</CardTitle>
         </CardHeader>
         <CardContent>
           <PieChart :key="results" :match-score="results?.score" />
-        </CardContent>
-      </Card>
-      <Card class="my-4 p-6">
-        <TiptapEditor />
-      </Card>
-      <Card class="my-4 col-span-2">
-        <CardHeader>
-          <CardTitle>Keywords</CardTitle>
-        </CardHeader>
-        <CardContent>
           <ag-grid-vue
             :loading="saving"
             :rowData="results?.jobDescriptionKeywords"
@@ -179,6 +169,22 @@
             style="height: 888px"
             class="ag-theme-quartz"
           />
+        </CardContent>
+      </Card>
+      <Card class="my-4 p-6 col-span-2">
+        <CardHeader>
+          <CardTitle>Job Description</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TiptapEditor v-model="jdMarkup" />
+        </CardContent>
+      </Card>
+      <Card class="my-4 p-6 col-span-2">
+        <CardHeader>
+          <CardTitle>Reusme</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TiptapEditor v-model="resumeMarkup" />
         </CardContent>
       </Card>
     </div>
@@ -218,6 +224,9 @@ let formSchema = [
 ];
 const results = ref({});
 const stepIndex = ref(1);
+const jdMarkup = ref("");
+const resumeMarkup = ref("");
+
 const steps = [
   {
     step: 1,
@@ -361,7 +370,6 @@ const loadResumeTestData = (e) => {
 };
 
 const analyzeResume = async (data) => {
-  console.log(data);
   saving.value = true;
   const { fileName: resumeFileName, dataURL: resumeDataURL } = await getFile(data.resumeFile);
   return await $fetch("/api/target-resume-analysis", {
@@ -380,6 +388,10 @@ async function onSubmit(values) {
     success: (data) => {
       saving.value = false;
       results.value = data;
+
+      jdMarkup.value = data.jobDescriptionMarkup;
+      resumeMarkup.value = data.resumeMarkup;
+      
       return `${data.score} toast has been added`;
     },
     error: "Error",
