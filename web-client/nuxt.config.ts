@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     public: {
       buildDate: process.env.BUILD_DATE || "local",
       deploymentType: process.env.DEPLOYMENT_TYPE || "local",
+      stripePublishableKey: 'pk_test_51LFeohDzztVEsKLKTENtpN6ldhK8UdRxyWfkavABywJKKmtnneFpCj6UykGw03hpMWdUs2lGvQXYGshqNSwLmklq00Rckby4h6'
     },
   },
   nitro: {

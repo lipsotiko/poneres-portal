@@ -45,7 +45,7 @@ let initialData = ref({
   lastName: undefined,
   phoneNumber: undefined,
   email: undefined,
-  profilePhoto: undefined
+  profilePhoto: undefined,
 });
 
 const saving = ref(false);
@@ -53,9 +53,11 @@ const profilePhotoDataUrl = ref();
 
 const setProfilePhoto = async (e) => {
   e.preventDefault();
-  const { fileName: profilePhotoName, dataURL: profilePhotoDataURL } = await getFile(profileForm.value.values.profilePhoto);
+  const { fileName: profilePhotoName, dataURL: profilePhotoDataURL } = await getFile(
+    profileForm.value.values.profilePhoto,
+  );
   profilePhotoDataUrl.value = profilePhotoDataURL;
-}
+};
 
 const handlePhoneNumber = async (phoneNumber) => {
   const formatted = new AsYouType("US").input(phoneNumber);
@@ -74,6 +76,7 @@ const verifyEmail = () => {
   sendVerificationEmail();
   toast("Please check your email for a verification link.");
 };
+
 </script>
 <template>
   <DefaultLayoutWrapper>
@@ -154,7 +157,12 @@ const verifyEmail = () => {
                   <FormControl>
                     <div class="flex">
                       <Input v-bind="componentField" />
-                      <Button v-if="!userInfo?.verified" variant="link" :disabled="pendingUserInfo" @click="verifyEmail">
+                      <Button
+                        v-if="!userInfo?.verified"
+                        variant="link"
+                        :disabled="pendingUserInfo"
+                        @click="verifyEmail"
+                      >
                         <Loader2 v-if="pendingUserInfo" class="w-4 h-4 animate-spin" />
                         <span v-else>Verify</span>
                       </Button>
@@ -192,5 +200,6 @@ const verifyEmail = () => {
         </div>
       </form>
     </Form>
+    <PaymentWrapper />
   </Card>
 </template>
