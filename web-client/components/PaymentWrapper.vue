@@ -7,5 +7,5 @@
   </ClientOnly>
 </template>
 <script setup>
-const { pending, data, refresh } = await useAsyncData("payment", () => $fetch("/api/payments/create-payment-intent"));
+const { pending, data } = await useAsyncData("payment", () => $fetch("/api/payments/create-payment-intent"));
 </script>

@@ -25,7 +25,7 @@ public class LocalAuthenticationService implements AuthenticationService {
 
     @Override
     public String getEmail() {
-        return "";
+        return "test@hello.io";
     }
 
     @Override
